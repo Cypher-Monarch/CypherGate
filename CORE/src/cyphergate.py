@@ -262,12 +262,11 @@ class CypherGate(QWidget):
 
         try:
             self.vpn_process = subprocess.Popen(
-                [r"bin\openvpn.exe", "--config", ovpn_path],
-                creationflags=subprocess.CREATE_NO_WINDOW,
+                ["pkexec","openvpn", "--config", ovpn_path],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
-            time.sleep(15)
+            time.sleep(5)
             self.status_label.setText(f"🔒 Connected to {country}")
             self.connect_btn.setEnabled(False)
             self.disconnect_btn.setEnabled(True)
@@ -294,18 +293,20 @@ class CypherGate(QWidget):
 
     def disconnect_vpn(self):
         if self.vpn_process:
-            self.vpn_process.terminate()
-            self.vpn_process.wait()
-            self.vpn_process = None
-            self.status_label.setText("🔓 Disconnected")
-            self.connect_btn.setEnabled(True)
-            self.disconnect_btn.setEnabled(False)
-            QMessageBox.information(self, "VPN Disconnected", "VPN connection has been terminated.")
-            notification.notify(
-                title="CypherGate VPN Disconnected",
-                message="VPN connection has been terminated.",
-                app_name="CypherGate"
-            )
+            try:
+                subprocess.run(["pkexec", "kill", str(self.vpn_process.pid)])
+                self.vpn_process = None
+                self.status_label.setText("🔓 Disconnected")
+                self.connect_btn.setEnabled(True)
+                self.disconnect_btn.setEnabled(False)
+                QMessageBox.information(self, "VPN Disconnected", "VPN connection has been terminated.")
+                notification.notify(
+                    title="CypherGate VPN Disconnected",
+                    message="VPN connection has been terminated.",
+                    app_name="CypherGate"
+                )
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to disconnect:\n{e}")
 
     def closeEvent(self, event):
         event.ignore()
