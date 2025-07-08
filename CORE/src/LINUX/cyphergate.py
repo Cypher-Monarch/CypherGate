@@ -27,7 +27,11 @@ if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
         f.write("# Example:\nJapan\nUnited States\nIndia\nGermany")
 
-APP_DIR = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, 'frozen', False):
+    APP_DIR = os.path.dirname(sys.executable)
+else:
+    APP_DIR = os.path.dirname(os.path.abspath(__file__))
+
 ICON_PATH = os.path.join(APP_DIR,"Assets","icon.png")
 
 class CypherGate(QWidget):
