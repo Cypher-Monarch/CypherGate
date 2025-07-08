@@ -6,9 +6,10 @@ set -o pipefail
 APP_NAME="CypherGate"
 INSTALL_DIR="/opt/$APP_NAME"
 DESKTOP_ENTRY_PATH="/usr/share/applications/$APP_NAME.desktop"
-RELEASE_URL="https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.0/CypherGate-Linux-v1.0.0.zip"
+GITHUB_REPO="Cypher-Monarch/CypherGate"
 
-# Detect root early
+trap 'echo "❌ Installation failed. Exiting." >&2' ERR
+
 if [[ "$EUID" -ne 0 ]]; then
     echo "🚨 Please run this script with sudo: sudo $0"
     exit 1
@@ -40,17 +41,27 @@ esac
 
 mkdir -p "$INSTALL_DIR"
 
-echo "⬇️ Downloading latest release..."
+echo "⬇️ Fetching latest release info..."
+API_URL="https://api.github.com/repos/$GITHUB_REPO/releases/latest"
+LATEST_RELEASE=$(curl -s "$API_URL")
+
+# Extract download URL (with or without jq)
+if command -v jq &> /dev/null; then
+    DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[0].browser_download_url')
+else
+    DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | grep "browser_download_url" | head -n 1 | cut -d '"' -f 4)
+fi
+
+echo "📥 Downloading from: $DOWNLOAD_URL"
 TMP_DIR=$(mktemp -d)
-curl -L "$RELEASE_URL" -o "$TMP_DIR/app.zip"
+curl -L "$DOWNLOAD_URL" -o "$TMP_DIR/app.zip"
 
 echo "📦 Extracting package..."
 unzip "$TMP_DIR/app.zip" -d "$TMP_DIR"
 
-cp "$TMP_DIR/cyphergate" "$INSTALL_DIR/"
+cp "$TMP_DIR"/cyphergate* "$INSTALL_DIR/"
 cp -r "$TMP_DIR/Assets" "$INSTALL_DIR/"
 
-# Create desktop file
 tee "$DESKTOP_ENTRY_PATH" > /dev/null <<EOL
 [Desktop Entry]
 Version=1.0
