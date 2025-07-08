@@ -57,5 +57,5 @@ wget https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.0/Cyphe
 unzip CypherGate-Linux-v1.0.0.zip
 cd CypherGate-Linux
 chmod +x install.sh
-./install.sh
+sudo ./install.sh
 ```
