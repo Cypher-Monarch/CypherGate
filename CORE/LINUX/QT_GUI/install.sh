@@ -59,8 +59,11 @@ curl -L "$DOWNLOAD_URL" -o "$TMP_DIR/app.zip"
 echo "📦 Extracting package..."
 unzip "$TMP_DIR/app.zip" -d "$TMP_DIR"
 
-cp "$TMP_DIR"/cyphergate.elf* "$INSTALL_DIR/"
-cp -r "$TMP_DIR/Assets" "$INSTALL_DIR/"
+# Move into extracted folder (fix for nested directory inside ZIP)
+cd "$TMP_DIR"/CypherGate-Linux
+
+cp cyphergate.elf "$INSTALL_DIR/"
+cp -r Assets "$INSTALL_DIR/"
 
 tee "$DESKTOP_ENTRY_PATH" > /dev/null <<EOL
 [Desktop Entry]
@@ -78,8 +81,9 @@ echo "You can now launch $APP_NAME from the app menu 🚀"
 
 read -p "Do you want to launch $APP_NAME now? (y/N): " choice
 case "$choice" in
-  y|Y ) echo "🚀 Launching $APP_NAME..."; "$INSTALL_DIR/cyphergate" & ;;
+  y|Y ) echo "🚀 Launching $APP_NAME..."; "$INSTALL_DIR/cyphergate.elf" & ;;
   * ) echo "👌 Alright, launch it anytime from the menu." ;;
 esac
 
 rm -rf "$TMP_DIR"
+
