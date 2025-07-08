@@ -56,6 +56,5 @@ All config, cache, and logs are neatly stored under:
 wget https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.0/CypherGate-Linux-v1.0.0.zip
 unzip CypherGate-Linux-v1.0.0.zip
 cd CypherGate-Linux
-chmod +x install.sh
 sudo ./install.sh
 ```
