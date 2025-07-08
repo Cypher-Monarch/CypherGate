@@ -27,6 +27,9 @@ if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
         f.write("# Example:\nJapan\nUnited States\nIndia\nGermany")
 
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+ICON_PATH = os.path.join(APP_DIR,"Assets","icon.png")
+
 class CypherGate(QWidget):
     def __init__(self):
         super().__init__()
@@ -148,7 +151,7 @@ class CypherGate(QWidget):
         self.setLayout(layout)
         self.load_servers()
 
-        self.tray_icon = QSystemTrayIcon(QIcon("Assets/icon.png"), self)
+        self.tray_icon = QSystemTrayIcon(QIcon(ICON_PATH), self)
         self.tray_icon.setToolTip("🌐 CypherGate VPN")
 
         # Tray menu setup
@@ -350,7 +353,7 @@ class CypherGate(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("Assets/icon.png"))
+    app.setWindowIcon(QIcon(ICON_PATH))
     window = CypherGate()
     window.show()
     frame = window.frameGeometry()
