@@ -67,7 +67,7 @@ tee "$DESKTOP_ENTRY_PATH" > /dev/null <<EOL
 Version=1.0
 Type=Application
 Name=CypherGate VPN
-Exec=$INSTALL_DIR/cyphergate
+Exec=$INSTALL_DIR/cyphergate.elf
 Icon=$INSTALL_DIR/Assets/icon.png
 Terminal=false
 Categories=Network;Utility;
