@@ -59,7 +59,7 @@ curl -L "$DOWNLOAD_URL" -o "$TMP_DIR/app.zip"
 echo "📦 Extracting package..."
 unzip "$TMP_DIR/app.zip" -d "$TMP_DIR"
 
-cp "$TMP_DIR"/cyphergate* "$INSTALL_DIR/"
+cp "$TMP_DIR"/cyphergate.elf* "$INSTALL_DIR/"
 cp -r "$TMP_DIR/Assets" "$INSTALL_DIR/"
 
 tee "$DESKTOP_ENTRY_PATH" > /dev/null <<EOL
