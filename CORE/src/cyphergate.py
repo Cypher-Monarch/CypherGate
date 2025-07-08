@@ -15,10 +15,17 @@ from PySide6.QtCore import Qt
 import time
 
 API_URL = "http://www.vpngate.net/api/iphone/"
-VPN_DIR = os.path.expanduser("~/.config/cyphergate/ovpn_configs")
-CACHE_FILE = os.path.join(os.path.expanduser(f"{VPN_DIR}/cache"), "serverlist.csv")
+VPN_ROOT=os.path.expanduser("~/.config/cyphergate")
+VPN_DIR = os.path.expanduser(f"{VPN_ROOT}/servers")
+CACHE_FILE = os.path.join(f"{VPN_ROOT}/cache", "serverlist.csv")
+COUNTRIES_CONF = os.path.join(f"{VPN_ROOT}","countries.conf")
 os.makedirs(VPN_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
+os.makedirs(os.path.dirname(COUNTRIES_CONF), exist_ok=True)
+
+if not os.path.exists(COUNTRIES_CONF):
+    with open(COUNTRIES_CONF, "w") as f:
+        f.write("# Example:\nJapan\nUnited States\nIndia\nGermany")
 
 class CypherGate(QWidget):
     def __init__(self):
@@ -96,7 +103,7 @@ class CypherGate(QWidget):
         title_bar_widget.setStyleSheet("background-color: black;")
         title_bar_widget.setLayout(title_bar_layout)
 
-        layout.addWidget(title_bar_widget)  # NOW it's correct 👀
+        layout.addWidget(title_bar_widget)
 
         title = QLabel("Available VPN Servers")
         title.setAlignment(Qt.AlignCenter)
@@ -167,13 +174,19 @@ class CypherGate(QWidget):
         self.tray_icon.activated.connect(self.on_tray_icon_activated)
         self.tray_icon.show()
 
+
+    def load_allowed_countries(self):
+        if os.path.exists(COUNTRIES_CONF):
+            with open(COUNTRIES_CONF, "r", encoding="utf-8") as f:
+                return [line.strip() for line in f if line.strip()]
+        return None  # No filter if config missing
+
     def load_servers(self):
         try:
             response = requests.get(API_URL, timeout=30)
             response.raise_for_status()
             data = response.text
             
-            # Save to cache for offline use later
             with open(CACHE_FILE, "w", encoding="utf-8") as f:
                 f.write(data)
 
@@ -185,16 +198,21 @@ class CypherGate(QWidget):
             else:
                 QMessageBox.critical(self, "Error", f"Failed to fetch VPN servers and no cache found:\n{e}")
                 return
-        
-        # Continue parsing servers normally
+
         lines = data.splitlines()[2:]
         reader = csv.reader(lines)
         servers = []
         countries = set()
+
+        allowed_countries = self.load_allowed_countries()
+
         for row in reader:
             if len(row) < 15:
                 continue
             country = row[5]
+            if allowed_countries and country not in allowed_countries:
+                continue  # Skip this country if not allowed
+
             ping = row[3] + " ms"
             speed = str(int(int(row[4]) / 1000)) + " kbps"
             users = row[2]

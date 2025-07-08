@@ -131,7 +131,7 @@ notify-send "VPN" "🔄 Connecting to $CHOICE..."
 echo "[INFO] Connecting to $CHOICE at $(date)" >> "$LOG_FILE"
 
 # Connect
-sudo openvpn --config "$PROFILE_DIR/$CHOICE.ovpn" >> "$LOG_FILE" 2>&1 &
+pkexec openvpn --config "$PROFILE_DIR/$CHOICE.ovpn" >> "$LOG_FILE" 2>&1 &
 
 VPN_PID=$!
 sleep 5
