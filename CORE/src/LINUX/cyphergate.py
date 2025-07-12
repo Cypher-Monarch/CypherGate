@@ -181,7 +181,6 @@ class CypherGate(QWidget):
         self.tray_icon.activated.connect(self.on_tray_icon_activated)
         self.tray_icon.show()
 
-
     def load_allowed_countries(self):
         if os.path.exists(COUNTRIES_CONF):
             with open(COUNTRIES_CONF, "r", encoding="utf-8") as f:
@@ -232,7 +231,6 @@ class CypherGate(QWidget):
         self.country_dropdown.addItems(sorted(countries))
         if countries:
             self.filter_servers(self.country_dropdown.currentText())
-
 
     def filter_servers(self, country):
         filtered = [s for s in self.all_servers if s[0] == country]
