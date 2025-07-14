@@ -1,3 +1,7 @@
+# ────────────────────────────────────────────────────────
+# Imports & Constants
+# ────────────────────────────────────────────────────────
+
 import os
 import sys
 import subprocess
@@ -8,10 +12,10 @@ from plyer import notification
 from PySide6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem,
     QPushButton, QLabel, QMessageBox, QHBoxLayout, QComboBox, QSystemTrayIcon,
-    QMenu, QSizePolicy
+    QMenu, QSizePolicy, QGraphicsOpacityEffect
 )
-from PySide6.QtGui import QIcon, QAction, QFont
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon, QAction, QFont, QPainter, QColor, QPen
+from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QTimer, QRectF, QSize, QEvent
 import time
 
 API_URL = "http://www.vpngate.net/api/iphone/"
@@ -27,9 +31,46 @@ if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
         f.write("# Example:\nJapan\nUnited States\nIndia\nGermany")
 
+# ────────────────────────────────────────────────────────
+# Spinner Widget
+# ────────────────────────────────────────────────────────
+
+class SpinnerWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.angle = 0
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.rotate)
+        self.timer.start(50)
+        self.setFixedSize(40, 40)
+
+    def rotate(self):
+        self.angle = (self.angle + 30) % 360
+        self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+        rect = self.rect()
+        center = rect.center()
+        radius = min(rect.width(), rect.height()) / 2 - 5
+        pen = QPen(QColor("#FFD700"), 3)
+        painter.setPen(pen)
+        painter.translate(center)
+        painter.rotate(self.angle)
+        painter.drawArc(QRectF(-radius, -radius, 2*radius, 2*radius), 0, 120 * 16)
+
+# ────────────────────────────────────────────────────────
+# Main Application Class
+# ────────────────────────────────────────────────────────
 class CypherGate(QWidget):
     def __init__(self):
         super().__init__()
+
+#────────────────────────────────────────────────────────
+#Initialization (Components and ui)
+#────────────────────────────────────────────────────────
+
         self.setWindowFlag(Qt.FramelessWindowHint)
         self.setWindowTitle("CypherGate")
         self.setGeometry(100, 100, 800, 550)
@@ -69,13 +110,13 @@ class CypherGate(QWidget):
         title_bar_layout = QHBoxLayout()
         title_bar_layout.setContentsMargins(0, 0, 0, 0)
 
-        title = QLabel("🌐 CypherGate VPN")
+        title = QLabel("\U0001F310 CypherGate VPN")
         title.setFont(QFont("monospace", 11))
         title.setStyleSheet("color: gold; padding: 4px;")
         title.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
         btn_min = QPushButton("—")
-        btn_close = QPushButton("✕")
+        btn_close = QPushButton("\u2715")
         for btn in (btn_min, btn_close):
             btn.setFont(QFont("noto sans", 12))
             btn.setFixedSize(30, 28)
@@ -90,15 +131,14 @@ class CypherGate(QWidget):
                 }
             """)
 
-        btn_min.clicked.connect(self.showMinimized)
-        btn_close.clicked.connect(self.close)
+        btn_min.clicked.connect(lambda: self.animated_exit("minimize"))
+        btn_close.clicked.connect(lambda: self.animated_exit("close"))
 
         title_bar_layout.addWidget(title)
         title_bar_layout.addStretch()
         title_bar_layout.addWidget(btn_min)
         title_bar_layout.addWidget(btn_close)
 
-        # Wrap the layout inside a QWidget
         title_bar_widget = QWidget()
         title_bar_widget.setStyleSheet("background-color: black;")
         title_bar_widget.setLayout(title_bar_layout)
@@ -122,57 +162,74 @@ class CypherGate(QWidget):
         layout.addWidget(self.table)
 
         btn_layout = QHBoxLayout()
-        self.refresh_btn = QPushButton("🔄 Refresh")
+        self.refresh_btn = QPushButton("\U0001F504 Refresh")
         self.refresh_btn.clicked.connect(self.load_servers)
         btn_layout.addWidget(self.refresh_btn)
 
-        self.connect_btn = QPushButton("🔗 Connect")
+        self.connect_btn = QPushButton("\U0001F517 Connect")
         self.connect_btn.clicked.connect(self.connect_vpn)
         btn_layout.addWidget(self.connect_btn)
 
-        self.auto_btn = QPushButton("🚀 Auto-Connect Fastest")
+        self.auto_btn = QPushButton("\U0001F680 Auto-Connect Fastest")
         self.auto_btn.clicked.connect(self.auto_connect_fastest)
         btn_layout.addWidget(self.auto_btn)
 
-        self.disconnect_btn = QPushButton("❌ Disconnect")
+        self.disconnect_btn = QPushButton("\u274C Disconnect")
         self.disconnect_btn.clicked.connect(self.disconnect_vpn)
         self.disconnect_btn.setEnabled(False)
         btn_layout.addWidget(self.disconnect_btn)
 
         layout.addLayout(btn_layout)
 
-        self.status_label = QLabel("🔓 Disconnected")
+        self.spinner = SpinnerWidget()
+        self.spinner.hide()
+        layout.addWidget(self.spinner, alignment=Qt.AlignCenter)
+
+        self.status_label = QLabel("\U0001F513 Disconnected")
         self.status_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.status_label)
 
         self.setLayout(layout)
         self.load_servers()
 
-        self.tray_icon = QSystemTrayIcon(QIcon("Assets/icon.ico"), self)
-        self.tray_icon.setToolTip("🌐 CypherGate VPN")
+        opacity_effect = QGraphicsOpacityEffect()
+        self.setGraphicsEffect(opacity_effect)
 
-        # Tray menu setup
+        fade_in = QPropertyAnimation(opacity_effect, b"opacity")
+        fade_in.setDuration(700)
+        fade_in.setStartValue(0)
+        fade_in.setEndValue(1)
+        fade_in.setEasingCurve(QEasingCurve.OutCubic)
+        fade_in.start()
+
+        self.tray_icon = QSystemTrayIcon(QIcon("Assets/icon.png"), self)
+        self.tray_icon.setToolTip("\U0001F310 CypherGate VPN")
+
         self.tray_menu = QMenu()
 
-        show_action = QAction("👁️ Show", self)
-        show_action.triggered.connect(self.show)
+        show_action = QAction("\U0001F441 Show", self)
+        show_action.triggered.connect(self.tray_restore)
         self.tray_menu.addAction(show_action)
 
-        connect_action = QAction("🔗 Connect", self)
+        connect_action = QAction("\U0001F517 Connect", self)
         connect_action.triggered.connect(self.connect_vpn)
         self.tray_menu.addAction(connect_action)
 
-        disconnect_action = QAction("❌ Disconnect", self)
+        disconnect_action = QAction("\u274C Disconnect", self)
         disconnect_action.triggered.connect(self.disconnect_vpn)
         self.tray_menu.addAction(disconnect_action)
 
-        exit_action = QAction("🚪 Exit", self)
+        exit_action = QAction("\U0001F6AA Exit", self)
         exit_action.triggered.connect(QApplication.quit)
         self.tray_menu.addAction(exit_action)
 
         self.tray_icon.setContextMenu(self.tray_menu)
         self.tray_icon.activated.connect(self.on_tray_icon_activated)
         self.tray_icon.show()
+
+#────────────────────────────────────────────────────────
+# Core VPN Logic
+#────────────────────────────────────────────────────────
 
     def load_allowed_countries(self):
         if os.path.exists(COUNTRIES_CONF):
@@ -239,14 +296,53 @@ class CypherGate(QWidget):
 
     def populate_table(self, servers):
         self.table.setRowCount(len(servers))
-        for i, (country, ping, speed, users, _) in enumerate(servers):
-            self.table.setItem(i, 0, QTableWidgetItem(country))
-            self.table.setItem(i, 1, QTableWidgetItem(ping))
-            self.table.setItem(i, 2, QTableWidgetItem(speed))
-            self.table.setItem(i, 3, QTableWidgetItem(users))
-        self.table.resizeColumnsToContents()
         self.filtered_servers = servers
 
+        for i, (country, ping, speed, users, _) in enumerate(servers):
+            row_data = [country, ping, speed, users]
+
+            for j, text in enumerate(row_data):
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(Qt.AlignCenter)
+                item.setForeground(QColor("gold"))
+                self.table.setItem(i, j, item)
+
+                cell_rect = self.table.visualItemRect(item)
+                start_rect = QRectF(
+                    cell_rect.center().x() - cell_rect.width() * 0.1,
+                    cell_rect.center().y() - cell_rect.height() * 0.1,
+                    cell_rect.width() * 0.2,
+                    cell_rect.height() * 0.2
+                ).toRect()
+
+                anim_label = QLabel(text, self.table.viewport())
+                anim_label.setStyleSheet("color: gold; font-family: monospace; background: transparent;")
+                anim_label.setAlignment(Qt.AlignCenter)
+                anim_label.setGeometry(start_rect)
+                anim_label.show()
+
+                effect = QGraphicsOpacityEffect(anim_label)
+                effect.setOpacity(0)
+                anim_label.setGraphicsEffect(effect)
+
+                fade_anim = QPropertyAnimation(effect, b"opacity", self)
+                fade_anim.setStartValue(0)
+                fade_anim.setEndValue(1)
+                fade_anim.setDuration(400)
+                fade_anim.setEasingCurve(QEasingCurve.OutCubic)
+
+                geo_anim = QPropertyAnimation(anim_label, b"geometry", self)
+                geo_anim.setStartValue(start_rect)
+                geo_anim.setEndValue(cell_rect)
+                geo_anim.setDuration(400)
+                geo_anim.setEasingCurve(QEasingCurve.OutBack)
+
+                delay = 100 * i + 50 * j
+                QTimer.singleShot(delay, lambda a=fade_anim: a.start())
+                QTimer.singleShot(delay, lambda a=geo_anim: a.start())
+                QTimer.singleShot(delay + 400, anim_label.deleteLater)
+
+        self.table.resizeColumnsToContents()
         if self.table.rowCount() > 0:
             self.table.selectRow(0)
 
@@ -283,7 +379,13 @@ class CypherGate(QWidget):
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
-            time.sleep(15)
+            self.start_spinner()
+            QApplication.processEvents()
+            start = time.time()
+            while time.time() - start < 15:
+                QApplication.processEvents()
+            self.stop_spinner(f"🔒 Connected to {country}")
+
             self.status_label.setText(f"🔒 Connected to {country}")
             self.connect_btn.setEnabled(False)
             self.disconnect_btn.setEnabled(True)
@@ -296,17 +398,17 @@ class CypherGate(QWidget):
             ip = requests.get("https://ipinfo.io/ip", timeout=10).text.strip()
         except:
             ip = "Unknown"
+        notification.notify(
+            title="CypherGate VPN Connected",
+            message=f"{country} | New IP: {ip}",
+            app_name="CypherGate"
+        )
         msg = (f"🌐 Connected to {country}\n"
                f"🏓 Ping: {ping}\n"
                f"🚀 Speed: {speed}\n"
                f"👥 Users: {users}\n"
                f"🔑 Your new IP: {ip}")
         QMessageBox.information(self, "VPN Connected", msg)
-        notification.notify(
-            title="CypherGate VPN Connected",
-            message=f"{country} | New IP: {ip}",
-            app_name="CypherGate"
-        )
 
     def disconnect_vpn(self):
         if self.vpn_process:
@@ -322,7 +424,9 @@ class CypherGate(QWidget):
                 message="VPN connection has been terminated.",
                 app_name="CypherGate"
             )
-
+#────────────────────────────────────────────────────────
+# Event Handlers
+#────────────────────────────────────────────────────────    
     def closeEvent(self, event):
         event.ignore()
         self.hide()
@@ -341,17 +445,109 @@ class CypherGate(QWidget):
             self.move(self.pos() + event.globalPosition().toPoint() - self.drag_pos)
             self.drag_pos = event.globalPosition().toPoint()
 
+    def changeEvent(self, event):
+        if event.type() == QEvent.WindowStateChange:
+            if self.isVisible() and not self.isMinimized():
+                if hasattr(self, "original_geometry"):
+                    self.animated_restore()
+        super().changeEvent(event)
+
+#────────────────────────────────────────────────────────
+# Animation Methods
+#────────────────────────────────────────────────────────
+
+    def animated_exit(self, action="close"):
+        self.effect = QGraphicsOpacityEffect(self)
+        self.setGraphicsEffect(self.effect)
+
+        self.fade = QPropertyAnimation(self.effect, b"opacity")
+        self.fade.setDuration(300)
+        self.fade.setStartValue(1)
+        self.fade.setEndValue(0)
+        self.fade.setEasingCurve(QEasingCurve.InOutQuad)
+
+        if action == "minimize":
+            self.geo = self.geometry()
+            self.shrink = QPropertyAnimation(self, b"geometry")
+            self.shrink.setDuration(300)
+            self.shrink.setStartValue(self.geo)
+            self.shrink.setEndValue(QRectF(self.geo.center(), QSize(1, 1)).toRect())
+            self.shrink.setEasingCurve(QEasingCurve.InOutCubic)
+
+            self.fade.start()
+            self.shrink.start()
+            self.fade.finished.connect(self.final_minimize)
+        elif action == "close":
+            self.fade.start()
+            self.fade.finished.connect(self.final_close)
+
     def on_tray_icon_activated(self, reason):
         if reason == QSystemTrayIcon.DoubleClick:
-            self.show()
+            if hasattr(self, "original_geometry"):
+                self.animated_restore()
+
+    def tray_restore(self):
+        self.setVisible(True)
+        self.showNormal()
+        self.raise_()
+        self.activateWindow()
+        self.setWindowOpacity(1)
+
+    def animated_restore(self):
+        self.setWindowOpacity(0)
+        self.show()
+
+        def start_animation():
+            if not hasattr(self, "original_geometry"):
+                self.original_geometry = self.geometry()
+
+            start_rect = QRectF(self.original_geometry.center(), QSize(10, 10)).toRect()
+            self.setGeometry(start_rect)
+
+            geo_anim = QPropertyAnimation(self, b"geometry", self)
+            geo_anim.setStartValue(start_rect)
+            geo_anim.setEndValue(self.original_geometry)
+            geo_anim.setDuration(400)
+            geo_anim.setEasingCurve(QEasingCurve.OutBack)
+
+            opacity_anim = QPropertyAnimation(self, b"windowOpacity", self)
+            opacity_anim.setStartValue(0)
+            opacity_anim.setEndValue(1)
+            opacity_anim.setDuration(400)
+            opacity_anim.setEasingCurve(QEasingCurve.InOutQuad)
+
+            geo_anim.start()
+            opacity_anim.start()
+
+        QTimer.singleShot(10, start_animation)
+
+    def start_spinner(self):
+        self.spinner.show()
+
+    def stop_spinner(self, final_status):
+        self.spinner.hide()
+        self.status_label.setText(final_status)
+    
+    def final_close(self):
+        self.close()
+
+    def final_minimize(self):
+        self.showMinimized()
+        self.setGraphicsEffect(None)     
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("Assets/icon.ico"))
+    app.setWindowIcon(QIcon("Assets/icon.png"))
     window = CypherGate()
     window.show()
+
+    # Center the window
     frame = window.frameGeometry()
     center_point = QApplication.primaryScreen().availableGeometry().center()
     frame.moveCenter(center_point)
     window.move(frame.topLeft())
+
+    # Save geometry after it's fully drawn
+    QTimer.singleShot(0, lambda: setattr(window, 'original_geometry', window.geometry()))
+
     sys.exit(app.exec())
