@@ -31,6 +31,8 @@ if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
         f.write("# Example:\nJapan\nUnited States\nIndia\nGermany")
 
+VERSION = "1.0.0"
+
 # ────────────────────────────────────────────────────────
 # Spinner Widget
 # ────────────────────────────────────────────────────────
@@ -226,6 +228,9 @@ class CypherGate(QWidget):
         self.tray_icon.setContextMenu(self.tray_menu)
         self.tray_icon.activated.connect(self.on_tray_icon_activated)
         self.tray_icon.show()
+        
+        #Check for updates
+        self.check_for_updates()
 
 #────────────────────────────────────────────────────────
 # Core VPN Logic
@@ -424,6 +429,26 @@ class CypherGate(QWidget):
                 message="VPN connection has been terminated.",
                 app_name="CypherGate"
             )
+
+#────────────────────────────────────────────────────────
+# Update Check
+#────────────────────────────────────────────────────────
+
+    def check_for_updates(self):
+        try:
+            response = requests.get("https://raw.githubusercontent.com/Cypher-Monarch/CypherGate/main/Versions/windows_version.txt", timeout=5)
+            latest_version = response.text.strip()
+            if latest_version != VERSION:
+                QMessageBox.information(
+                    self, "Update Available",
+                    f"A new version {latest_version} is available! Please update for the latest features and fixes."
+                )
+        except requests.RequestException as e:
+            QMessageBox.warning(
+                self, "Update Check Failed",
+                f"Could not check for updates: {e}\nYou can manually check on GitHub."
+            )
+
 #────────────────────────────────────────────────────────
 # Event Handlers
 #────────────────────────────────────────────────────────    
@@ -484,7 +509,7 @@ class CypherGate(QWidget):
     def on_tray_icon_activated(self, reason):
         if reason == QSystemTrayIcon.DoubleClick:
             if hasattr(self, "original_geometry"):
-                self.animated_restore()
+                self.tray_restore()
 
     def tray_restore(self):
         self.setVisible(True)
