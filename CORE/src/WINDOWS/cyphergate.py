@@ -18,10 +18,10 @@ from PySide6.QtGui import QIcon, QAction, QFont, QPainter, QColor, QPen
 from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QTimer, QRectF, QSize, QEvent
 import time
 import re
-import datetime
+from datetime import datetime
 
 API_URL = "http://www.vpngate.net/api/iphone/"
-VPN_ROOT=os.path.expanduser("~/.config/cyphergate")
+VPN_ROOT=os.path.expanduser("~\\.config\\cyphergate")
 VPN_DIR = os.path.expanduser(f"{VPN_ROOT}/servers")
 LOGS_DIR = os.path.join(VPN_ROOT, "logs")
 CACHE_FILE = os.path.join(f"{VPN_ROOT}/cache", "serverlist.csv")
@@ -47,11 +47,11 @@ class SpinnerWidget(QWidget):
         self.angle = 0
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.rotate)
-        self.timer.start(50)
+        self.timer.start(16)
         self.setFixedSize(40, 40)
 
     def rotate(self):
-        self.angle = (self.angle + 30) % 360
+        self.angle = (self.angle + 6) % 360
         self.update()
 
     def paintEvent(self, event):
@@ -85,27 +85,27 @@ class CypherGate(QWidget):
         self.setStyleSheet("""
             QWidget {
                 background-color: #000000;
-                color: #FFD700;
+                color: #E5C100;
                 font-family: 'monospace';
                 font-size: 14px;
             }
             QHeaderView::section {
-                background-color: #FFD700;
+                background-color: #E5C100;
                 color: #000000;
                 font-weight: bold;
             }
             QPushButton {
-                background-color: #FFD700;
+                background-color: #E5C100;
                 color: #000000;
                 border: none;
                 padding: 6px;
                 border-radius: 4px;
             }
             QPushButton:hover {
-                background-color: #e6c200;
+                background-color: #C9A227;
             }
             QTableWidget::item:selected {
-                background-color: #FFD700;
+                background-color: #E5C100;
                 color: #000000;
                 font-weight: bold;
             }
@@ -118,7 +118,7 @@ class CypherGate(QWidget):
 
         title = QLabel("\U0001F310 CypherGate VPN")
         title.setFont(QFont("monospace", 11))
-        title.setStyleSheet("color: gold; padding: 4px;")
+        title.setStyleSheet("color: #E5C100; padding: 4px;")
         title.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
         btn_min = QPushButton("—")
@@ -129,7 +129,7 @@ class CypherGate(QWidget):
             btn.setStyleSheet("""
                 QPushButton {
                     background-color: transparent;
-                    color: gold;
+                    color: #E5C100;
                     border: none;
                 }
                 QPushButton:hover {
@@ -146,7 +146,7 @@ class CypherGate(QWidget):
         title_bar_layout.addWidget(btn_close)
 
         title_bar_widget = QWidget()
-        title_bar_widget.setStyleSheet("background-color: black;")
+        title_bar_widget.setStyleSheet("background-color: #000000;")
         title_bar_widget.setLayout(title_bar_layout)
 
         layout.addWidget(title_bar_widget)
@@ -313,7 +313,7 @@ class CypherGate(QWidget):
             for j, text in enumerate(row_data):
                 item = QTableWidgetItem(text)
                 item.setTextAlignment(Qt.AlignCenter)
-                item.setForeground(QColor("gold"))
+                item.setForeground(QColor("#E5C100"))
                 self.table.setItem(i, j, item)
 
                 cell_rect = self.table.visualItemRect(item)
@@ -325,7 +325,7 @@ class CypherGate(QWidget):
                 ).toRect()
 
                 anim_label = QLabel(text, self.table.viewport())
-                anim_label.setStyleSheet("color: gold; font-family: monospace; background: transparent;")
+                anim_label.setStyleSheet("color: #E5C100; font-family: monospace; background: transparent;")
                 anim_label.setAlignment(Qt.AlignCenter)
                 anim_label.setGeometry(start_rect)
                 anim_label.show()
@@ -375,7 +375,7 @@ class CypherGate(QWidget):
 
         def server_supports_ipv6(host):
             try:
-                result = subprocess.run(["nslookup", "-query=AAAA", host], capture_output=True, text=True)
+                result = subprocess.run(["nslookup", "-query=AAAA", host], capture_output=True, text=True, creationflags=subprocess.CREATE_NO_WINDOW)
                 return "::" in result.stdout or "IPv6 address" in result.stdout
             except:
                 return False
@@ -403,14 +403,18 @@ class CypherGate(QWidget):
                 ]) + "\n"
         else:
             # Disable IPv6 temporarily to prevent DNS leaks
-            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "disabled"], shell=False)
+            subprocess.Popen(["netsh", "interface", "ipv6", "set", "state", "disabled"],
+                             stdout=subprocess.DEVNULL,
+                             stderr=subprocess.DEVNULL,
+                             creationflags=subprocess.CREATE_NO_WINDOW
+                             )
 
         with open(ovpn_path, "w") as f:
             f.write(config)
 
         try:            
-            log_file = os.path.join(LOGS_DIR, f"cyphergate_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.txt")
-            self.log_file_handle = open(log_file, "w")
+            self.log_file = os.path.join(LOGS_DIR, f"cyphergate_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt")
+            self.log_file_handle = open(self.log_file, "w")
             self.log_file_handle.write(f"\n\n===== VPN Session Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} =====\n")
 
             self.vpn_process = subprocess.Popen(
@@ -425,13 +429,6 @@ class CypherGate(QWidget):
             while time.time() - start < 15:
                 QApplication.processEvents()
             self.stop_spinner(f"🔒 Connected to {country}")
-
-            # Try to fetch current IPv6 (if any)
-            ipv6 = "Unavailable"
-            try:
-                ipv6 = requests.get("https://api64.ipify.org", timeout=10).text.strip()
-            except:
-                pass
 
             self.status_label.setText(f"🔒 Connected to {country}")
             self.connect_btn.setEnabled(False)
@@ -475,7 +472,11 @@ class CypherGate(QWidget):
             self.connect_btn.setEnabled(True)
             self.disconnect_btn.setEnabled(False)
             self.log_file_handle.close()
-            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "enabled"], shell=False)
+            subprocess.Popen(["netsh", "interface", "ipv6", "set", "state", "enabled"], 
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                            creationflags=subprocess.CREATE_NO_WINDOW
+                            )
             QMessageBox.information(self, "VPN Disconnected", "VPN connection has been terminated.")
             notification.notify(
                 title="CypherGate VPN Disconnected",
