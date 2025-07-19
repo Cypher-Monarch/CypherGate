@@ -18,15 +18,18 @@ from PySide6.QtGui import QIcon, QAction, QFont, QPainter, QColor, QPen
 from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QTimer, QRectF, QSize, QEvent
 import time
 import re
+import datetime
 
 API_URL = "http://www.vpngate.net/api/iphone/"
 VPN_ROOT=os.path.expanduser("~/.config/cyphergate")
 VPN_DIR = os.path.expanduser(f"{VPN_ROOT}/servers")
+LOGS_DIR = os.path.join(VPN_ROOT, "logs")
 CACHE_FILE = os.path.join(f"{VPN_ROOT}/cache", "serverlist.csv")
 COUNTRIES_CONF = os.path.join(f"{VPN_ROOT}","countries.conf")
 os.makedirs(VPN_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
 os.makedirs(os.path.dirname(COUNTRIES_CONF), exist_ok=True)
+os.makedirs(LOGS_DIR, exist_ok=True)
 
 if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
@@ -400,17 +403,21 @@ class CypherGate(QWidget):
                 ]) + "\n"
         else:
             # Disable IPv6 temporarily to prevent DNS leaks
-            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "disabled"], shell=True)
+            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "disabled"], shell=False)
 
         with open(ovpn_path, "w") as f:
             f.write(config)
 
-        try:
+        try:            
+            log_file = os.path.join(LOGS_DIR, f"cyphergate_{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.txt")
+            self.log_file_handle = open(log_file, "w")
+            self.log_file_handle.write(f"\n\n===== VPN Session Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} =====\n")
+
             self.vpn_process = subprocess.Popen(
                 [r"bin\openvpn.exe", "--config", ovpn_path],
                 creationflags=subprocess.CREATE_NO_WINDOW,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
+                stdout=self.log_file_handle,
+                stderr=self.log_file_handle
             )
             self.start_spinner()
             QApplication.processEvents()
@@ -426,29 +433,37 @@ class CypherGate(QWidget):
             except:
                 pass
 
-            self.status_label.setText(f"🔒 Connected to {country} | IPv6: {ipv6}")
+            self.status_label.setText(f"🔒 Connected to {country}")
             self.connect_btn.setEnabled(False)
             self.disconnect_btn.setEnabled(True)
             self.show_connection_info(country, ping, speed, users)
 
         except Exception as e:
             QMessageBox.critical(self, "Connection Failed", str(e))
+    
+        finally:
+            if self.log_file_handle and not self.log_file_handle.closed:
+                self.log_file_handle.close()
+
 
     def show_connection_info(self, country, ping, speed, users):
         try:
-            ip = requests.get("https://ipinfo.io/ip", timeout=10).text.strip()
+            ipv4 = requests.get("https://ipinfo.io/ip", timeout=10).text.strip()
+            ipv6 = requests.get("https://api64.ipify.org", timeout=10).text.strip()
         except:
-            ip = "Unknown"
+            ipv4 = "Unknown"
+            ipv6 = "Unknown"
         notification.notify(
             title="CypherGate VPN Connected",
-            message=f"{country} | New IP: {ip}",
+            message=f"{country} | New IPv4: {ipv4}",
             app_name="CypherGate"
         )
         msg = (f"🌐 Connected to {country}\n"
                f"🏓 Ping: {ping}\n"
                f"🚀 Speed: {speed}\n"
                f"👥 Users: {users}\n"
-               f"🔑 Your new IP: {ip}")
+               f"🔑 Your new IPv4: {ipv4}\n"
+               f"🔑 Your new IPv6: {ipv6}")
         QMessageBox.information(self, "VPN Connected", msg)
 
     def disconnect_vpn(self):
@@ -459,7 +474,8 @@ class CypherGate(QWidget):
             self.status_label.setText("🔓 Disconnected")
             self.connect_btn.setEnabled(True)
             self.disconnect_btn.setEnabled(False)
-            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "enabled"], shell=True)
+            self.log_file_handle.close()
+            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "enabled"], shell=False)
             QMessageBox.information(self, "VPN Disconnected", "VPN connection has been terminated.")
             notification.notify(
                 title="CypherGate VPN Disconnected",
