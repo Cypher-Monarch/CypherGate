@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QIcon, QAction, QFont, QPainter, QColor, QPen
 from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QTimer, QRectF, QSize, QEvent
 import time
+import re
 
 API_URL = "http://www.vpngate.net/api/iphone/"
 VPN_ROOT=os.path.expanduser("~/.config/cyphergate")
@@ -31,7 +32,7 @@ if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
         f.write("# Example:\nJapan\nUnited States\nIndia\nGermany")
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 # ────────────────────────────────────────────────────────
 # Spinner Widget
@@ -365,14 +366,41 @@ class CypherGate(QWidget):
         self.start_vpn_connection(self.filtered_servers[0])
 
     def start_vpn_connection(self, server):
+        def extract_remote_host(config):
+            match = re.search(r'^remote\s+([^\s]+)', config, re.MULTILINE)
+            return match.group(1) if match else None
+
+        def server_supports_ipv6(host):
+            try:
+                result = subprocess.run(["nslookup", "-query=AAAA", host], capture_output=True, text=True)
+                return "::" in result.stdout or "IPv6 address" in result.stdout
+            except:
+                return False
+
         country, ping, speed, users, config_b64 = server
         ovpn_path = os.path.join(VPN_DIR, f"{country}.ovpn")
 
         config = base64.b64decode(config_b64).decode(errors='ignore')
+
+        # Inject ciphers if missing
         if "data-ciphers" not in config:
             config += "\ndata-ciphers AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305:AES-128-CBC\n"
         if "cipher" not in config:
             config += "\ncipher AES-128-CBC\n"
+
+        # Handle IPv6 logic
+        host = extract_remote_host(config)
+        if host and server_supports_ipv6(host):
+            if "tun-ipv6" not in config:
+                config += "\n".join([
+                    "\n", "tun-ipv6",
+                    "push-peer-info",
+                    "redirect-gateway def1 ipv6",
+                    "route-ipv6 2000::/3 ::1"
+                ]) + "\n"
+        else:
+            # Disable IPv6 temporarily to prevent DNS leaks
+            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "disabled"], shell=True)
 
         with open(ovpn_path, "w") as f:
             f.write(config)
@@ -391,10 +419,18 @@ class CypherGate(QWidget):
                 QApplication.processEvents()
             self.stop_spinner(f"🔒 Connected to {country}")
 
-            self.status_label.setText(f"🔒 Connected to {country}")
+            # Try to fetch current IPv6 (if any)
+            ipv6 = "Unavailable"
+            try:
+                ipv6 = requests.get("https://api64.ipify.org", timeout=10).text.strip()
+            except:
+                pass
+
+            self.status_label.setText(f"🔒 Connected to {country} | IPv6: {ipv6}")
             self.connect_btn.setEnabled(False)
             self.disconnect_btn.setEnabled(True)
             self.show_connection_info(country, ping, speed, users)
+
         except Exception as e:
             QMessageBox.critical(self, "Connection Failed", str(e))
 
@@ -423,6 +459,7 @@ class CypherGate(QWidget):
             self.status_label.setText("🔓 Disconnected")
             self.connect_btn.setEnabled(True)
             self.disconnect_btn.setEnabled(False)
+            subprocess.run(["netsh", "interface", "ipv6", "set", "state", "enabled"], shell=True)
             QMessageBox.information(self, "VPN Disconnected", "VPN connection has been terminated.")
             notification.notify(
                 title="CypherGate VPN Disconnected",
