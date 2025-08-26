@@ -44,7 +44,7 @@ Born out of frustration with half-working configs — refined into something smo
 - `Bash`
 - `curl`
 - `base64`
-- `whiptail` *(for TUI)*
+- `whiptail`
 - `openvpn`
 - `notify-send`
 ---
