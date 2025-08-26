@@ -1,60 +1,89 @@
 # CypherGate
 
-**Autonomous VPN tunneling app. Fetches, patches, connects.**
+
+[![AUR](https://img.shields.io/aur/version/cyphergatevpn-bin?color=gold&label=AUR&logo=arch-linux)](https://aur.archlinux.org/packages/cyphergatevpn-bin)  [![GitHub release](https://img.shields.io/github/v/release/Cypher-Monarch/CypherGate?color=black&logo=github)](https://github.com/Cypher-Monarch/CypherGate/releases)  [![License](https://img.shields.io/github/license/Cypher-Monarch/CypherGate?color=gold)](LICENSE)  
+
+
+**CypherGate — an autonomous VPN tunneling client. Fetch. Patch. Connect.**  
 
 ---
 
-> _“I didn’t know how it worked. I just knew it would.”_
+> _“Anyone can hide. Few remain hidden.”_  
 
-CypherGate is a fully autonomous VPN tunneling app featuring:
-- Live VPN server fetching from [VPNGate](https://www.vpngate.net/en/)
-- Auto-patches broken OpenVPN configs (fixes cipher issues automagically)
-- Modern **Qt GUI** *(with system tray support, notifications, etc.)*
-- Minimalist terminal-based legacy TUI (for old-school vibes)
-- Auto-connect, manual connect, and fastest-server modes
-- Caches server lists for offline use
-- Logs every connection for your ~paranoia~ convenience
-- Desktop notifications for each step (both GUI & TUI)
+CypherGate takes the pain out of VPNGate. It fetches live OpenVPN servers, auto-repairs their broken configs, and connects you in seconds.  
+No manual fixes, no fiddling — just click, connect, and tunnel.  
 
-Born purely out of spite for broken configs and a desire to automate everything.
+What you get out of the box:  
+- 🌐 Live VPN server fetching from [VPNGate](https://www.vpngate.net/en/)  
+- 🛠️ Auto-patching of broken configs (ciphers fixed automatically)  
+- 🎨 Sleek gold-on-black **Qt GUI** with tray support & notifications  
+- 🖥️ Minimalist legacy **TUI** for terminal enjoyers  
+- 🚀 Auto-connect, manual select, or fastest-server mode  
+- 📦 Server cache for offline use  
+- 📝 Per-session connection logs (for your ~paranoia~ convenience)  
+- 🔔 Desktop notifications at every step  
 
----
-
-## ✨ Features
-- Automatic VPN server fetching (with fallback to local cache)
-- Config patching for modern OpenVPN compatibility  
-- Beautiful dark-themed **GUI** with tray controls  
-- Minimal, interactive **TUI** for quick terminal use  
-- Auto-patches AES ciphers for seamless connections  
-- Desktop notifications on connection status  
-- Connection logs stored for every session  
-- Fully offline-capable after first fetch
+Born out of frustration with half-working configs — refined into something smooth and automatic.  
 
 ---
 
-## ⚙️ Requirements
-- Bash
+## ✨ Features  
+- 🌐 Live server fetching (with offline cache fallback)  
+- 🛠️ Smart config patching for modern OpenVPN compatibility  
+- 🎨 Dark-themed GUI with animations and tray controls  
+- 🖥️ Simple TUI for quick, no-nonsense terminal use  
+- 🔑 Auto-injected AES/ChaCha20 ciphers  
+- 🔔 Real-time notifications on connect/disconnect  
+- 📝 Session logs saved automatically  
+- 📴 Fully functional even offline after first fetch  
+
+
+---
+
+## ⚙️ Requirements (TUI only): 
+- `Bash`
 - `curl`
 - `base64`
 - `whiptail` *(for TUI)*
 - `openvpn`
 - `notify-send`
-- Python 3.x *(bundled with release builds for GUI)*
-- `PySide6`, `plyer`, `requests` *(only for source builds)*
-
 ---
 
-## 📂 Configuration & Files
+## 📂 Configuration & Files:
 
 All config, cache, and logs are neatly stored under:
-```bash
+```
 ~/.config/cyphergate/
 ```
 
-## For installation on linux 
+## For installation on ARCH based Distros:
 ```
-wget https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGate-Linux-v1.0.1.zip
-unzip CypherGate-Linux-v1.0.0.zip
-cd CypherGate-Linux-v1.0.1
+yay -S cyphergatevpn-bin
+```
+
+## For installation on LINUX (general):
+
+```
+curl -L -o install.sh https://raw.githubusercontent.com/Cypher-Monarch/CypherGate/main/CORE/LINUX/QT_GUI/install.sh
+chmod +x install.sh
 sudo ./install.sh
 ```
+
+## 🪟 Windows:
+
+`Grab the latest release`
+
+- `CypherGateInstaller.exe` → Easy setup
+- `CypherGate.zip` → Portable build
+
+## 🖥️ Usage:
+
+- Linux GUI → run CypherGate VPN
+- Linux Legacy TUI → run cyphergate.sh
+- Windows → launch from Start Menu or run CypherGate.exe
+
+## Logs are stored under:
+
+- Linux → `~/.config/cyphergate/logs`
+- Windows → `%USERPROFILE%\.config\cyphergate\logs`
+
