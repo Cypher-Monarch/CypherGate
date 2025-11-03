@@ -64,17 +64,15 @@ yay -S cyphergatevpn-bin
 ## For installation on LINUX (general):
 
 ```
-curl -L -o install.sh https://raw.githubusercontent.com/Cypher-Monarch/CypherGate/main/CORE/LINUX/QT_GUI/install.sh
-chmod +x install.sh
-sudo ./install.sh
+wget -qO- https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/install.sh | sudo bash
 ```
 
 ## 🪟 Windows:
 
 `Grab the latest release`
 
-- `CypherGateInstaller.exe` → Easy setup
-- `CypherGate.zip` → Portable build
+- [CypherGateInstaller.exe](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGateInstaller-v1.0.1.exe) → Easy setup
+- [CypherGate.zip](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGate-Windows-v1.0.1.zip) → Portable build
 
 ## 🖥️ Usage:
 
