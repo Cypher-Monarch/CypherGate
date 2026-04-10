@@ -10,22 +10,51 @@ import csv
 import base64
 from plyer import notification
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem,
-    QPushButton, QLabel, QMessageBox, QHBoxLayout, QComboBox, QSystemTrayIcon,
-    QMenu, QSizePolicy, QGraphicsOpacityEffect
+    QApplication,
+    QWidget,
+    QVBoxLayout,
+    QTableWidget,
+    QTableWidgetItem,
+    QPushButton,
+    QLabel,
+    QMessageBox,
+    QHBoxLayout,
+    QComboBox,
+    QSystemTrayIcon,
+    QMenu,
+    QSizePolicy,
+    QGraphicsOpacityEffect,
 )
 from PySide6.QtGui import QIcon, QAction, QFont, QPainter, QColor, QPen
-from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QTimer, QRectF, QSize, QEvent
+from PySide6.QtCore import (
+    Qt,
+    QPropertyAnimation,
+    QEasingCurve,
+    QTimer,
+    QRectF,
+    QSize,
+    QEvent,
+    Signal,
+)
 import time
 import re
 from datetime import datetime
+import threading
+import socket
+import json
+
+
+# ────────────────────────────────────────────────────────
+# Paths and Constants
+# ────────────────────────────────────────────────────────
 
 API_URL = "http://www.vpngate.net/api/iphone/"
-VPN_ROOT=os.path.expanduser("~/.config/cyphergate")
+VPN_ROOT = os.path.expanduser("~/.config/cyphergate")
 VPN_DIR = os.path.expanduser(f"{VPN_ROOT}/servers")
 LOGS_DIR = os.path.join(VPN_ROOT, "logs")
 CACHE_FILE = os.path.join(f"{VPN_ROOT}/cache", "serverlist.csv")
-COUNTRIES_CONF = os.path.join(f"{VPN_ROOT}","countries.conf")
+COUNTRIES_CONF = os.path.join(f"{VPN_ROOT}", "countries.conf")
+SOCKET_PATH = "/tmp/cyphergate-root-handler.sock"
 os.makedirs(VPN_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
 os.makedirs(os.path.dirname(COUNTRIES_CONF), exist_ok=True)
@@ -35,14 +64,47 @@ if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
         f.write("# Example:\nJapan\nUnited States\nIndia\nGermany")
 
-if getattr(sys, 'frozen', False):
+if getattr(sys, "frozen", False):
     APP_DIR = os.path.dirname(sys.executable)
 else:
     APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
-ICON_PATH = os.path.join(APP_DIR,"Assets","icon.png")
+ROOT_HANDLER_PATH=os.path.join(APP_DIR, "root_handler.py")
+
+ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 
 VERSION = "1.0.1"
+
+# ────────────────────────────────────────────────────────
+# Helper Functions
+# ────────────────────────────────────────────────────────
+
+def ensure_root_handler():
+    if not os.path.exists(SOCKET_PATH):
+        subprocess.Popen(["pkexec", "python3", ROOT_HANDLER_PATH])
+
+    for _ in range(10):
+        if os.path.exists(SOCKET_PATH):
+            try:
+                sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                sock.connect(SOCKET_PATH)
+                sock.close()
+                return
+            except:
+                time.sleep(0.2)
+
+def send_root_command(cmd_dict):
+    for _ in range(5): 
+        try:
+            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            sock.connect(SOCKET_PATH)
+            sock.send(json.dumps(cmd_dict).encode())
+            sock.close()
+            return
+        except Exception:
+            time.sleep(0.2)
+
+    print("Root handler error: could not connect")
 
 # ────────────────────────────────────────────────────────
 # Spinner Widget
@@ -71,19 +133,25 @@ class SpinnerWidget(QWidget):
         painter.setPen(pen)
         painter.translate(center)
         painter.rotate(self.angle)
-        painter.drawArc(QRectF(-radius, -radius, 2*radius, 2*radius), 0, 120 * 16)
+        painter.drawArc(QRectF(-radius, -radius, 2 * radius, 2 * radius), 0, 120 * 16)
+
 
 # ────────────────────────────────────────────────────────
 # Main Application Class
 # ────────────────────────────────────────────────────────
 
+
 class CypherGate(QWidget):
+    data_loaded = Signal(str)
+
     def __init__(self):
         super().__init__()
 
-#────────────────────────────────────────────────────────
-#Initialization (Components and ui)
-#────────────────────────────────────────────────────────
+        self.data_loaded.connect(self.process_server_data)
+
+        # ────────────────────────────────────────────────────────
+        # Initialization (Components and ui)
+        # ────────────────────────────────────────────────────────
 
         self.setWindowFlag(Qt.FramelessWindowHint)
         self.setWindowTitle("CypherGate")
@@ -169,6 +237,8 @@ class CypherGate(QWidget):
         self.country_dropdown.currentTextChanged.connect(self.filter_servers)
         layout.addWidget(self.country_dropdown)
 
+        self.ensure_root_handler_async()
+
         self.table = QTableWidget()
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(["Country", "Ping", "Speed", "Users"])
@@ -178,7 +248,7 @@ class CypherGate(QWidget):
 
         btn_layout = QHBoxLayout()
         self.refresh_btn = QPushButton("🔄 Refresh")
-        self.refresh_btn.clicked.connect(self.load_servers)
+        self.refresh_btn.clicked.connect(self.refresh_servers)
         btn_layout.addWidget(self.refresh_btn)
 
         self.connect_btn = QPushButton("🔗 Connect")
@@ -205,7 +275,14 @@ class CypherGate(QWidget):
         layout.addWidget(self.status_label)
 
         self.setLayout(layout)
-        self.load_servers()
+
+        self.spinner.show()
+        self.status_label.setText("🌐 Fetching servers...")
+
+        self.connect_btn.setEnabled(False)
+        self.refresh_btn.setEnabled(False)
+
+        self.load_servers_async()
 
         self.tray_icon = QSystemTrayIcon(QIcon(ICON_PATH), self)
         self.tray_icon.setToolTip("🌐 CypherGate VPN")
@@ -234,9 +311,9 @@ class CypherGate(QWidget):
         self.tray_icon.show()
         self.check_for_updates()
 
-#────────────────────────────────────────────────────────
-# Core VPN Logic
-#────────────────────────────────────────────────────────
+    # ────────────────────────────────────────────────────────
+    # Core VPN Logic
+    # ────────────────────────────────────────────────────────
 
     def load_allowed_countries(self):
         if os.path.exists(COUNTRIES_CONF):
@@ -244,24 +321,13 @@ class CypherGate(QWidget):
                 return [line.strip() for line in f if line.strip()]
         return None  # No filter if config missing
 
-    def load_servers(self):
-        try:
-            response = requests.get(API_URL, timeout=30)
-            response.raise_for_status()
-            data = response.text
-            
-            with open(CACHE_FILE, "w", encoding="utf-8") as f:
-                f.write(data)
+    def ensure_root_handler_async(self):
+        def task():
+            ensure_root_handler()
+        threading.Thread(target=task, daemon=True).start()
 
-        except Exception as e:
-            if os.path.exists(CACHE_FILE):
-                with open(CACHE_FILE, "r", encoding="utf-8") as f:
-                    data = f.read()
-                QMessageBox.warning(self, "Offline Mode", "Failed to fetch VPN servers online. Loaded from cache.")
-            else:
-                QMessageBox.critical(self, "Error", f"Failed to fetch VPN servers and no cache found:\n{e}")
-                return
-
+    def process_server_data(self, data):
+        print("Processing server data")
         lines = data.splitlines()[2:]
         reader = csv.reader(lines)
         servers = []
@@ -289,6 +355,40 @@ class CypherGate(QWidget):
         if countries:
             self.filter_servers(self.country_dropdown.currentText())
 
+        self.spinner.hide()
+        self.status_label.setText("🔓 Disconnected")
+
+        self.connect_btn.setEnabled(True)
+        self.refresh_btn.setEnabled(True)
+
+    def load_servers_async(self):
+        def task():
+            try:
+                response = requests.get(API_URL, timeout=30)
+                response.raise_for_status()
+                data = response.text
+                with open(CACHE_FILE, "w", encoding="utf-8") as f:
+                    f.write(data)
+
+            except Exception as e:
+                if os.path.exists(CACHE_FILE):
+                    with open(CACHE_FILE, "r", encoding="utf-8") as f:
+                        data = f.read()
+                else:
+                    QTimer.singleShot(
+                        0,
+                        lambda: QMessageBox.critical(
+                            self,
+                            "Error",
+                            f"Failed to fetch VPN servers and no cache found:\n{e}",
+                        ),
+                    )
+                    return
+
+            self.data_loaded.emit(data)
+
+        threading.Thread(target=task, daemon=True).start()
+
     def filter_servers(self, country):
         filtered = [s for s in self.all_servers if s[0] == country]
 
@@ -296,7 +396,7 @@ class CypherGate(QWidget):
             try:
                 return int(ping_str.split()[0])
             except ValueError:
-                return float('inf')
+                return float("inf")
 
         filtered.sort(key=lambda s: parse_ping(s[1]))
         self.populate_table(filtered)
@@ -319,11 +419,13 @@ class CypherGate(QWidget):
                     cell_rect.center().x() - cell_rect.width() * 0.1,
                     cell_rect.center().y() - cell_rect.height() * 0.1,
                     cell_rect.width() * 0.2,
-                    cell_rect.height() * 0.2
+                    cell_rect.height() * 0.2,
                 ).toRect()
 
                 anim_label = QLabel(text, self.table.viewport())
-                anim_label.setStyleSheet("color: #E5C100; font-family: monospace; background: transparent;")
+                anim_label.setStyleSheet(
+                    "color: #E5C100; font-family: monospace; background: transparent;"
+                )
                 anim_label.setAlignment(Qt.AlignCenter)
                 anim_label.setGeometry(start_rect)
                 anim_label.show()
@@ -362,20 +464,21 @@ class CypherGate(QWidget):
 
     def auto_connect_fastest(self):
         if not self.filtered_servers:
-            QMessageBox.warning(self, "No Servers", "No servers available to auto-connect.")
+            QMessageBox.warning(
+                self, "No Servers", "No servers available to auto-connect."
+            )
             return
         self.start_vpn_connection(self.filtered_servers[0])
 
     def start_vpn_connection(self, server):
         def extract_remote_host(config):
-            match = re.search(r'^remote\s+([^\s]+)', config, re.MULTILINE)
+            match = re.search(r"^remote\s+([^\s]+)", config, re.MULTILINE)
             return match.group(1) if match else None
 
         def server_supports_ipv6(host):
             try:
                 result = subprocess.run(
-                    ["dig", "AAAA", host, "+short"],
-                    capture_output=True, text=True
+                    ["dig", "AAAA", host, "+short"], capture_output=True, text=True
                 )
                 return bool(result.stdout.strip())
             except:
@@ -384,11 +487,13 @@ class CypherGate(QWidget):
         country, ping, speed, users, config_b64 = server
         ovpn_path = os.path.join(VPN_DIR, f"{country}.ovpn")
 
-        config = base64.b64decode(config_b64).decode(errors='ignore')
+        config = base64.b64decode(config_b64).decode(errors="ignore")
 
         # Inject cipher settings if missing
         if "data-ciphers" not in config:
-            config += "\ndata-ciphers AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305:AES-128-CBC\n"
+            config += (
+                "\ndata-ciphers AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305:AES-128-CBC\n"
+            )
         if "cipher" not in config:
             config += "\ncipher AES-128-CBC\n"
 
@@ -396,76 +501,113 @@ class CypherGate(QWidget):
         host = extract_remote_host(config)
         if host and server_supports_ipv6(host):
             if "tun-ipv6" not in config:
-                config += "\n".join([
-                    "\n", "tun-ipv6",
-                    "push-peer-info",
-                    "redirect-gateway def1 ipv6",
-                    "route-ipv6 2000::/3 ::1"
-                ]) + "\n"
+                config += (
+                    "\n".join(
+                        [
+                            "\n",
+                            "tun-ipv6",
+                            "push-peer-info",
+                            "redirect-gateway def1 ipv6",
+                            "route-ipv6 2000::/3 ::1",
+                        ]
+                    )
+                    + "\n"
+                )
         else:
-            # Disable IPv6 temporarily using pkexec
-            subprocess.Popen(
-                ["pkexec", "sysctl", "-w", "net.ipv6.conf.all.disable_ipv6=1"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+            self.ensure_root_handler_async()
+            send_root_command({
+                "action": "DISABLE_IPV6"
+            })
 
         # Save the updated config
         with open(ovpn_path, "w") as f:
             f.write(config)
 
         try:
-            self.log_file = os.path.join(LOGS_DIR, f"cyphergate_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt")
-            self.log_file_handle = open(self.log_file, "w")
-            self.log_file_handle.write(f"\n\n===== VPN Session Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} =====\n")
-            self.vpn_process = subprocess.Popen(
-                ["pkexec", "openvpn", "--config", ovpn_path],
-                stdout=self.log_file_handle,
-                stderr=self.log_file_handle,
+            self.log_file = os.path.join(
+                LOGS_DIR,
+                f"cyphergate_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt",
             )
-
-            self.start_spinner()
-            QApplication.processEvents()
-            start = time.time()
-            while time.time() - start < 15:
-                QApplication.processEvents()
-            self.stop_spinner(f"🔒 Connected to {country}")
-
-            self.status_label.setText(f"🔒 Connected to {country}")
+            self.log_file_handle = open(self.log_file, "w")
+            self.log_file_handle.write(
+                f"\n\n===== VPN Session Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} =====\n"
+            )
+            send_root_command({
+                "action":"START_VPN",
+                "config":ovpn_path,
+                "log_file": self.log_file
+            })
             self.connect_btn.setEnabled(False)
-            self.disconnect_btn.setEnabled(True)
-            self.show_connection_info(country, ping, speed, users)
-
+            self.refresh_btn.setEnabled(False)
+            self.start_spinner()
+            self.status_label.setText('Connection in progress...')
+            
+            # start watcher timer
+            self.watch_timer = QTimer()
+            self.watch_timer.timeout.connect(
+                lambda: self.check_vpn_status(country, ping, speed, users)
+            )
+            self.watch_timer.start(500)
         except Exception as e:
             QMessageBox.critical(self, "Connection Failed", str(e))
-        
-        finally: 
+
+        finally:
             if self.log_file_handle and not self.log_file_handle.closed:
                 self.log_file_handle.close()
+
+    def check_vpn_status(self, country, ping, speed, users):
+        try:
+            with open(self.log_file, "r") as f:
+                content = f.read()
+
+            if "Initialization Sequence Completed" in content:
+                self.watch_timer.stop()
+
+                self.stop_spinner(f"🔒 Connected to {country}")
+
+                self.status_label.setText(f"🔒 Connected to {country}")
+                self.connect_btn.setEnabled(False)
+                self.disconnect_btn.setEnabled(True)
+
+                self.show_connection_info(country, ping, speed, users)
+
+        except:
+            pass
+
+    def refresh_servers(self):
+        self.spinner.show()
+        self.status_label.setText("🔄 Refreshing servers...")
+        self.connect_btn.setEnabled(False)
+        self.refresh_btn.setEnabled(False)
+        self.load_servers_async()
 
     def show_connection_info(self, country, ping, speed, users):
         try:
             ipv4 = requests.get("https://ipinfo.io/ip", timeout=10).text.strip()
-            ipv6 = requests.get("https://api64.ipify.org", timeout=10).text.strip()
         except:
             ipv4 = "Unknown"
-            ipv6 = "Unknown"
         notification.notify(
             title="CypherGate VPN Connected",
             message=f"{country} | New IPv4: {ipv4}",
-            app_name="CypherGate"
+            app_name="CypherGate",
         )
-        msg = (f"🌐 Connected to {country}\n"
-               f"🏓 Ping: {ping}\n"
-               f"🚀 Speed: {speed}\n"
-               f"👥 Users: {users}\n"
-               f"🔑 Your new IPv4: {ipv4}\n"
-               f"🔑 Your new IPv6: {ipv6}")
+        msg = (
+            f"🌐 Connected to {country}\n"
+            f"🏓 Ping: {ping}\n"
+            f"🚀 Speed: {speed}\n"
+            f"👥 Users: {users}\n"
+            f"🔑 Your new IPv4: {ipv4}\n"
+        )
         QMessageBox.information(self, "VPN Connected", msg)
 
     def disconnect_vpn(self):
-        if self.vpn_process:
-            subprocess.run(["pkexec", "kill", str(self.vpn_process.pid)])
+        if True:
+            if hasattr(self, "watch_timer"):
+                self.watch_timer.stop()
+            self.ensure_root_handler_async()
+            send_root_command({
+                "action": "STOP_VPN"
+            })
             self.vpn_process = None
 
             self.status_label.setText("🔓 Disconnected")
@@ -475,42 +617,46 @@ class CypherGate(QWidget):
             if self.log_file_handle and not self.log_file_handle.closed:
                 self.log_file_handle.close()
 
-            # Re-enable IPv6 using pkexec
-            subprocess.Popen(
-                ["pkexec", "sysctl", "-w", "net.ipv6.conf.all.disable_ipv6=0"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
+            send_root_command({
+                "action": "ENABLE_IPV6"
+            })
+            QMessageBox.information(
+                self, "VPN Disconnected", "VPN connection has been terminated."
             )
-
-            QMessageBox.information(self, "VPN Disconnected", "VPN connection has been terminated.")
 
             notification.notify(
                 title="CypherGate VPN Disconnected",
                 message="VPN connection has been terminated.",
-                app_name="CypherGate"
+                app_name="CypherGate",
             )
-#────────────────────────────────────────────────────────
-# Update Check
-#────────────────────────────────────────────────────────
+
+    # ────────────────────────────────────────────────────────
+    # Update Check
+    # ────────────────────────────────────────────────────────
 
     def check_for_updates(self):
         try:
-            response = requests.get("https://raw.githubusercontent.com/Cypher-Monarch/CypherGate/main/Versions/linux_version.txt", timeout=5)
+            response = requests.get(
+                "https://raw.githubusercontent.com/Cypher-Monarch/CypherGate/main/Versions/linux_version.txt",
+                timeout=5,
+            )
             latest_version = response.text.strip()
             if latest_version != VERSION:
                 QMessageBox.information(
-                    self, "Update Available",
-                    f"A new version {latest_version} is available! Please update for the latest features and fixes."
+                    self,
+                    "Update Available",
+                    f"A new version {latest_version} is available! Please update for the latest features and fixes.",
                 )
         except requests.RequestException as e:
             QMessageBox.warning(
-                self, "Update Check Failed",
-                f"Could not check for updates: {e}\nYou can manually check on GitHub."
+                self,
+                "Update Check Failed",
+                f"Could not check for updates: {e}\nYou can manually check on GitHub.",
             )
 
-#────────────────────────────────────────────────────────
-# Event Handlers
-#────────────────────────────────────────────────────────    
+    # ────────────────────────────────────────────────────────
+    # Event Handlers
+    # ────────────────────────────────────────────────────────
 
     def closeEvent(self, event):
         event.ignore()
@@ -519,8 +665,9 @@ class CypherGate(QWidget):
             "CypherGate",
             "App minimized to tray. Double-click to restore.",
             QSystemTrayIcon.Information,
-            2000
+            2000,
         )
+
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.drag_pos = event.globalPosition().toPoint()
@@ -530,13 +677,9 @@ class CypherGate(QWidget):
             self.move(self.pos() + event.globalPosition().toPoint() - self.drag_pos)
             self.drag_pos = event.globalPosition().toPoint()
 
-    def on_tray_icon_activated(self, reason):
-        if reason == QSystemTrayIcon.DoubleClick:
-            self.show()
-
-#────────────────────────────────────────────────────────
-# Animation Methods
-#────────────────────────────────────────────────────────
+    # ────────────────────────────────────────────────────────
+    # Animation Methods
+    # ────────────────────────────────────────────────────────
 
     def animated_exit(self, action="close"):
         self.effect = QGraphicsOpacityEffect(self)
@@ -609,13 +752,14 @@ class CypherGate(QWidget):
     def stop_spinner(self, final_status):
         self.spinner.hide()
         self.status_label.setText(final_status)
-    
+
     def final_close(self):
         self.close()
 
     def final_minimize(self):
         self.showMinimized()
-        self.setGraphicsEffect(None)     
+        self.setGraphicsEffect(None)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -630,6 +774,8 @@ if __name__ == "__main__":
     window.move(frame.topLeft())
 
     # Save geometry after it's fully drawn
-    QTimer.singleShot(0, lambda: setattr(window, 'original_geometry', window.geometry()))
+    QTimer.singleShot(
+        0, lambda: setattr(window, "original_geometry", window.geometry())
+    )
 
     sys.exit(app.exec())
