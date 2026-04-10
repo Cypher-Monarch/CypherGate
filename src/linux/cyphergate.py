@@ -69,19 +69,21 @@ if getattr(sys, "frozen", False):
 else:
     APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
-ROOT_HANDLER_PATH=os.path.join(APP_DIR, "root_handler.py")
+ROOT_HANDLER_PATH = "/opt/CypherGate/cyphergated"
 
 ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 
-VERSION = "1.0.1"
+VERSION = "2.0.0"
 
 # ────────────────────────────────────────────────────────
 # Helper Functions
 # ────────────────────────────────────────────────────────
 
+
 def ensure_root_handler():
     if not os.path.exists(SOCKET_PATH):
-        subprocess.Popen(["pkexec", "python3", ROOT_HANDLER_PATH])
+        subprocess.Popen(["pkexec", ROOT_HANDLER_PATH])
+        print("Using ROOT_HANDLER_PATH at:", ROOT_HANDLER_PATH)
 
     for _ in range(10):
         if os.path.exists(SOCKET_PATH):
@@ -93,8 +95,9 @@ def ensure_root_handler():
             except:
                 time.sleep(0.2)
 
+
 def send_root_command(cmd_dict):
-    for _ in range(5): 
+    for _ in range(5):
         try:
             sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             sock.connect(SOCKET_PATH)
@@ -106,9 +109,11 @@ def send_root_command(cmd_dict):
 
     print("Root handler error: could not connect")
 
+
 # ────────────────────────────────────────────────────────
 # Spinner Widget
 # ────────────────────────────────────────────────────────
+
 
 class SpinnerWidget(QWidget):
     def __init__(self, parent=None):
@@ -324,6 +329,7 @@ class CypherGate(QWidget):
     def ensure_root_handler_async(self):
         def task():
             ensure_root_handler()
+
         threading.Thread(target=task, daemon=True).start()
 
     def process_server_data(self, data):
@@ -515,9 +521,7 @@ class CypherGate(QWidget):
                 )
         else:
             self.ensure_root_handler_async()
-            send_root_command({
-                "action": "DISABLE_IPV6"
-            })
+            send_root_command({"action": "DISABLE_IPV6"})
 
         # Save the updated config
         with open(ovpn_path, "w") as f:
@@ -532,16 +536,14 @@ class CypherGate(QWidget):
             self.log_file_handle.write(
                 f"\n\n===== VPN Session Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} =====\n"
             )
-            send_root_command({
-                "action":"START_VPN",
-                "config":ovpn_path,
-                "log_file": self.log_file
-            })
+            send_root_command(
+                {"action": "START_VPN", "config": ovpn_path, "log_file": self.log_file}
+            )
             self.connect_btn.setEnabled(False)
             self.refresh_btn.setEnabled(False)
             self.start_spinner()
-            self.status_label.setText('Connection in progress...')
-            
+            self.status_label.setText("Connection in progress...")
+
             # start watcher timer
             self.watch_timer = QTimer()
             self.watch_timer.timeout.connect(
@@ -605,9 +607,7 @@ class CypherGate(QWidget):
             if hasattr(self, "watch_timer"):
                 self.watch_timer.stop()
             self.ensure_root_handler_async()
-            send_root_command({
-                "action": "STOP_VPN"
-            })
+            send_root_command({"action": "STOP_VPN"})
             self.vpn_process = None
 
             self.status_label.setText("🔓 Disconnected")
@@ -617,9 +617,7 @@ class CypherGate(QWidget):
             if self.log_file_handle and not self.log_file_handle.closed:
                 self.log_file_handle.close()
 
-            send_root_command({
-                "action": "ENABLE_IPV6"
-            })
+            send_root_command({"action": "ENABLE_IPV6"})
             QMessageBox.information(
                 self, "VPN Disconnected", "VPN connection has been terminated."
             )
