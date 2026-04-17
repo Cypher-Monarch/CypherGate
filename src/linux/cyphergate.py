@@ -613,6 +613,7 @@ class CypherGate(QWidget):
             self.status_label.setText("🔓 Disconnected")
             self.connect_btn.setEnabled(True)
             self.disconnect_btn.setEnabled(False)
+            self.refresh_btn.setEnabled(True)
 
             if self.log_file_handle and not self.log_file_handle.closed:
                 self.log_file_handle.close()
