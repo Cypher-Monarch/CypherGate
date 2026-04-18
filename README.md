@@ -25,15 +25,10 @@ So yeah:
 
 ---
 
-## 🖼️ Screenshots
+## 🎬 Showcase
 
 <p align="center">
-  <img src="./Assets/SC1.jpg" width="45%" />
-  <img src="./Assets/SC2.jpg" width="45%" />
-</p>
-<p align="center">
-  <img src="./Assets/SC3.jpg" width="45%" />
-  <img src="./Assets/SC4.jpg" width="45%" />
+  <video src="./Assets/showcase.mp4" width="45%" controls></video>
 </p>
 
 ---
@@ -111,7 +106,7 @@ wget -qO- https://github.com/Cypher-Monarch/CypherGate/releases/download/v2.0.0/
 
 ---
 
-### Windows
+### Windows (For the "Where is my .exe?" people)
 
 * Installer → [Here you go](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGateInstaller-v1.0.1.exe)
 * Portable → [There you go](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGate-Windows-v1.0.1.zip)
