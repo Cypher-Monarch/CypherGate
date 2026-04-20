@@ -27,9 +27,7 @@ So yeah:
 
 ## 🎬 Showcase
 
-<p align="center">
-  <video src="./Assets/showcase.mp4" width="45%" controls></video>
-</p>
+[Showcase.mp4](https://github.com/user-attachments/assets/145af112-a414-499f-906b-b6e549b969e3)
 
 ---
 
