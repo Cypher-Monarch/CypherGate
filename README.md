@@ -99,7 +99,7 @@ yay -S cyphergatevpn-bin
 ### Linux (general)
 
 ```bash
-wget -qO- https://github.com/Cypher-Monarch/CypherGate/releases/download/v2.0.0/install.sh | sudo bash
+curl -fsSL https://github.com/Cypher-Monarch/CypherGate/releases/download/v2.0.0/install.sh | sudo bash
 ```
 
 ---
@@ -108,6 +108,8 @@ wget -qO- https://github.com/Cypher-Monarch/CypherGate/releases/download/v2.0.0/
 
 * Installer → [Here you go](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGateInstaller-v1.0.1.exe)
 * Portable → [There you go](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGate-Windows-v1.0.1.zip)
+
+#### AS OF v1.0.1 Development of the windows version is discontinued
 
 ---
 
