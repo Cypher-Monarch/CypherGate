@@ -5,3 +5,4 @@ Releases/
 cyphergate.elf
 .gitignore
 pyrightconfig.json
+**/__pycache__/

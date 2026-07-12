@@ -47,7 +47,7 @@ while True:
             vpn_process = subprocess.Popen(
                 ["/usr/bin/openvpn", "--config", config],
                 stdout=vpn_log_handle,
-                stderr=subprocess.STDOUT
+                stderr=subprocess.STDOUT,
             )
 
         elif cmd["action"] == "STOP_VPN":
@@ -67,7 +67,7 @@ while True:
             subprocess.run(
                 ["sysctl", "-w", "net.ipv6.conf.all.disable_ipv6=1"],
                 stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
+                stderr=subprocess.DEVNULL,
             )
 
         elif cmd["action"] == "ENABLE_IPV6":
@@ -75,7 +75,7 @@ while True:
             subprocess.run(
                 ["sysctl", "-w", "net.ipv6.conf.all.disable_ipv6=0"],
                 stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL
+                stderr=subprocess.DEVNULL,
             )
 
     except Exception as e:
