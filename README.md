@@ -86,10 +86,16 @@ Logs:
 
 ---
 
-## 📦 Installation
+## 📦 Installation (All official releases since v2.0.1 are cryptographically signed with GnuPG)
 
-### Arch
+### AUR
 
+1. **FIRST TIME ONLY** - Import CypherGate release signing keys with: 
+```bash
+gpg --keyserver hkps://keys.openpgp.org \
+    --recv-keys 9ED87F6065033606670941AAC6C9B498797C980E
+```
+2. Use your favourite AUR helper to install `cyphergatevpn-bin`!
 ```bash
 yay -S cyphergatevpn-bin
 ```
@@ -99,7 +105,7 @@ yay -S cyphergatevpn-bin
 ### Linux (general)
 
 ```bash
-curl -fsSL https://github.com/Cypher-Monarch/CypherGate/releases/download/v2.0.0/install.sh | sudo bash
+curl -fsSL https://github.com/Cypher-Monarch/CypherGate/releases/latest/download/install.sh | sudo bash
 ```
 
 ---
