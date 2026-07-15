@@ -11,7 +11,7 @@
 > *“Anyone can hide. Few remain hidden.”*
 
 I made this because VPNGate configs are… let’s just say
-**not exactly plug-and-play** 💀
+**not exactly plug-and-play** 
 
 CypherGate:
 
@@ -33,18 +33,18 @@ So yeah:
 
 ## ⚡ What it does (without the marketing talk)
 
-* 🌐 grabs live VPNGate servers
-* 🛠️ auto-fixes configs that shouldn’t have been broken in the first place
-* 🎨 runs a gold-on-black Qt GUI (yes it’s opinionated, no I won’t apologize)
-* 🖥️ also has a TUI if you live in the terminal
-* 🚀 lets you:
+* grabs live VPNGate servers
+* auto-fixes configs that shouldn’t have been broken in the first place
+* runs a gold-on-black Qt GUI (yes it’s opinionated, no I won’t apologize)
+* also has a TUI if you live in the terminal
+* lets you:
 
   * auto-connect
   * pick manually
   * or just go “fastest server pls”
-* 📦 caches servers so you’re not stuck when offline
-* 📝 logs everything (for your ~paranoia~ curiosity)
-* 🔔 sends notifications so you know what’s going on
+* caches servers so you’re not stuck when offline
+* logs everything (for your ~paranoia~ curiosity)
+* sends notifications so you know what’s going on
 
 ---
 
@@ -137,3 +137,9 @@ If you like that:
 If not:
 
 > well… at least it fixes your configs 😭
+
+---
+## License
+
+CypherGate is licensed under the GNU General Public License v3.0 (GPL-3.0).
+See the [LICENSE](https://github.com/Cypher-Monarch/CypherGate/blob/main/LICENSE) file for details.
