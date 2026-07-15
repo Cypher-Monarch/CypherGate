@@ -34,7 +34,13 @@ def setup_layout(window):
 
     layout.addLayout(btn_layout)
 
-    layout.addWidget(window.spinner, alignment=Qt.AlignCenter)
+    spinner_layout = QHBoxLayout()
+
+    spinner_layout.addWidget(window.spinner, alignment=Qt.AlignCenter)
+    spinner_layout.addWidget(window.cancel_button, alignment=Qt.AlignCenter)
+
+    layout.addLayout(spinner_layout)
+
     layout.addWidget(window.status_label)
 
     window.setLayout(layout)

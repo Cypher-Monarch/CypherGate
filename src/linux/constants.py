@@ -4,12 +4,15 @@ import sys
 API_URL = "http://www.vpngate.net/api/iphone/"
 
 VPN_ROOT = os.path.expanduser("~/.config/cyphergate")
-VPN_DIR = os.path.expanduser(f"{VPN_ROOT}/servers")
+VPN_DIR = os.path.join(f"{VPN_ROOT}/servers")
 LOGS_DIR = os.path.join(VPN_ROOT, "logs")
 CACHE_FILE = os.path.join(f"{VPN_ROOT}/cache", "serverlist.csv")
 COUNTRIES_CONF = os.path.join(VPN_ROOT, "countries.conf")
 
-SOCKET_PATH = "/tmp/cyphergate-root-handler.sock"
+CONNECTION_TIMEOUT = 15
+
+SOCKET_DIR = "/run/cyphergate"
+SOCKET_PATH = f"{SOCKET_DIR}/cyphergated.sock"
 
 os.makedirs(VPN_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
@@ -29,7 +32,13 @@ else:
     APP_DIR = os.path.dirname(os.path.abspath(__file__))
     ROOT_HANDLER_PATH = os.path.join(APP_DIR, "cyphergated.py")
 
+ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
+
+ICON_SIZE = 20
+ICON_COLOR = "#0F0F0F"
+CANCEL_ICON_COLOR = "#FFD700"
+SYSTRAY_ICON_COLOR = "#FFD700"
 
 ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"

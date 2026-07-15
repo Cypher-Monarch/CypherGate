@@ -6,3 +6,4 @@ cyphergate.elf
 .gitignore
 pyrightconfig.json
 **/__pycache__/
+**/Assets/

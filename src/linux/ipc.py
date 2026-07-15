@@ -12,7 +12,7 @@ from constants import ROOT_HANDLER_PATH, SOCKET_PATH
 
 def ensure_root_handler():
     if not os.path.exists(SOCKET_PATH):
-        subprocess.Popen(["pkexec", "python", ROOT_HANDLER_PATH])
+        subprocess.Popen(["pkexec", ROOT_HANDLER_PATH])
         print("Using ROOT_HANDLER_PATH at:", ROOT_HANDLER_PATH)
 
     for _ in range(10):
@@ -37,4 +37,4 @@ def send_root_command(cmd_dict):
         except Exception:
             time.sleep(0.2)
 
-    print("Root handler error: could not connect")
+    print("Root handler error: could not connect", flush=True)
