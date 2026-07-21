@@ -27,7 +27,7 @@ So yeah:
 
 ## 🎬 Showcase
 
-[Showcase.mp4](https://github.com/user-attachments/assets/145af112-a414-499f-906b-b6e549b969e3)
+[Showcase.mp4](https://github.com/user-attachments/assets/5f362c0a-4c95-4375-a177-99b25eb1fc27)
 
 ---
 
