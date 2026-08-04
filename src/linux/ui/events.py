@@ -12,17 +12,17 @@ def closeEvent(self, event):
     self.tray_icon.showMessage(
         "CypherGate",
         "App minimized to tray. Double-click to restore.",
-        QSystemTrayIcon.Information,
+        QSystemTrayIcon.MessageIcon.Information,
         2000,
     )
 
 
 def mousePressEvent(self, event):
-    if event.button() == Qt.LeftButton:
+    if event.button() == Qt.MouseButton.LeftButton:
         self.drag_pos = event.globalPosition().toPoint()
 
 
 def mouseMoveEvent(self, event):
-    if event.buttons() == Qt.LeftButton:
+    if event.buttons() == Qt.MouseButton.LeftButton:
         self.move(self.pos() + event.globalPosition().toPoint() - self.drag_pos)
         self.drag_pos = event.globalPosition().toPoint()

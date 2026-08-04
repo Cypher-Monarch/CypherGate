@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 from PySide6.QtGui import QAction, QIcon
+from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
 from constants import SYSTRAY_ICON_COLOR
 from ui.icons import icon

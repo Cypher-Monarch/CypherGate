@@ -1,9 +1,9 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QWidget,
 )
-from PySide6.QtCore import Qt
 
 
 def setup_layout(window):
@@ -36,8 +36,10 @@ def setup_layout(window):
 
     spinner_layout = QHBoxLayout()
 
-    spinner_layout.addWidget(window.spinner, alignment=Qt.AlignCenter)
-    spinner_layout.addWidget(window.cancel_button, alignment=Qt.AlignCenter)
+    spinner_layout.addWidget(window.spinner, alignment=Qt.AlignmentFlag.AlignCenter)
+    spinner_layout.addWidget(
+        window.cancel_button, alignment=Qt.AlignmentFlag.AlignCenter
+    )
 
     layout.addLayout(spinner_layout)
 

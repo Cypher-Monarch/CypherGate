@@ -1,49 +1,60 @@
 import os
+import threading
 import time
+
+import requests
 from plyer import notification
-from PySide6.QtWidgets import (
-    QWidget,
-    QTableWidgetItem,
-    QLabel,
-    QMessageBox,
-    QGraphicsOpacityEffect,
-    QApplication,
-)
-from PySide6.QtGui import QColor
 from PySide6.QtCore import (
-    Qt,
-    QPropertyAnimation,
     QEasingCurve,
-    QTimer,
+    QPropertyAnimation,
     QRectF,
+    Qt,
+    QTimer,
     Signal,
 )
-import requests
-from datetime import datetime
-import threading
+from PySide6.QtGui import QColor
+from PySide6.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QGraphicsOpacityEffect,
+    QLabel,
+    QMessageBox,
+    QPushButton,
+    QTableWidget,
+    QTableWidgetItem,
+    QWidget,
+)
 
-from constants import LOGS_DIR, CACHE_FILE, ICON_PATH, API_URL, CONNECTION_TIMEOUT
+from constants import (
+    API_URL,
+    CACHE_FILE,
+    CONNECTION_TIMEOUT,
+    ICON_PATH,
+    STATUS_POLL_INTERVAL,
+)
+from ipc import ensure_root_handler, get_status, send_root_command
 from permissions import check_permissions
-from ipc import ensure_root_handler, send_root_command
-from vpn.loader import parse_server_data, filter_servers as filter_server_list
-from vpn.connector import prepare_connection, write_config
-from ui.tray import create_tray
-from update import check_for_updates
-from ui.layout import setup_layout
-from ui.widgets import create_widgets, connect_signals
-from ui.window import setup_window
-from ui.events import closeEvent, mousePressEvent, mouseMoveEvent
 from ui.animations import (
     animated_exit,
     animated_restore,
-    on_tray_icon_activated,
-    tray_restore,
-    start_spinner,
-    stop_spinner,
     final_close,
     final_minimize,
+    on_tray_icon_activated,
+    start_spinner,
+    stop_spinner,
+    tray_restore,
 )
-
+from ui.events import closeEvent, mouseMoveEvent, mousePressEvent
+from ui.layout import setup_layout
+from ui.spinner import SpinnerWidget
+from ui.status import sync_ui_state
+from ui.tray import create_tray
+from ui.widgets import connect_signals, create_widgets
+from ui.window import setup_window
+from update import check_for_updates
+from vpn.connector import prepare_connection, write_config
+from vpn.loader import filter_servers as filter_server_list
+from vpn.loader import parse_server_data
 
 # ────────────────────────────────────────────────────────
 # Main Application Class
@@ -65,6 +76,8 @@ class CypherGate(QWidget):
 
         self.ensure_root_handler_async()
 
+        print(get_status(), flush=True)
+
         self.spinner.show()
         self.status_label.setText("Fetching servers...")
 
@@ -73,36 +86,40 @@ class CypherGate(QWidget):
 
         self.load_servers_async()
 
+        self.watch_timer = QTimer(self)
+        self.watch_timer.timeout.connect(self.check_vpn_status)
+        self.previous_status = None
+
         self.tray_icon = create_tray(self, ICON_PATH)
 
-        status = check_permissions()
+        perms = check_permissions()
 
-        if not status["ok"]:
-            self.show_permission_dialog(status)
+        if not perms["ok"]:
+            self.show_permission_dialog(perms)
 
         check_for_updates(self)
 
-    def show_permission_dialog(self, status):
+    def show_permission_dialog(self, perms):
         dialog = QMessageBox(self)
 
-        dialog.setIcon(QMessageBox.Warning)
-        dialog.setWindowTitle(status["title"])
-        dialog.setText(status["message"])
+        dialog.setIcon(QMessageBox.Icon.Warning)
+        dialog.setWindowTitle(perms["title"])
+        dialog.setText(perms["message"])
 
         copy_button = None
 
-        if status.get("copy"):
+        if perms.get("copy"):
             copy_button = dialog.addButton(
                 "Copy Command",
-                QMessageBox.ActionRole,
+                QMessageBox.ButtonRole.ActionRole,
             )
 
-        dialog.addButton(QMessageBox.Close)
+        dialog.addButton(QMessageBox.StandardButton.Close)
 
         dialog.exec()
 
         if copy_button and dialog.clickedButton() == copy_button:
-            QApplication.clipboard().setText(status["copy"])
+            QApplication.clipboard().setText(perms["copy"])
 
     # ────────────────────────────────────────────────────────
     # Core VPN Logic
@@ -176,7 +193,7 @@ class CypherGate(QWidget):
 
             for j, text in enumerate(row_data):
                 item = QTableWidgetItem(text)
-                item.setTextAlignment(Qt.AlignCenter)
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 item.setForeground(QColor("#E5C100"))
                 self.table.setItem(i, j, item)
 
@@ -192,7 +209,7 @@ class CypherGate(QWidget):
                 anim_label.setStyleSheet(
                     "color: #E5C100; font-family: monospace; background: transparent;"
                 )
-                anim_label.setAlignment(Qt.AlignCenter)
+                anim_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 anim_label.setGeometry(start_rect)
                 anim_label.show()
 
@@ -204,13 +221,13 @@ class CypherGate(QWidget):
                 fade_anim.setStartValue(0)
                 fade_anim.setEndValue(1)
                 fade_anim.setDuration(400)
-                fade_anim.setEasingCurve(QEasingCurve.OutCubic)
+                fade_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
 
                 geo_anim = QPropertyAnimation(anim_label, b"geometry", self)
                 geo_anim.setStartValue(start_rect)
                 geo_anim.setEndValue(cell_rect)
                 geo_anim.setDuration(400)
-                geo_anim.setEasingCurve(QEasingCurve.OutBack)
+                geo_anim.setEasingCurve(QEasingCurve.Type.OutBack)
 
                 delay = 100 * i + 50 * j
                 QTimer.singleShot(delay, lambda a=fade_anim: a.start())
@@ -248,48 +265,51 @@ class CypherGate(QWidget):
         write_config(config, ovpn_path)
 
         try:
-            self.log_file = os.path.join(
-                LOGS_DIR,
-                f"cyphergate_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt",
-            )
-
-            with open(self.log_file, "w") as f:
-                f.write(
-                    f"\n\n===== VPN Session Started: "
-                    f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} =====\n"
-                )
-
             send_root_command(
                 {
                     "action": "START_VPN",
                     "config": ovpn_path,
-                    "log_file": self.log_file,
+                    "country": country,
+                    "ping": ping,
+                    "speed": speed,
+                    "users": users,
                 }
             )
 
-            self.connect_btn.setEnabled(False)
-            self.refresh_btn.setEnabled(False)
-
-            self.start_spinner()
-            self.status_label.setText("Connection in progress...")
-
-            self.cancel_button.show()
-            self.cancel_button.setEnabled(True)
-
             self.connection_start = time.monotonic()
 
-            self.watch_timer = QTimer()
-            self.watch_timer.timeout.connect(
-                lambda: self.check_vpn_status(country, ping, speed, users)
-            )
-            self.watch_timer.start(500)
+            sync_ui_state(self, get_status())
+
+            self.watch_timer.start(STATUS_POLL_INTERVAL)
 
         except Exception as e:
             QMessageBox.critical(self, "Connection Failed", str(e))
 
-    def check_vpn_status(self, country, ping, speed, users):
+    def check_vpn_status(self):
         try:
-            # Timeout
+            status = get_status()
+
+            if status is None:
+                return
+
+            sync_ui_state(self, status)
+
+            current_status = status["status"]
+
+            if self.previous_status != "CONNECTED" and current_status == "CONNECTED":
+                self.show_connection_info(
+                    status["country"],
+                    status["ping"],
+                    status["speed"],
+                    status["users"],
+                )
+
+            self.previous_status = current_status
+
+            if current_status in {"CONNECTED", "ERROR", "DISCONNECTED"}:
+                self.watch_timer.stop()
+                return
+
             if time.monotonic() - self.connection_start >= CONNECTION_TIMEOUT:
                 self.watch_timer.stop()
 
@@ -298,40 +318,16 @@ class CypherGate(QWidget):
                 send_root_command({"action": "STOP_VPN"})
                 send_root_command({"action": "ENABLE_IPV6"})
 
-                self.cancel_button.hide()
-
-                self.stop_spinner("Connection timed out")
-
-                self.status_label.setText("Connection timed out")
-
-                self.connect_btn.setEnabled(True)
-                self.refresh_btn.setEnabled(True)
-                self.disconnect_btn.setEnabled(False)
+                new_status = get_status()
+                if new_status:
+                    sync_ui_state(self, new_status)
+                self.previous_status = None
 
                 QMessageBox.warning(
                     self,
                     "Connection Timed Out",
                     f"The VPN server did not respond within {CONNECTION_TIMEOUT} seconds.",
                 )
-
-                return
-
-            with open(self.log_file, "r") as f:
-                content = f.read()
-
-            # Connected successfully
-            if "Initialization Sequence Completed" in content:
-                self.watch_timer.stop()
-
-                self.cancel_button.hide()
-
-                self.stop_spinner(f"Connected to {country}")
-
-                self.status_label.setText(f"Connected to {country}")
-                self.connect_btn.setEnabled(False)
-                self.disconnect_btn.setEnabled(True)
-
-                self.show_connection_info(country, ping, speed, users)
 
         except Exception:
             pass
@@ -348,11 +344,12 @@ class CypherGate(QWidget):
             ipv4 = requests.get("https://ipinfo.io/ip", timeout=10).text.strip()
         except Exception:
             ipv4 = "Unknown"
-        notification.notify(
-            title="CypherGate VPN Connected",
-            message=f"{country} | New IPv4: {ipv4}",
-            app_name="CypherGate",
-        )
+        if notification.notify is not None:
+            notification.notify(
+                title="CypherGate VPN Connected",
+                message=f"{country} | New IPv4: {ipv4}",
+                app_name="CypherGate",
+            )
         msg = (
             f"Connected to {country}\n"
             f"Ping: {ping}\n"
@@ -367,22 +364,21 @@ class CypherGate(QWidget):
             self.watch_timer.stop()
         self.ensure_root_handler_async()
         send_root_command({"action": "STOP_VPN"})
-
-        self.status_label.setText("Disconnected")
-        self.connect_btn.setEnabled(True)
-        self.disconnect_btn.setEnabled(False)
-        self.refresh_btn.setEnabled(True)
-
         send_root_command({"action": "ENABLE_IPV6"})
+
+        sync_ui_state(self, get_status())
+
         QMessageBox.information(
             self, "VPN Disconnected", "VPN connection has been terminated."
         )
 
-        notification.notify(
-            title="CypherGate VPN Disconnected",
-            message="VPN connection has been terminated.",
-            app_name="CypherGate",
-        )
+        if notification.notify is not None:
+            notification.notify(
+                title="CypherGate VPN Disconnected",
+                message="VPN connection has been terminated.",
+                app_name="CypherGate",
+            )
+        self.previous_status = None
 
     def cancel_connection(self):
         if hasattr(self, "watch_timer"):
@@ -397,15 +393,19 @@ class CypherGate(QWidget):
             QMessageBox.warning(self, "Cancel Failed", str(e))
             return
 
-        self.stop_spinner("Connection cancelled")
+        sync_ui_state(self, get_status())
+        self.previous_status = None
 
-        self.status_label.setText("Connection cancelled")
-
-        self.connect_btn.setEnabled(True)
-        self.refresh_btn.setEnabled(True)
-        self.disconnect_btn.setEnabled(False)
-
-        self.cancel_button.hide()
+    # Type declarations
+    spinner: SpinnerWidget
+    status_label: QLabel
+    connect_btn: QPushButton
+    disconnect_btn: QPushButton
+    refresh_btn: QPushButton
+    cancel_button: QPushButton
+    watch_timer: QTimer
+    table: QTableWidget
+    country_dropdown: QComboBox
 
     # Event listeners
     closeEvent = closeEvent

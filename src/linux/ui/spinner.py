@@ -1,6 +1,6 @@
+from PySide6.QtCore import QRectF, QTimer
+from PySide6.QtGui import QColor, QPainter, QPen
 from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import QTimer, QRectF
-from PySide6.QtGui import QPainter, QColor, QPen
 
 # ────────────────────────────────────────────────────────
 # Spinner Widget
@@ -22,7 +22,7 @@ class SpinnerWidget(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         rect = self.rect()
         center = rect.center()
         radius = min(rect.width(), rect.height()) / 2 - 5

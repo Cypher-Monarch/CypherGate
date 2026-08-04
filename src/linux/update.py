@@ -1,6 +1,7 @@
 import requests
-from constants import VERSION
 from PySide6.QtWidgets import QMessageBox
+
+from constants import VERSION
 
 # ────────────────────────────────────────────────────────
 # Update Check

@@ -5,7 +5,6 @@ from PySide6.QtCore import (
     QSize,
     QTimer,
 )
-
 from PySide6.QtWidgets import (
     QGraphicsOpacityEffect,
     QSystemTrayIcon,
@@ -24,7 +23,7 @@ def animated_exit(self, action="close"):
     self.fade.setDuration(300)
     self.fade.setStartValue(1)
     self.fade.setEndValue(0)
-    self.fade.setEasingCurve(QEasingCurve.InOutQuad)
+    self.fade.setEasingCurve(QEasingCurve.Type.InOutQuad)
 
     if action == "minimize":
         self.geo = self.geometry()
@@ -32,7 +31,7 @@ def animated_exit(self, action="close"):
         self.shrink.setDuration(300)
         self.shrink.setStartValue(self.geo)
         self.shrink.setEndValue(QRectF(self.geo.center(), QSize(1, 1)).toRect())
-        self.shrink.setEasingCurve(QEasingCurve.InOutCubic)
+        self.shrink.setEasingCurve(QEasingCurve.Type.InOutCubic)
 
         self.fade.start()
         self.shrink.start()
@@ -71,13 +70,13 @@ def animated_restore(self):
         geo_anim.setStartValue(start_rect)
         geo_anim.setEndValue(self.original_geometry)
         geo_anim.setDuration(400)
-        geo_anim.setEasingCurve(QEasingCurve.OutBack)
+        geo_anim.setEasingCurve(QEasingCurve.Type.OutBack)
 
         opacity_anim = QPropertyAnimation(self, b"windowOpacity", self)
         opacity_anim.setStartValue(0)
         opacity_anim.setEndValue(1)
         opacity_anim.setDuration(400)
-        opacity_anim.setEasingCurve(QEasingCurve.InOutQuad)
+        opacity_anim.setEasingCurve(QEasingCurve.Type.InOutQuad)
 
         geo_anim.start()
         opacity_anim.start()

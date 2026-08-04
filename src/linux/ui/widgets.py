@@ -1,17 +1,17 @@
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
+    QAbstractItemView,
+    QComboBox,
     QLabel,
     QPushButton,
-    QTableWidget,
-    QComboBox,
     QSizePolicy,
-    QAbstractItemView,
+    QTableWidget,
 )
-from PySide6.QtGui import QFont
-from PySide6.QtCore import Qt
 
-from ui.spinner import SpinnerWidget
-from ui.icons import icon
 from constants import CANCEL_ICON_COLOR
+from ui.icons import icon
+from ui.spinner import SpinnerWidget
 
 
 def create_widgets(window):
@@ -23,8 +23,8 @@ def create_widgets(window):
     window.title_label.setFont(QFont("monospace", 11))
     window.title_label.setStyleSheet("color: gold; padding: 4px;")
     window.title_label.setSizePolicy(
-        QSizePolicy.Expanding,
-        QSizePolicy.Preferred,
+        QSizePolicy.Policy.Expanding,
+        QSizePolicy.Policy.Preferred,
     )
 
     window.btn_min = QPushButton("—")
@@ -50,7 +50,7 @@ def create_widgets(window):
     # ────────────────────────────────────────────────────────
 
     window.heading_label = QLabel("Available VPN Servers")
-    window.heading_label.setAlignment(Qt.AlignCenter)
+    window.heading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
     window.heading_label.setStyleSheet("font-weight: bold; font-size: 18px;")
 
     # ────────────────────────────────────────────────────────
@@ -66,8 +66,8 @@ def create_widgets(window):
     window.table = QTableWidget()
     window.table.setColumnCount(4)
     window.table.setHorizontalHeaderLabels(["Country", "Ping", "Speed", "Users"])
-    window.table.setSelectionBehavior(QAbstractItemView.SelectRows)
-    window.table.setSelectionMode(QAbstractItemView.SingleSelection)
+    window.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+    window.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
     # ────────────────────────────────────────────────────────
     # Buttons
@@ -90,8 +90,8 @@ def create_widgets(window):
     window.cancel_button.setObjectName("cancelButton")
     window.cancel_button.setFixedHeight(32)
     window.cancel_button.setSizePolicy(
-        QSizePolicy.Fixed,
-        QSizePolicy.Fixed,
+        QSizePolicy.Policy.Fixed,
+        QSizePolicy.Policy.Fixed,
     )
     window.cancel_button.hide()
 
@@ -103,7 +103,7 @@ def create_widgets(window):
     window.spinner.hide()
 
     window.status_label = QLabel("Disconnected")
-    window.status_label.setAlignment(Qt.AlignCenter)
+    window.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
 
 def connect_signals(window):

@@ -13,10 +13,12 @@ def extract_remote_host(config):
 
 def server_supports_ipv6(host):
     try:
+        result = False
         result = subprocess.run(
             ["dig", "AAAA", host, "+short"],
             capture_output=True,
             text=True,
+            timeout=2,
         )
         return bool(result.stdout.strip())
     except Exception:

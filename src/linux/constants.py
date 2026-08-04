@@ -5,7 +5,7 @@ API_URL = "http://www.vpngate.net/api/iphone/"
 
 VPN_ROOT = os.path.expanduser("~/.config/cyphergate")
 VPN_DIR = os.path.join(f"{VPN_ROOT}/servers")
-LOGS_DIR = os.path.join(VPN_ROOT, "logs")
+LOG_DIR = "/var/log/cyphergate"
 CACHE_FILE = os.path.join(f"{VPN_ROOT}/cache", "serverlist.csv")
 COUNTRIES_CONF = os.path.join(VPN_ROOT, "countries.conf")
 
@@ -17,7 +17,6 @@ SOCKET_PATH = f"{SOCKET_DIR}/cyphergated.sock"
 os.makedirs(VPN_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
 os.makedirs(os.path.dirname(COUNTRIES_CONF), exist_ok=True)
-os.makedirs(LOGS_DIR, exist_ok=True)
 
 if not os.path.exists(COUNTRIES_CONF):
     with open(COUNTRIES_CONF, "w") as f:
@@ -31,6 +30,8 @@ if getattr(sys, "frozen", False):
 else:
     APP_DIR = os.path.dirname(os.path.abspath(__file__))
     ROOT_HANDLER_PATH = os.path.join(APP_DIR, "cyphergated.py")
+
+STATUS_POLL_INTERVAL = 500
 
 ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
 

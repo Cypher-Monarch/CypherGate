@@ -1,13 +1,10 @@
-import os
-import subprocess
 import json
-import time
+import os
 import socket
-from constants import ROOT_HANDLER_PATH, SOCKET_PATH
+import subprocess
+import time
 
-# ────────────────────────────────────────────────────────
-# Helper Functions
-# ────────────────────────────────────────────────────────
+from constants import ROOT_HANDLER_PATH, SOCKET_PATH
 
 
 def ensure_root_handler():
@@ -18,23 +15,38 @@ def ensure_root_handler():
     for _ in range(10):
         if os.path.exists(SOCKET_PATH):
             try:
-                sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-                sock.connect(SOCKET_PATH)
-                sock.close()
+                with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+                    sock.connect(SOCKET_PATH)
                 return
-            except Exception:
+            except OSError:
                 time.sleep(0.2)
 
 
 def send_root_command(cmd_dict):
     for _ in range(5):
         try:
-            sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            sock.connect(SOCKET_PATH)
-            sock.send(json.dumps(cmd_dict).encode())
-            sock.close()
-            return
+            with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+                sock.settimeout(1)
+                sock.connect(SOCKET_PATH)
+
+                sock.sendall(json.dumps(cmd_dict).encode())
+
+                try:
+                    response = sock.recv(4096)
+                except TimeoutError:
+                    return None
+
+                if response:
+                    return json.loads(response.decode())
+
+                return None
+
         except Exception:
             time.sleep(0.2)
 
     print("Root handler error: could not connect", flush=True)
+    return None
+
+
+def get_status():
+    return send_root_command({"action": "STATUS"})

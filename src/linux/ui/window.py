@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 
 
 def setup_window(window):
-    window.setWindowFlag(Qt.FramelessWindowHint)
+    window.setWindowFlag(Qt.WindowType.FramelessWindowHint)
     window.setWindowTitle("CypherGate")
     window.setGeometry(100, 100, 800, 550)
 
