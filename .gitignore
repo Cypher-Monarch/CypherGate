@@ -1,9 +1,6 @@
 .venv/
-CypherGate.iss
 .python-version
 Releases/
-cyphergate.elf
 .gitignore
 pyrightconfig.json
 **/__pycache__/
-**/Assets/
