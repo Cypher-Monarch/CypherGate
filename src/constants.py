@@ -42,4 +42,4 @@ SYSTRAY_ICON_COLOR = "#FFD700"
 
 ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 
-VERSION = "2.0.1"
+VERSION = "2.0.2"
