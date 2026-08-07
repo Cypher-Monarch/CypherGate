@@ -76,8 +76,6 @@ class CypherGate(QWidget):
 
         self.ensure_root_handler_async()
 
-        print(get_status(), flush=True)
-
         self.spinner.show()
         self.status_label.setText("Fetching servers...")
 
@@ -98,6 +96,8 @@ class CypherGate(QWidget):
             self.show_permission_dialog(perms)
 
         check_for_updates(self)
+
+        sync_ui_state(self, get_status())
 
     def show_permission_dialog(self, perms):
         dialog = QMessageBox(self)
