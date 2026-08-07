@@ -11,6 +11,7 @@ FORBIDDEN_DIRECTIVES = frozenset(
         "plugin",
         "tls-verify",
         "auth-user-pass-verify",
+        "config",
     }
 )
 

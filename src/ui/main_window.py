@@ -97,8 +97,6 @@ class CypherGate(QWidget):
 
         check_for_updates(self)
 
-        sync_ui_state(self, get_status())
-
     def show_permission_dialog(self, perms):
         dialog = QMessageBox(self)
 
