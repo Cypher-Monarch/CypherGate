@@ -11,6 +11,7 @@ def sync_ui_state(window, state):
         window.connect_btn.setEnabled(True)
         window.disconnect_btn.setEnabled(False)
         window.refresh_btn.setEnabled(True)
+        window.auto_btn.setEnabled(True)
 
         window.cancel_button.hide()
 
@@ -22,6 +23,7 @@ def sync_ui_state(window, state):
         window.connect_btn.setEnabled(False)
         window.disconnect_btn.setEnabled(False)
         window.refresh_btn.setEnabled(False)
+        window.auto_btn.setEnabled(False)
 
         window.cancel_button.show()
         window.cancel_button.setEnabled(True)
@@ -34,6 +36,7 @@ def sync_ui_state(window, state):
         window.connect_btn.setEnabled(False)
         window.disconnect_btn.setEnabled(True)
         window.refresh_btn.setEnabled(False)
+        window.auto_btn.setEnabled(False)
 
         window.cancel_button.hide()
 
@@ -45,5 +48,6 @@ def sync_ui_state(window, state):
         window.connect_btn.setEnabled(True)
         window.disconnect_btn.setEnabled(False)
         window.refresh_btn.setEnabled(True)
+        window.auto_btn.setEnabled(True)
 
         window.cancel_button.hide()
