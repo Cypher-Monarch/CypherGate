@@ -42,9 +42,10 @@ def animated_exit(self, action="close"):
 
 
 def on_tray_icon_activated(self, reason):
-    if reason == QSystemTrayIcon.DoubleClick:
-        if hasattr(self, "original_geometry"):
-            self.tray_restore()
+    if reason == QSystemTrayIcon.ActivationReason.DoubleClick and hasattr(
+        self, "original_geometry"
+    ):
+        self.tray_restore()
 
 
 def tray_restore(self):

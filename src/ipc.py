@@ -9,7 +9,13 @@ from constants import ROOT_HANDLER_PATH, SOCKET_PATH
 
 def ensure_root_handler():
     if not os.path.exists(SOCKET_PATH):
-        subprocess.Popen(["pkexec", ROOT_HANDLER_PATH])
+        subprocess.Popen(
+            ["pkexec", ROOT_HANDLER_PATH],
+            start_new_session=True,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         print("Using ROOT_HANDLER_PATH at:", ROOT_HANDLER_PATH)
 
     for _ in range(10):

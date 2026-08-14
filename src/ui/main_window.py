@@ -181,7 +181,16 @@ class CypherGate(QWidget):
         self.connect_btn.setEnabled(True)
         self.refresh_btn.setEnabled(True)
 
-        sync_ui_state(self, get_status())
+        status = get_status()
+        sync_ui_state(self, status)
+
+        if status and status["status"] == "CONNECTED":
+            self.show_connection_info(
+                status["country"],
+                status["ping"],
+                status["speed"],
+                status["users"],
+            )
 
     def populate_table(self, servers):
         self.table.setRowCount(len(servers))

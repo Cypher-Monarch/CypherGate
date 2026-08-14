@@ -13,6 +13,7 @@ CONNECTION_TIMEOUT = 15
 
 SOCKET_DIR = "/run/cyphergate"
 SOCKET_PATH = f"{SOCKET_DIR}/cyphergated.sock"
+DAEMON_CONFIG = f"{SOCKET_DIR}/config.ovpn"
 
 os.makedirs(VPN_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
@@ -42,4 +43,4 @@ SYSTRAY_ICON_COLOR = "#FFD700"
 
 ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 
-VERSION = "2.0.2"
+VERSION = "2.0.3"

@@ -9,13 +9,13 @@ from constants import LOG_DIR, SOCKET_DIR, SOCKET_PATH
 def create_server():
     gid = grp.getgrnam("cyphergate").gr_gid
 
-    os.makedirs(LOG_DIR, mode=0o750, exist_ok=True)
+    os.makedirs(LOG_DIR, mode=0o2750, exist_ok=True)
     os.chown(LOG_DIR, 0, gid)
-    os.chmod(LOG_DIR, 0o750)
+    os.chmod(LOG_DIR, 0o2750)
 
-    os.makedirs(SOCKET_DIR, mode=0o750, exist_ok=True)
+    os.makedirs(SOCKET_DIR, mode=0o2750, exist_ok=True)
     os.chown(SOCKET_DIR, 0, gid)
-    os.chmod(SOCKET_DIR, 0o750)
+    os.chmod(SOCKET_DIR, 0o2750)
 
     if os.path.exists(SOCKET_PATH):
         if stat.S_ISSOCK(os.stat(SOCKET_PATH).st_mode):

@@ -1,8 +1,10 @@
 import json
+import os
 import subprocess
 import threading
 import time
 
+from constants import DAEMON_CONFIG
 from daemon.logging import create_log
 from daemon.monitor import monitor_connection
 from daemon.state import reset_connection_state, state
@@ -10,16 +12,24 @@ from daemon.validator import validate_config
 
 
 def start_vpn(cmd):
-    config = cmd["config"]
+    config_path = cmd["config"]
+
+    with open(config_path, encoding="utf-8") as f:
+        config = f.read()
 
     validate_config(config)
+
+    with open(DAEMON_CONFIG, "w", encoding="utf-8") as f:
+        f.write(config)
+
+    os.chmod(DAEMON_CONFIG, 0o640)
 
     log_file = create_log()
 
     print("[cyphergated] START_VPN", flush=True)
 
     state["status"] = "CONNECTING"
-    state["config"] = config
+    state["config"] = DAEMON_CONFIG
     state["log_file"] = log_file
     state["started_at"] = time.time()
     state["last_error"] = None
@@ -32,7 +42,7 @@ def start_vpn(cmd):
 
     try:
         state["process"] = subprocess.Popen(
-            ["/usr/bin/openvpn", "--config", config],
+            ["/usr/bin/openvpn", "--config", DAEMON_CONFIG],
             stdout=state["log_handle"],
             stderr=subprocess.STDOUT,
         )
@@ -62,6 +72,11 @@ def stop_vpn():
         state["process"].terminate()
         state["process"].wait()
         state["process"] = None
+
+    try:
+        os.unlink(DAEMON_CONFIG)
+    except FileNotFoundError:
+        pass
 
     if state["log_handle"]:
         state["log_handle"].close()

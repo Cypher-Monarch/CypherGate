@@ -4,3 +4,4 @@ Releases/
 .gitignore
 pyrightconfig.json
 **/__pycache__/
+**/ruff.toml
