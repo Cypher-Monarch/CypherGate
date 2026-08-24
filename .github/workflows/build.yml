@@ -1,0 +1,64 @@
+name: Build CypherGate
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: archlinux:latest
+
+    steps:
+      - name: Install build dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm \
+            git \
+            python \
+            python-pip \
+            xz \
+            tar \
+            qt6-base \
+            qt6-svg \
+            qt6-imageformats \
+            qt6-wayland \
+            fontconfig \
+            freetype2 \
+            libx11 \
+            libxkbcommon \
+            libxkbcommon-x11 \
+            libxcb \
+            xcb-util \
+            xcb-util-cursor \
+            xcb-util-image \
+            xcb-util-keysyms \
+            xcb-util-renderutil \
+            xcb-util-wm \
+            xcb-util-xrm \
+            gtk3 \
+            cairo \
+            pango \
+            harfbuzz \
+            gdk-pixbuf2
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make build script executable
+        run: chmod +x build.sh
+
+      - name: Build release
+        run: ./build.sh "$GITHUB_REF_NAME"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/CypherGate-Linux-${{ github.ref_name }}.tar.xz
+          generate_release_notes: false
