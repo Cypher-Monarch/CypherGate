@@ -9,7 +9,6 @@ from PySide6.QtWidgets import (
     QTableWidget,
 )
 
-from constants import CANCEL_ICON_COLOR
 from ui.icons import icon
 from ui.spinner import SpinnerWidget
 
@@ -86,19 +85,19 @@ def create_widgets(window):
 
     window.connect_btn = QPushButton("Connect")
     window.connect_btn.setObjectName("connectButton")
-    window.connect_btn.setIcon(icon("lock"))
+    window.connect_btn.setIcon(icon("connect"))
 
     window.auto_btn = QPushButton("Auto-Connect Fastest")
     window.auto_btn.setObjectName("autoConnectButton")
-    window.auto_btn.setIcon(icon("rocket"))
+    window.auto_btn.setIcon(icon("auto_connect"))
 
     window.disconnect_btn = QPushButton("Disconnect")
     window.disconnect_btn.setObjectName("disconnectButton")
-    window.disconnect_btn.setIcon(icon("lock-open"))
+    window.disconnect_btn.setIcon(icon("disconnect"))
 
     window.cancel_button = QPushButton("Cancel")
     window.cancel_button.setObjectName("cancelButton")
-    window.cancel_button.setIcon(icon("cancel", CANCEL_ICON_COLOR))
+    window.cancel_button.setIcon(icon("cancel"))
     window.cancel_button.setFixedHeight(32)
     window.cancel_button.setSizePolicy(
         QSizePolicy.Policy.Fixed,

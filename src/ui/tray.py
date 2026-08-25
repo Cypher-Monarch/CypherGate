@@ -1,7 +1,6 @@
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
-from constants import SYSTRAY_ICON_COLOR
 from ui.icons import icon
 
 
@@ -12,7 +11,7 @@ def create_tray(window, icon_path):
     tray_menu = QMenu()
 
     show_action = QAction(
-        icon("eye", SYSTRAY_ICON_COLOR),
+        icon("show", "systray"),
         "Show",
         window,
     )
@@ -20,7 +19,7 @@ def create_tray(window, icon_path):
     tray_menu.addAction(show_action)
 
     cancel_action = QAction(
-        icon("cancel", SYSTRAY_ICON_COLOR),
+        icon("cancel", "systray"),
         "Cancel",
         window,
     )
@@ -28,7 +27,7 @@ def create_tray(window, icon_path):
     tray_menu.addAction(cancel_action)
 
     connect_action = QAction(
-        icon("lock", SYSTRAY_ICON_COLOR),
+        icon("connect", "systray"),
         "Connect",
         window,
     )
@@ -36,7 +35,7 @@ def create_tray(window, icon_path):
     tray_menu.addAction(connect_action)
 
     disconnect_action = QAction(
-        icon("lock-open", SYSTRAY_ICON_COLOR),
+        icon("disconnect", "systray"),
         "Disconnect",
         window,
     )
@@ -46,7 +45,7 @@ def create_tray(window, icon_path):
     tray_menu.addSeparator()
 
     exit_action = QAction(
-        icon("door-exit", SYSTRAY_ICON_COLOR),
+        icon("exit", "systray"),
         "Exit",
         window,
     )
