@@ -25,12 +25,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from config.manager import load_settings
 from constants import (
     API_URL,
     CACHE_FILE,
-    CONNECTION_TIMEOUT,
     ICON_PATH,
-    STATUS_POLL_INTERVAL,
 )
 from ipc import ensure_root_handler, get_status, send_root_command
 from permissions import check_permissions
@@ -66,6 +65,8 @@ class CypherGate(QWidget):
 
     def __init__(self):
         super().__init__()
+
+        self.settings = load_settings()
 
         self.data_loaded.connect(self.process_server_data)
 
@@ -288,7 +289,11 @@ class CypherGate(QWidget):
 
             sync_ui_state(self, get_status())
 
-            self.watch_timer.start(STATUS_POLL_INTERVAL)
+            status_update_interval = self.settings["application"][
+                "status_update_interval"
+            ]
+
+            self.watch_timer.start(status_update_interval)
 
         except Exception as e:
             QMessageBox.critical(self, "Connection Failed", str(e))
@@ -318,7 +323,9 @@ class CypherGate(QWidget):
                 self.watch_timer.stop()
                 return
 
-            if time.monotonic() - self.connection_start >= CONNECTION_TIMEOUT:
+            connection_timeout = int(self.settings["vpn"]["connection_timeout"])
+
+            if time.monotonic() - self.connection_start >= connection_timeout:
                 self.watch_timer.stop()
 
                 self.ensure_root_handler_async()
@@ -334,7 +341,7 @@ class CypherGate(QWidget):
                 QMessageBox.warning(
                     self,
                     "Connection Timed Out",
-                    f"The VPN server did not respond within {CONNECTION_TIMEOUT} seconds.",
+                    f"The VPN server did not respond within {connection_timeout} seconds.",
                 )
 
         except Exception:

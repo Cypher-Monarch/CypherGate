@@ -5,11 +5,10 @@ API_URL = "http://www.vpngate.net/api/iphone/"
 
 VPN_ROOT = os.path.expanduser("~/.config/cyphergate")
 VPN_DIR = os.path.join(f"{VPN_ROOT}/servers")
+CONFIG_FILE = os.path.join(VPN_ROOT, "settings.json")
 LOG_DIR = "/var/log/cyphergate"
 CACHE_FILE = os.path.join(f"{VPN_ROOT}/cache", "serverlist.csv")
 COUNTRIES_CONF = os.path.join(VPN_ROOT, "countries.conf")
-
-CONNECTION_TIMEOUT = 15
 
 SOCKET_DIR = "/run/cyphergate"
 SOCKET_PATH = f"{SOCKET_DIR}/cyphergated.sock"
@@ -31,8 +30,6 @@ if getattr(sys, "frozen", False):
 else:
     APP_DIR = os.path.dirname(os.path.abspath(__file__))
     ROOT_HANDLER_PATH = os.path.join(APP_DIR, "cyphergated.py")
-
-STATUS_POLL_INTERVAL = 500
 
 ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
 

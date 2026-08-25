@@ -20,6 +20,7 @@ def create_widgets(window):
     # ────────────────────────────────────────────────────────
 
     window.title_label = QLabel("CypherGate VPN")
+    window.title_label.setObjectName("titleLabel")
     window.title_label.setFont(QFont("monospace", 11))
     window.title_label.setStyleSheet("color: gold; padding: 4px;")
     window.title_label.setSizePolicy(
@@ -28,7 +29,10 @@ def create_widgets(window):
     )
 
     window.btn_min = QPushButton("—")
+    window.btn_min.setObjectName("minimizeButton")
+
     window.btn_close = QPushButton("✕")
+    window.btn_close.setObjectName("closeButton")
 
     for btn in (window.btn_min, window.btn_close):
         btn.setFont(QFont("Noto Sans", 12))
@@ -50,6 +54,7 @@ def create_widgets(window):
     # ────────────────────────────────────────────────────────
 
     window.heading_label = QLabel("Available VPN Servers")
+    window.heading_label.setObjectName("headingLabel")
     window.heading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
     window.heading_label.setStyleSheet("font-weight: bold; font-size: 18px;")
 
@@ -58,12 +63,14 @@ def create_widgets(window):
     # ────────────────────────────────────────────────────────
 
     window.country_dropdown = QComboBox()
+    window.country_dropdown.setObjectName("countryDropdown")
 
     # ────────────────────────────────────────────────────────
     # Server Table
     # ────────────────────────────────────────────────────────
 
     window.table = QTableWidget()
+    window.table.setObjectName("serverTable")
     window.table.setColumnCount(4)
     window.table.setHorizontalHeaderLabels(["Country", "Ping", "Speed", "Users"])
     window.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
@@ -74,20 +81,24 @@ def create_widgets(window):
     # ────────────────────────────────────────────────────────
 
     window.refresh_btn = QPushButton("Refresh")
+    window.refresh_btn.setObjectName("refreshButton")
     window.refresh_btn.setIcon(icon("refresh"))
 
     window.connect_btn = QPushButton("Connect")
+    window.connect_btn.setObjectName("connectButton")
     window.connect_btn.setIcon(icon("lock"))
 
     window.auto_btn = QPushButton("Auto-Connect Fastest")
+    window.auto_btn.setObjectName("autoConnectButton")
     window.auto_btn.setIcon(icon("rocket"))
 
     window.disconnect_btn = QPushButton("Disconnect")
+    window.disconnect_btn.setObjectName("disconnectButton")
     window.disconnect_btn.setIcon(icon("lock-open"))
 
     window.cancel_button = QPushButton("Cancel")
-    window.cancel_button.setIcon(icon("cancel", CANCEL_ICON_COLOR))
     window.cancel_button.setObjectName("cancelButton")
+    window.cancel_button.setIcon(icon("cancel", CANCEL_ICON_COLOR))
     window.cancel_button.setFixedHeight(32)
     window.cancel_button.setSizePolicy(
         QSizePolicy.Policy.Fixed,
@@ -103,6 +114,7 @@ def create_widgets(window):
     window.spinner.hide()
 
     window.status_label = QLabel("Disconnected")
+    window.status_label.setObjectName("statusLabel")
     window.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
 
