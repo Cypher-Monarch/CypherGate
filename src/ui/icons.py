@@ -81,3 +81,11 @@ def icon(name, context="default"):
     _ICON_CACHE[key] = qicon
 
     return qicon
+
+
+def apply_icons(window):
+    window.refresh_btn.setIcon(icon("refresh"))
+    window.connect_btn.setIcon(icon("connect"))
+    window.auto_btn.setIcon(icon("auto_connect"))
+    window.disconnect_btn.setIcon(icon("disconnect"))
+    window.cancel_button.setIcon(icon("cancel"))

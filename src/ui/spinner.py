@@ -72,3 +72,18 @@ class SpinnerWidget(QWidget):
         painter.translate(center)
         painter.rotate(self.angle)
         painter.drawArc(QRectF(-radius, -radius, 2 * radius, 2 * radius), 0, 120 * 16)
+
+    def reload_config(self):
+        settings = get_spinner_config()
+
+        self.fps = settings["fps"]
+        self.rotation_speed = settings["rotation_speed"]
+
+        self.timer.setInterval(1000 // self.fps)
+
+        self.setFixedSize(
+            settings["size"],
+            settings["size"],
+        )
+
+        self.update()

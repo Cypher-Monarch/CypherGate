@@ -18,6 +18,7 @@ def setup_layout(window):
     title_bar_layout.addWidget(window.btn_close)
 
     title_bar_widget = QWidget()
+    title_bar_widget.setObjectName("titleBar")
     title_bar_widget.setLayout(title_bar_layout)
 
     layout.addWidget(title_bar_widget)

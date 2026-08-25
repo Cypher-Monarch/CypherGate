@@ -5,6 +5,8 @@ from copy import deepcopy
 from config.defaults import DEFAULT_SETTINGS
 from constants import CONFIG_FILE, VPN_ROOT
 
+_LAST_SETTINGS = None
+
 
 def ensure_config():
     os.makedirs(VPN_ROOT, exist_ok=True)
@@ -14,6 +16,8 @@ def ensure_config():
 
 
 def load_settings():
+    global _LAST_SETTINGS
+
     ensure_config()
 
     try:
@@ -21,12 +25,17 @@ def load_settings():
             settings = json.load(file)
 
     except (json.JSONDecodeError, OSError):
-        settings = {}
+        if _LAST_SETTINGS is not None:
+            return deepcopy(_LAST_SETTINGS)
+
+        return deepcopy(DEFAULT_SETTINGS)
 
     merged = merge_defaults(settings, DEFAULT_SETTINGS)
 
     if merged != settings:
         save_settings(merged)
+
+    _LAST_SETTINGS = merged
 
     return merged
 

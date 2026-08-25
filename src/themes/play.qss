@@ -1,0 +1,273 @@
+/* ==========================================================
+   CypherGate Theme Playground
+   ========================================================== */
+
+
+/* -------------------------
+   Global
+   ------------------------- */
+
+QWidget#mainWindow {
+    background-color: #101014;
+    color: #e8e8ee;
+    font-family: "Noto Sans";
+    font-size: 14px;
+}
+
+QWidget {
+    background-color: #181825;
+    color: #cdd6f4;
+}
+
+QLabel {
+    color: #e8e8ee;
+}
+
+
+/* -------------------------
+   Title Bar
+   ------------------------- */
+
+QLabel#titleLabel {
+    color: #cba6f7;
+    font-size: 15px;
+    font-weight: bold;
+    background: transparent;
+}
+
+QPushButton#minimizeButton,
+QPushButton#closeButton {
+    background: transparent;
+    border: none;
+    color: #cba6f7;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+QPushButton#minimizeButton:hover,
+QPushButton#closeButton:hover {
+    background-color: #313244;
+}
+
+QPushButton#closeButton:hover {
+    color: #f38ba8;
+}
+
+QWidget#titleBar {
+    background-color: transparent;
+}
+
+/* -------------------------
+   Heading
+   ------------------------- */
+
+QLabel#headingLabel {
+    color: #cba6f7;
+    font-size: 22px;
+    font-weight: bold;
+    background: transparent;
+}
+
+/* -------------------------
+   Animation Label
+   ------------------------- */
+
+QLabel#animLabel {
+    color: #cba6f7;
+    background-color: transparent;
+}
+
+/* -------------------------
+   Dropdown popup
+   ------------------------- */
+
+QFrame#countryPopup {
+    background-color: #181825;
+    border: 1px solid #313244;
+}
+
+
+QFrame#countryPopup QListView {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: none;
+    outline: none;
+}
+
+
+QFrame#countryPopup QListView::viewport {
+    background-color: #181825;
+}
+
+
+QFrame#countryPopup QWidget#qt_scrollarea_viewport {
+    background-color: #181825;
+}
+
+
+QFrame#countryPopup QWidget#qt_scrollarea_hcontainer,
+QFrame#countryPopup QWidget#qt_scrollarea_vcontainer {
+    background-color: #181825;
+}
+
+
+QFrame#countryPopup QScrollBar {
+    background-color: #181825;
+}
+
+
+QFrame#countryPopup QListView::item {
+    background-color: #181825;
+    color: #cdd6f4;
+    padding: 6px 10px;
+}
+
+
+QFrame#countryPopup QListView::item:hover {
+    background-color: #313244;
+}
+
+
+QFrame#countryPopup QListView::item:selected {
+    background-color: #cba6f7;
+    color: #11111b;
+}
+
+/* -------------------------
+   Server Table
+   ------------------------- */
+
+QTableCornerButton::section {
+    background-color: #181825;
+    border: none;
+}
+
+QTableWidget#serverTable {
+    background-color: #11111b;
+    alternate-background-color: #181825;
+    border: 1px solid #313244;
+    border-radius: 12px;
+    gridline-color: #313244;
+}
+
+QTableWidget#serverTable::item {
+    padding: 8px;
+    color: #cba6f7
+}
+
+QTableWidget#serverTable::item:selected {
+    background-color: #cba6f7;
+    color: #11111b;
+}
+
+QHeaderView {
+    background-color: #11111b;
+}
+
+QHeaderView::section {
+    background-color: #181825;
+    color: #cba6f7;
+    padding: 8px;
+    border: none;
+    font-weight: bold;
+}
+
+
+/* -------------------------
+   Main Buttons
+   ------------------------- */
+
+QPushButton {
+    background-color: #cba6f7;
+    color: #11111b;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #b4befe;
+}
+
+QPushButton:pressed {
+    background-color: #89b4fa;
+}
+
+QPushButton:disabled {
+    background-color: #313244;
+    color: #6c7086;
+}
+
+
+/* Individual Buttons */
+
+QPushButton#refreshButton {
+    background-color: #89b4fa;
+}
+
+QPushButton#connectButton {
+    background-color: #a6e3a1;
+}
+
+QPushButton#disconnectButton {
+    background-color: #f38ba8;
+}
+
+QPushButton#autoConnectButton {
+    background-color: #fab387;
+}
+
+QPushButton#cancelButton {
+    background-color: #1e1e2e;
+    color: #f9e2af;
+    border: 1px solid #f9e2af;
+    border-radius: 16px;
+}
+
+QPushButton#cancelButton:hover {
+    background-color: #313244;
+}
+
+
+/* -------------------------
+   Status
+   ------------------------- */
+
+QLabel#statusLabel {
+    color: #a6e3a1;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/* -------------------------
+   Scrollbars
+   ------------------------- */
+
+QScrollBar:vertical {
+    background-color: #11111b;
+    width: 10px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #45475a;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #cba6f7;
+}
+
+
+/* -------------------------
+   Tooltips
+   ------------------------- */
+
+QToolTip {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: 1px solid #cba6f7;
+    padding: 6px;
+    border-radius: 8px;
+}

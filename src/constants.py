@@ -31,14 +31,9 @@ if getattr(sys, "frozen", False):
 else:
     APP_DIR = os.path.dirname(os.path.abspath(__file__))
     ROOT_HANDLER_PATH = os.path.join(APP_DIR, "cyphergated.py")
-    THEME_DIR = os.path.join(APP_DIR, "src", "themes")
+    THEME_DIR = os.path.join(APP_DIR, "themes")
 
 ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
-
-ICON_SIZE = 20
-ICON_COLOR = "#0F0F0F"
-CANCEL_ICON_COLOR = "#FFD700"
-SYSTRAY_ICON_COLOR = "#FFD700"
 
 ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 

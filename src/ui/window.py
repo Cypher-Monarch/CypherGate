@@ -3,6 +3,10 @@ from PySide6.QtCore import Qt
 from config.theme import load_theme
 
 
+def apply_theme(window):
+    window.setStyleSheet(load_theme())
+
+
 def setup_window(window):
     window.setObjectName("mainWindow")
 
@@ -10,4 +14,4 @@ def setup_window(window):
     window.setWindowTitle("CypherGate")
     window.setGeometry(100, 100, 800, 550)
 
-    window.setStyleSheet(load_theme())
+    apply_theme(window)

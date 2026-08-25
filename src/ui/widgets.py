@@ -1,5 +1,4 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
@@ -20,8 +19,6 @@ def create_widgets(window):
 
     window.title_label = QLabel("CypherGate VPN")
     window.title_label.setObjectName("titleLabel")
-    window.title_label.setFont(QFont("monospace", 11))
-    window.title_label.setStyleSheet("color: gold; padding: 4px;")
     window.title_label.setSizePolicy(
         QSizePolicy.Policy.Expanding,
         QSizePolicy.Policy.Preferred,
@@ -33,21 +30,6 @@ def create_widgets(window):
     window.btn_close = QPushButton("✕")
     window.btn_close.setObjectName("closeButton")
 
-    for btn in (window.btn_min, window.btn_close):
-        btn.setFont(QFont("Noto Sans", 12))
-        btn.setFixedSize(30, 28)
-        btn.setStyleSheet("""
-            QPushButton {
-                background-color: transparent;
-                color: gold;
-                border: none;
-            }
-
-            QPushButton:hover {
-                background-color: #333;
-            }
-        """)
-
     # ────────────────────────────────────────────────────────
     # Main Heading
     # ────────────────────────────────────────────────────────
@@ -55,7 +37,6 @@ def create_widgets(window):
     window.heading_label = QLabel("Available VPN Servers")
     window.heading_label.setObjectName("headingLabel")
     window.heading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-    window.heading_label.setStyleSheet("font-weight: bold; font-size: 18px;")
 
     # ────────────────────────────────────────────────────────
     # Country Selector

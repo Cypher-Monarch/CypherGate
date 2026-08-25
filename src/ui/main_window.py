@@ -1,6 +1,7 @@
 import os
 import threading
 import time
+from pathlib import Path
 
 import requests
 from plyer import notification
@@ -26,9 +27,11 @@ from PySide6.QtWidgets import (
 )
 
 from config.manager import load_settings
+from config.watcher import ConfigWatcher
 from constants import (
     API_URL,
     CACHE_FILE,
+    CONFIG_FILE,
     ICON_PATH,
 )
 from ipc import ensure_root_handler, get_status, send_root_command
@@ -44,12 +47,14 @@ from ui.animations import (
     tray_restore,
 )
 from ui.events import closeEvent, mouseMoveEvent, mousePressEvent
+from ui.icons import apply_icons
+from ui.icons import reload as reload_icons
 from ui.layout import setup_layout
 from ui.spinner import SpinnerWidget
 from ui.status import sync_ui_state
 from ui.tray import create_tray
 from ui.widgets import connect_signals, create_widgets
-from ui.window import setup_window
+from ui.window import apply_theme, setup_window
 from update import check_for_updates
 from vpn.connector import prepare_connection, write_config
 from vpn.loader import filter_servers as filter_server_list
@@ -74,6 +79,13 @@ class CypherGate(QWidget):
         create_widgets(self)
         setup_layout(self)
         connect_signals(self)
+
+        self.config_watcher = ConfigWatcher(
+            Path(CONFIG_FILE),
+            self,
+        )
+
+        self.config_watcher.changed.connect(self.reload_config)
 
         self.ensure_root_handler_async()
 
@@ -203,7 +215,6 @@ class CypherGate(QWidget):
             for j, text in enumerate(row_data):
                 item = QTableWidgetItem(text)
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-                item.setForeground(QColor("#E5C100"))
                 self.table.setItem(i, j, item)
 
                 cell_rect = self.table.visualItemRect(item)
@@ -215,9 +226,7 @@ class CypherGate(QWidget):
                 ).toRect()
 
                 anim_label = QLabel(text, self.table.viewport())
-                anim_label.setStyleSheet(
-                    "color: #E5C100; font-family: monospace; background: transparent;"
-                )
+                anim_label.setObjectName("animLabel")
                 anim_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 anim_label.setGeometry(start_rect)
                 anim_label.show()
@@ -410,6 +419,21 @@ class CypherGate(QWidget):
 
         sync_ui_state(self, get_status())
         self.previous_status = None
+
+    # Reload config
+
+    def reload_config(self, path):
+        self.settings = load_settings()
+
+        if path == str(CONFIG_FILE):
+            reload_icons()
+            apply_icons(self)
+
+            self.spinner.reload_config()
+
+            apply_theme(self)
+
+            self.config_watcher.refresh_theme()
 
     # Type declarations
     spinner: SpinnerWidget
