@@ -1,12 +1,27 @@
 from pathlib import Path
 
-THEME_DIR = Path(__file__).parent.parent / "themes"
+from config.fallback_theme import FALLBACK_THEME
+from config.manager import load_settings
+from constants import THEME_DIR
 
 
-def load_theme(name):
-    theme_path = THEME_DIR / f"{name}.qss"
+def resolve_theme_path() -> Path:
+    settings = load_settings()
+
+    theme = settings["theme"]
+
+    if theme["mode"] == "custom":
+        return Path(theme["path"])
+
+    return Path(THEME_DIR) / f"{theme['name']}.qss"
+
+
+def load_theme() -> str:
+    theme_path = resolve_theme_path()
 
     if not theme_path.exists():
-        return ""
+        return FALLBACK_THEME
 
-    return theme_path.read_text(encoding="utf-8")
+    return theme_path.read_text(
+        encoding="utf-8",
+    )

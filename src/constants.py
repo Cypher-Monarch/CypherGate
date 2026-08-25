@@ -27,9 +27,11 @@ if not os.path.exists(COUNTRIES_CONF):
 if getattr(sys, "frozen", False):
     APP_DIR = os.path.dirname(sys.executable)
     ROOT_HANDLER_PATH = os.path.join(APP_DIR, "cyphergated")
+    THEME_DIR = "/usr/share/cyphergate/themes"
 else:
     APP_DIR = os.path.dirname(os.path.abspath(__file__))
     ROOT_HANDLER_PATH = os.path.join(APP_DIR, "cyphergated.py")
+    THEME_DIR = os.path.join(APP_DIR, "src", "themes")
 
 ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
 

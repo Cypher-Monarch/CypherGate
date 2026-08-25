@@ -10,4 +10,4 @@ def setup_window(window):
     window.setWindowTitle("CypherGate")
     window.setGeometry(100, 100, 800, 550)
 
-    window.setStyleSheet(load_theme("default"))
+    window.setStyleSheet(load_theme())

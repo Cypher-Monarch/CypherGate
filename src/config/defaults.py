@@ -3,6 +3,7 @@ DEFAULT_SETTINGS = {
     "theme": {
         "mode": "builtin",
         "name": "default",
+        "path": None,
     },
     "icons": {
         "size": {
@@ -36,6 +37,15 @@ DEFAULT_SETTINGS = {
                 "show": "#FFD700",
                 "exit": "#FFD700",
             },
+        },
+    },
+    "widgets": {
+        "spinner": {
+            "size": 40,
+            "color": "#FFD700",
+            "thickness": 3,
+            "fps": 60,
+            "rotation_speed": 360,
         },
     },
     "application": {
