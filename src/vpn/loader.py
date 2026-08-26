@@ -60,8 +60,8 @@ def parse_server_data(data):
 def filter_servers(servers, country, settings):
     filtered = [s for s in servers if s[0] == country]
 
-    sort_by = settings["table"]["sort_by"]
-    sort_order = settings["table"]["sort_order"]
+    sort_by = settings["widgets"]["table"]["sort_by"]
+    sort_order = settings["widgets"]["table"]["sort_order"]
     index = TABLE_COLUMNS[sort_by][1]
 
     def key(server):

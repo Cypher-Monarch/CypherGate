@@ -208,7 +208,7 @@ class CypherGate(QWidget):
             )
 
     def configure_table(self):
-        columns = self.settings["table"]["columns"]
+        columns = self.settings["widgets"]["table"]["columns"]
 
         self.table.setColumnCount(len(columns))
         self.table.setHorizontalHeaderLabels(
@@ -219,7 +219,7 @@ class CypherGate(QWidget):
         self.table.setRowCount(len(servers))
         self.filtered_servers = servers
 
-        columns = self.settings["table"]["columns"]
+        columns = self.settings["widgets"]["table"]["columns"]
 
         for i, server in enumerate(servers):
             row_data = [server[TABLE_COLUMNS[column][1]] for column in columns]
