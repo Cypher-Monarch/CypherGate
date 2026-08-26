@@ -131,6 +131,15 @@ sudo bash install.sh
 
 ---
 
+## 🎨 Customization
+
+Want to make CypherGate look and behave the way you want?
+
+- [Settings](docs/settings.md) — Configure application behaviour and server tables
+- [Theming](docs/theming.md) — Create custom QSS themes
+
+---
+
 ## ⚡ Final note
 
 This is:
