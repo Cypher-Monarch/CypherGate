@@ -111,6 +111,10 @@ echo "==> Copying assets..."
 
 cp -r "$SRC_DIR/Assets" "$RELEASE_DIR/"
 
+echo "==> Copying themes..."
+
+cp -r "$SRC_DIR/themes" "$RELEASE_DIR/"
+
 echo "==> Copying binaries..."
 
 cp "$BUILD_DIR/cyphergate" "$RELEASE_DIR/cyphergate.elf"
