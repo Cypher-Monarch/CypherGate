@@ -16,7 +16,7 @@ QWidget {
 
 QWidget#mainWindow {
     background-color: #101010;
-    color: #fd576e;
+    color: #f5d76e;
     font-family: "monospace";
     font-size: 14px;
 }
