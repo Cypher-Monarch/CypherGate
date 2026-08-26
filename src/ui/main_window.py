@@ -187,9 +187,6 @@ class CypherGate(QWidget):
         if countries:
             self.filter_servers(self.country_dropdown.currentText())
 
-        if countries:
-            self.filter_servers(self.country_dropdown.currentText())
-
         self.spinner.hide()
 
         self.connect_btn.setEnabled(True)
@@ -210,6 +207,7 @@ class CypherGate(QWidget):
     def configure_table(self):
         columns = self.settings["widgets"]["table"]["columns"]
 
+        self.table.clearContents()
         self.table.setColumnCount(len(columns))
         self.table.setHorizontalHeaderLabels(
             [TABLE_COLUMNS[column][0] for column in columns]

@@ -18,7 +18,6 @@ def resolve_theme_path() -> Path:
 
 def load_theme() -> str:
     theme_path = resolve_theme_path()
-    print(theme_path, flush=True)
 
     if not theme_path.exists():
         return FALLBACK_THEME
