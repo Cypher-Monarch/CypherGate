@@ -461,12 +461,12 @@ class CypherGate(QWidget):
 
             self.spinner.reload_config()
 
-            apply_theme(self)
-
             self.configure_table()
             self.filter_servers(self.country_dropdown.currentText())
 
             self.config_watcher.refresh_theme()
+
+        apply_theme(self)
 
     # Type declarations
     spinner: SpinnerWidget
