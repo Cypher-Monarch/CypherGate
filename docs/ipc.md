@@ -25,9 +25,13 @@ or:
   "action": "START_VPN",
   "config": "/path/to/server.ovpn",
   "country": "Japan",
+  "country_short": "JP",
+  "hostname": "vpn.example",
+  "ip": "203.0.113.10",
   "ping": "42 ms",
   "speed": "100000 kbps",
-  "users": "123"
+  "users": "123",
+  "score": 123456
 }
 ```
 
@@ -43,12 +47,16 @@ Example shape:
 {
   "status": "CONNECTED",
   "country": "Japan",
+  "country_short": "JP",
+  "hostname": "vpn.example",
+  "ip": "203.0.113.10",
+  "score": 123456,
   "ping": "42 ms",
   "speed": "100000 kbps",
   "users": "123",
   "config": "/run/cyphergate/config.ovpn",
-  "log_file": "/var/log/cyphergate/cyphergate_....log",
-  "started_at": 1750000000.0,
+  "log_file": "/var/log/cyphergate/cyphergate_2026-08-26_140000.log",
+  "started_at": 1756197000.0,
   "ipv6_disabled": false,
   "last_error": null
 }
@@ -66,9 +74,13 @@ The request may include:
 
 - `config`
 - `country`
+- `country_short`
+- `hostname`
+- `ip`
 - `ping`
 - `speed`
 - `users`
+- `score`
 
 The daemon stores the connection metadata in its in-memory state. The active `config` value reported by `STATUS` refers to the daemon-controlled runtime configuration.
 

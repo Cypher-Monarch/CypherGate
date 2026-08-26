@@ -15,6 +15,8 @@ This document records assumptions that are easy to lose during refactors.
 - The GUI may disappear while the daemon continues running.
 - A new GUI instance must synchronize itself from daemon state.
 - GUI polling is currently used for state observation.
+- User-facing application behavior is controlled by the per-user settings file where applicable.
+- Configuration changes may be applied at runtime for settings explicitly supported by the configuration watcher.
 
 ## IPC assumptions
 
@@ -25,6 +27,10 @@ This document records assumptions that are easy to lose during refactors.
 
 ## Configuration assumptions
 
+- User configuration is stored in `~/.config/cyphergate/settings.json`.
+- Missing configuration values are populated from the application's defaults.
+- A configuration value of `null` represents an intentionally unset value where supported by the setting.
+- Builtin themes are resolved from the application's bundled theme directory.
 - VPNGate-provided configurations are untrusted input.
 - The GUI writes generated configurations to the user-side VPN directory before requesting a connection.
 - The daemon reads the supplied configuration file once, validates the resulting contents, and stages the contents in its daemon-controlled runtime configuration before launching OpenVPN.
@@ -32,9 +38,16 @@ This document records assumptions that are easy to lose during refactors.
 - The validator enforces a deliberately restricted OpenVPN feature set.
 - `script-security > 0` is unsupported.
 
+## Server data assumptions
+
+- VPNGate server metadata is provided as CSV data.
+- Server rows contain a base64-encoded OpenVPN configuration.
+- Server metadata includes country, ping, speed, user count, hostname, IP address, country code, and score.
+- The GUI may use server metadata for filtering, sorting, presentation, and connection state.
+- The configured default country is matched against the server's long country name.
+
 ## Network assumptions
 
-- VPNGate server metadata contains a base64-encoded OpenVPN configuration.
 - DNS AAAA lookup is used as the IPv6 capability check.
 - IPv6 is globally disabled through sysctl when the selected server does not appear to support IPv6.
 

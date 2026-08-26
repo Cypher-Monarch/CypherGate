@@ -1,12 +1,12 @@
 # CypherGate Architecture
 
-> Current implementation: v2.0.3 (Linux)
+> Current implementation: v2.1.0 (Linux)
 
 ## Overview
 
 CypherGate is split into an unprivileged Qt GUI and a privileged daemon.
 
-The GUI is responsible for presentation, server discovery, configuration preparation, and user interaction. The daemon owns the VPN process and the authoritative connection state.
+The GUI is responsible for presentation, server discovery, configuration management, VPN configuration preparation, and user interaction. The daemon owns the VPN process and the authoritative connection state.
 
 ```text
                     ┌─────────────────────┐
@@ -42,12 +42,30 @@ It:
 
 - fetches and caches the VPNGate server list;
 - filters servers by country;
+- sorts servers according to the configured table settings;
 - prepares `.ovpn` configuration data;
 - writes the generated configuration to the user-side VPN directory;
 - requests privileged operations through the IPC layer;
 - polls daemon state;
 - synchronizes widgets from daemon state;
+- applies user configuration to the GUI;
 - displays connection/disconnection notifications.
+
+### Configuration
+
+The `config/` package manages application configuration and theme selection.
+
+It:
+
+- loads and validates `settings.json`;
+- merges missing configuration values from the defaults;
+- resolves builtin and custom themes;
+- provides configuration-specific helpers;
+- watches the settings and active theme files for changes.
+
+Configuration is stored per-user under `~/.config/cyphergate/settings.json`.
+
+Settings cover theme selection, icon appearance, spinner behavior, application behavior, VPN defaults, and server-table presentation.
 
 ### IPC client
 
@@ -83,7 +101,8 @@ The state includes:
 
 - connection status;
 - OpenVPN process handle;
-- selected country and server metadata;
+- selected country;
+- selected server metadata, including country code, hostname, IP, score, ping, speed, and user count;
 - configuration path;
 - log path and handle;
 - connection start time;
@@ -108,7 +127,7 @@ It rejects configured dangerous directives and rejects any `script-security` val
 
 ### VPN data layer
 
-`vpn/loader.py` parses VPNGate CSV data and applies the local country allowlist.
+`vpn/loader.py` parses VPNGate CSV data and applies the local country allowlist. It retains server metadata used for filtering, sorting, table presentation, and connection state.
 
 `vpn/connector.py` prepares a server configuration, adds cipher settings when absent, detects IPv6 support, and writes the resulting configuration file.
 
@@ -136,6 +155,9 @@ The architecture deliberately separates:
 1. user interface lifecycle;
 2. privileged VPN lifecycle;
 3. authoritative connection state;
-4. VPN server data processing.
+4. VPN server data processing;
+5. user configuration and presentation preferences.
+
+The GUI remains responsible for presentation and configuration while the daemon remains responsible for privileged VPN lifecycle and authoritative state.
 
 This makes the daemon independently useful to other clients. The current IPC protocol is already sufficient for small external clients such as shell status/uptime/toggle helpers.
