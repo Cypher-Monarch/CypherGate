@@ -52,6 +52,14 @@ def create_tray(window, icon_path):
     exit_action.triggered.connect(QApplication.quit)
     tray_menu.addAction(exit_action)
 
+    window.tray_actions = {
+        "show": show_action,
+        "cancel": cancel_action,
+        "connect": connect_action,
+        "disconnect": disconnect_action,
+        "exit": exit_action,
+    }
+
     tray_icon.setContextMenu(tray_menu)
     tray_icon.activated.connect(window.on_tray_icon_activated)
     tray_icon.show()

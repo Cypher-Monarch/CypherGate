@@ -13,7 +13,7 @@ _ICON_CACHE: dict[tuple[str, str, int], QIcon] = {}
 _SETTINGS: dict[str, Any] | None = None
 
 
-def reload() -> dict[str, Any]:
+def reload_icons() -> dict[str, Any]:
     global _SETTINGS
 
     _SETTINGS = load_settings()
@@ -26,7 +26,7 @@ def reload() -> dict[str, Any]:
 
 def get_settings() -> dict[str, Any]:
     if _SETTINGS is None:
-        reload()
+        reload_icons()
 
     assert _SETTINGS is not None
 
@@ -89,3 +89,8 @@ def apply_icons(window):
     window.auto_btn.setIcon(icon("auto_connect"))
     window.disconnect_btn.setIcon(icon("disconnect"))
     window.cancel_button.setIcon(icon("cancel"))
+
+
+def apply_tray_icons(window):
+    for name, action in window.tray_actions.items():
+        action.setIcon(icon(name, "systray"))

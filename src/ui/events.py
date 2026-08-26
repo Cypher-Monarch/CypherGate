@@ -6,23 +6,26 @@ from PySide6.QtWidgets import QSystemTrayIcon
 # ────────────────────────────────────────────────────────
 
 
-def closeEvent(self, event):
-    event.ignore()
-    self.hide()
-    self.tray_icon.showMessage(
-        "CypherGate",
-        "App minimized to tray. Double-click to restore.",
-        QSystemTrayIcon.MessageIcon.Information,
-        2000,
-    )
+def closeEvent(window, event):
+    if window.settings["application"]["minimize_to_tray"]:
+        event.ignore()
+        window.hide()
+        window.tray_icon.showMessage(
+            "CypherGate",
+            "App minimized to tray. Double-click to restore.",
+            QSystemTrayIcon.MessageIcon.Information,
+            2000,
+        )
+    else:
+        event.accept()
 
 
-def mousePressEvent(self, event):
+def mousePressEvent(window, event):
     if event.button() == Qt.MouseButton.LeftButton:
-        self.drag_pos = event.globalPosition().toPoint()
+        window.drag_pos = event.globalPosition().toPoint()
 
 
-def mouseMoveEvent(self, event):
+def mouseMoveEvent(window, event):
     if event.buttons() == Qt.MouseButton.LeftButton:
-        self.move(self.pos() + event.globalPosition().toPoint() - self.drag_pos)
-        self.drag_pos = event.globalPosition().toPoint()
+        window.move(window.pos() + event.globalPosition().toPoint() - window.drag_pos)
+        window.drag_pos = event.globalPosition().toPoint()

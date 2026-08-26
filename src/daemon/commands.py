@@ -37,6 +37,10 @@ def start_vpn(cmd):
     state["ping"] = cmd.get("ping")
     state["speed"] = cmd.get("speed")
     state["users"] = cmd.get("users")
+    state["country_short"] = cmd.get("country_short")
+    state["hostname"] = cmd.get("hostname")
+    state["ip"] = cmd.get("ip")
+    state["score"] = cmd.get("score")
 
     state["log_handle"] = open(log_file, "a", buffering=1)
 
@@ -120,6 +124,10 @@ def get_status():
         {
             "status": state["status"],
             "country": state["country"],
+            "country_short": state["country_short"],
+            "hostname": state["hostname"],
+            "ip": state["ip"],
+            "score": state["score"],
             "ping": state["ping"],
             "speed": state["speed"],
             "users": state["users"],

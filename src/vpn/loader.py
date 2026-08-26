@@ -1,7 +1,7 @@
 import csv
 import os
 
-from constants import COUNTRIES_CONF
+from constants import COUNTRIES_CONF, TABLE_COLUMNS
 
 
 def load_allowed_countries():
@@ -29,25 +29,65 @@ def parse_server_data(data):
         if allowed_countries and country not in allowed_countries:
             continue
 
+        hostname = row[0]
+        ip = row[1]
+        score = row[2]
         ping = row[3] + " ms"
         speed = str(int(int(row[4]) / 1000)) + " kbps"
-        users = row[2]
+        country = row[5]
+        country_short = row[6]
+        users = row[9]
         config_b64 = row[-1]
 
-        servers.append((country, ping, speed, users, config_b64))
+        servers.append(
+            (
+                country,
+                ping,
+                speed,
+                users,
+                hostname,
+                ip,
+                country_short,
+                score,
+                config_b64,
+            )
+        )
         countries.add(country)
 
     return servers, sorted(countries)
 
 
-def filter_servers(servers, country):
+def filter_servers(servers, country, settings):
     filtered = [s for s in servers if s[0] == country]
 
-    def parse_ping(ping):
-        try:
-            return int(ping.split()[0])
-        except ValueError:
-            return float("inf")
+    sort_by = settings["table"]["sort_by"]
+    sort_order = settings["table"]["sort_order"]
+    index = TABLE_COLUMNS[sort_by][1]
 
-    filtered.sort(key=lambda s: parse_ping(s[1]))
-    return filtered
+    def key(server):
+        value = server[index]
+
+        if sort_by in ("ping", "speed"):
+            return int(value.split()[0])
+
+        return float(value)
+
+    valid = []
+    invalid = []
+
+    for server in filtered:
+        try:
+            if server[index] == "-":
+                invalid.append(server)
+            else:
+                key(server)
+                valid.append(server)
+        except (ValueError, TypeError):
+            invalid.append(server)
+
+    valid.sort(
+        key=key,
+        reverse=sort_order == "descending",
+    )
+
+    return valid + invalid

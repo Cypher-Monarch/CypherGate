@@ -13,7 +13,6 @@ from PySide6.QtCore import (
     QTimer,
     Signal,
 )
-from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -28,12 +27,7 @@ from PySide6.QtWidgets import (
 
 from config.manager import load_settings
 from config.watcher import ConfigWatcher
-from constants import (
-    API_URL,
-    CACHE_FILE,
-    CONFIG_FILE,
-    ICON_PATH,
-)
+from constants import API_URL, CACHE_FILE, CONFIG_FILE, ICON_PATH, TABLE_COLUMNS
 from ipc import ensure_root_handler, get_status, send_root_command
 from permissions import check_permissions
 from ui.animations import (
@@ -47,8 +41,7 @@ from ui.animations import (
     tray_restore,
 )
 from ui.events import closeEvent, mouseMoveEvent, mousePressEvent
-from ui.icons import apply_icons
-from ui.icons import reload as reload_icons
+from ui.icons import apply_icons, apply_tray_icons, reload_icons
 from ui.layout import setup_layout
 from ui.spinner import SpinnerWidget
 from ui.status import sync_ui_state
@@ -77,6 +70,7 @@ class CypherGate(QWidget):
 
         setup_window(self)
         create_widgets(self)
+        self.configure_table()
         setup_layout(self)
         connect_signals(self)
 
@@ -173,8 +167,7 @@ class CypherGate(QWidget):
 
     def filter_servers(self, country):
         self.filtered_servers = filter_server_list(
-            self.all_servers,
-            country,
+            self.all_servers, country, self.settings
         )
         self.populate_table(self.filtered_servers)
 
@@ -185,6 +178,14 @@ class CypherGate(QWidget):
 
         self.country_dropdown.clear()
         self.country_dropdown.addItems(countries)
+
+        default_country = self.settings["vpn"]["default_country"]
+
+        if default_country is not None and default_country in countries:
+            self.country_dropdown.setCurrentText(default_country)
+
+        if countries:
+            self.filter_servers(self.country_dropdown.currentText())
 
         if countries:
             self.filter_servers(self.country_dropdown.currentText())
@@ -201,16 +202,27 @@ class CypherGate(QWidget):
             self.show_connection_info(
                 status["country"],
                 status["ping"],
+                status["ip"],
                 status["speed"],
                 status["users"],
             )
+
+    def configure_table(self):
+        columns = self.settings["table"]["columns"]
+
+        self.table.setColumnCount(len(columns))
+        self.table.setHorizontalHeaderLabels(
+            [TABLE_COLUMNS[column][0] for column in columns]
+        )
 
     def populate_table(self, servers):
         self.table.setRowCount(len(servers))
         self.filtered_servers = servers
 
-        for i, (country, ping, speed, users, _) in enumerate(servers):
-            row_data = [country, ping, speed, users]
+        columns = self.settings["table"]["columns"]
+
+        for i, server in enumerate(servers):
+            row_data = [server[TABLE_COLUMNS[column][1]] for column in columns]
 
             for j, text in enumerate(row_data):
                 item = QTableWidgetItem(text)
@@ -272,7 +284,17 @@ class CypherGate(QWidget):
         self.start_vpn_connection(self.filtered_servers[0])
 
     def start_vpn_connection(self, server):
-        country, ping, speed, users, _ = server
+        (
+            country,
+            ping,
+            speed,
+            users,
+            hostname,
+            ip,
+            country_short,
+            score,
+            _,
+        ) = server
 
         config, ovpn_path, disable_ipv6 = prepare_connection(server)
 
@@ -288,9 +310,13 @@ class CypherGate(QWidget):
                     "action": "START_VPN",
                     "config": ovpn_path,
                     "country": country,
+                    "country_short": country_short,
+                    "hostname": hostname,
+                    "ip": ip,
                     "ping": ping,
                     "speed": speed,
                     "users": users,
+                    "score": score,
                 }
             )
 
@@ -322,6 +348,7 @@ class CypherGate(QWidget):
                 self.show_connection_info(
                     status["country"],
                     status["ping"],
+                    status["ip"],
                     status["speed"],
                     status["users"],
                 )
@@ -363,15 +390,14 @@ class CypherGate(QWidget):
         self.refresh_btn.setEnabled(False)
         self.load_servers_async()
 
-    def show_connection_info(self, country, ping, speed, users):
-        try:
-            ipv4 = requests.get("https://ipinfo.io/ip", timeout=10).text.strip()
-        except Exception:
-            ipv4 = "Unknown"
-        if notification.notify is not None:
+    def show_connection_info(self, country, ping, ip, speed, users):
+        if (
+            notification.notify is not None
+            and self.settings["application"]["notifications"]
+        ):
             notification.notify(
                 title="CypherGate VPN Connected",
-                message=f"{country} | New IPv4: {ipv4}",
+                message=f"{country} | New IPv4: {ip}",
                 app_name="CypherGate",
             )
         msg = (
@@ -379,7 +405,7 @@ class CypherGate(QWidget):
             f"Ping: {ping}\n"
             f"Speed: {speed}\n"
             f"Users: {users}\n"
-            f"Your new IPv4: {ipv4}\n"
+            f"Your new IPv4: {ip}\n"
         )
         QMessageBox.information(self, "VPN Connected", msg)
 
@@ -396,7 +422,10 @@ class CypherGate(QWidget):
             self, "VPN Disconnected", "VPN connection has been terminated."
         )
 
-        if notification.notify is not None:
+        if (
+            notification.notify is not None
+            and self.settings["application"]["notifications"]
+        ):
             notification.notify(
                 title="CypherGate VPN Disconnected",
                 message="VPN connection has been terminated.",
@@ -428,10 +457,14 @@ class CypherGate(QWidget):
         if path == str(CONFIG_FILE):
             reload_icons()
             apply_icons(self)
+            apply_tray_icons(self)
 
             self.spinner.reload_config()
 
             apply_theme(self)
+
+            self.configure_table()
+            self.filter_servers(self.country_dropdown.currentText())
 
             self.config_watcher.refresh_theme()
 

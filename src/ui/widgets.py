@@ -51,8 +51,6 @@ def create_widgets(window):
 
     window.table = QTableWidget()
     window.table.setObjectName("serverTable")
-    window.table.setColumnCount(4)
-    window.table.setHorizontalHeaderLabels(["Country", "Ping", "Speed", "Users"])
     window.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     window.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 

@@ -15,6 +15,10 @@ state = {
     "users": None,
     "speed": None,
     "ping": None,
+    "hostname": None,
+    "ip": None,
+    "country_short": None,
+    "score": None,
 }
 
 
@@ -26,7 +30,11 @@ def reset_connection_state():
     state["log_handle"] = None
     state["started_at"] = None
     state["country"] = None
+    state["country_short"] = None
+    state["hostname"] = None
+    state["ip"] = None
     state["ping"] = None
     state["speed"] = None
     state["users"] = None
+    state["score"] = None
     state["last_error"] = None

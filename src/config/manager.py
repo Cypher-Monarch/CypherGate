@@ -71,6 +71,9 @@ def merge_defaults(settings, defaults):
 
 
 def valid_type(value, expected):
+    if expected is None:
+        return True
+
     if isinstance(expected, bool):
         return isinstance(value, bool)
 

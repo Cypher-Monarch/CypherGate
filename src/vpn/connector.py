@@ -26,7 +26,8 @@ def server_supports_ipv6(host):
 
 
 def prepare_connection(server):
-    country, _, _, _, config_b64 = server
+    country = server[0]
+    config_b64 = server[8]
 
     ovpn_path = os.path.join(VPN_DIR, f"{country}.ovpn")
 
