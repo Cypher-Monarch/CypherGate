@@ -47,16 +47,16 @@ DEFAULT_SETTINGS = {
             "fps": 60,
             "rotation_speed": 360,
         },
-    },
-    "table": {
-        "columns": [
-            "country",
-            "ping",
-            "speed",
-            "users",
-        ],
-        "sort_by": "ping",
-        "sort_order": "ascending",
+        "table": {
+            "columns": [
+                "country",
+                "ping",
+                "speed",
+                "users",
+            ],
+            "sort_by": "ping",
+            "sort_order": "ascending",
+        },
     },
     "application": {
         "minimize_to_tray": True,
