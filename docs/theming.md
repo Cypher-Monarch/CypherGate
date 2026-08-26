@@ -21,7 +21,7 @@ Builtin themes are stored in the application's theme directory.
     "path": null
   }
 }
-````
+```
 
 When `mode` is `builtin`, CypherGate loads:
 
@@ -117,9 +117,9 @@ widget of the same Qt class.
 
 ### Country selector
 
-| Object name    | Widget                  |
-| -------------- | ----------------------- |
-| `countryPopup` | Country selection popup |
+| Object name       | Widget               |
+| ----------------- | -------------------- |
+| `countryDropdown` | Country selector     |
 
 ## Common selectors
 
@@ -209,19 +209,51 @@ QHeaderView::section {
 
 ### Country selector
 
-The country selector uses a popup frame containing a list view.
+The country selector is a `QComboBox` with an explicit `QListView`
+popup.
 
-The following selectors can be used:
+The combo box can be styled using:
 
 ```qss
-QFrame#countryPopup
-QFrame#countryPopup QListView
-QFrame#countryPopup QListView::item
-QFrame#countryPopup QListView::item:hover
-QFrame#countryPopup QListView::item:selected
+QComboBox
+QComboBox:hover
+QComboBox:focus
+QComboBox::drop-down
 ```
 
-The popup and its list items can therefore be styled independently.
+The popup list can be styled using:
+
+```qss
+QListView
+QListView::item
+QListView::item:hover
+QListView::item:selected
+```
+
+CypherGate sets `combobox-popup: 0` on the country selector to use
+the standard list-view popup behavior.
+
+For example:
+
+```qss
+QComboBox {
+    combobox-popup: 0;
+
+    background-color: #181825;
+    color: #cdd6f4;
+    border: 1px solid #313244;
+}
+
+QListView {
+    background-color: #181825;
+    color: #cdd6f4;
+}
+
+QListView::item:selected {
+    background-color: #cba6f7;
+    color: #11111b;
+}
+```
 
 ### Scrollbars
 
@@ -321,16 +353,6 @@ QTableWidget#serverTable::item:selected {
 ```
 
 Save the stylesheet as a `.qss` file and point `theme.path` at it:
-
-```json
-{
-  "theme": {
-    "mode": "custom",
-    "name": null,
-    "path": "/path/to/theme.qss"
-  }
-}
-```
 
 The theme can then be edited while CypherGate is running and the changes will
 be picked up by the configuration watcher.
