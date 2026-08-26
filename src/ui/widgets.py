@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
     QLabel,
+    QListView,
     QPushButton,
     QSizePolicy,
     QTableWidget,
@@ -44,6 +45,9 @@ def create_widgets(window):
 
     window.country_dropdown = QComboBox()
     window.country_dropdown.setObjectName("countryDropdown")
+
+    country_view = QListView()
+    window.country_dropdown.setView(country_view)
 
     # ────────────────────────────────────────────────────────
     # Server Table
