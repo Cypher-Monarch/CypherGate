@@ -7,7 +7,7 @@ This document records assumptions that are easy to lose during refactors.
 - `cyphergated` is the authoritative owner of the VPN process.
 - The daemon is expected to outlive the GUI.
 - Daemon connection state is maintained in memory for the lifetime of the daemon process.
-- The daemon owns the OpenVPN process; restarting or terminating the daemon therefore terminates the active VPN connection and starts the next daemon instance in a disconnected state.
+- When managed by systemd, the daemon and its OpenVPN child process share the same service control group. Terminating or restarting the daemon therefore terminates the active VPN connection through `KillMode=control-group`. Outside of systemd, terminating the daemon does not inherently terminate a reparented OpenVPN process.
 
 ## GUI assumptions
 
