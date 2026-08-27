@@ -278,7 +278,7 @@ QToolTip {
 
 ### Custom fonts
 
-Custom fonts require the font to be placed in `Assets/fonts`:
+Custom fonts require the font to be placed in `Assets/fonts`, the formats limited to `.ttf` and `.otf`:
 
 ```qss
 QWidget {
