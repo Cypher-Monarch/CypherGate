@@ -276,6 +276,16 @@ QToolTip {
 }
 ```
 
+### Custom fonts
+
+Custom fonts require the font to be placed in `Assets/fonts`:
+
+```qss
+QWidget {
+    font-family: "Panchang";
+}
+```
+
 ## States and pseudo-selectors
 
 Qt's standard pseudo-selectors can be used where supported by the target
