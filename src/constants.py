@@ -37,6 +37,8 @@ ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
 
 ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 
+FONT_DIR = os.path.join(APP_DIR, "Assets", "fonts")
+
 VERSION = "2.0.3"
 
 TABLE_COLUMNS = {

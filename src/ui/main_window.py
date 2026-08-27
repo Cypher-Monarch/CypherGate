@@ -41,6 +41,7 @@ from ui.animations import (
     tray_restore,
 )
 from ui.events import closeEvent, mouseMoveEvent, mousePressEvent
+from ui.fonts import load_fonts
 from ui.icons import apply_icons, apply_tray_icons, reload_icons
 from ui.layout import setup_layout
 from ui.spinner import SpinnerWidget
@@ -63,6 +64,8 @@ class CypherGate(QWidget):
 
     def __init__(self):
         super().__init__()
+
+        load_fonts()
 
         self.settings = load_settings()
 
