@@ -20,6 +20,7 @@ src
 ├── ui
 │   ├── animations.py
 │   ├── events.py
+│   ├── fonts.py
 │   ├── icons.py
 │   ├── layout.py
 │   ├── main_window.py
@@ -177,6 +178,7 @@ The UI modules are deliberately small:
 * `events.py`: window interaction events;
 * `icons.py`: SVG icon rendering/cache and icon application;
 * `spinner.py`: connection spinner and spinner configuration.
+* `fonts.py`: load custom fonts for themes using said fonts.
 
 The `config` package owns settings loading, defaults, theme resolution, and configuration watching.
 
