@@ -30,7 +30,7 @@ Controls the application's Qt stylesheet.
 | `mode`             | string      | `builtin` or `custom`                             |
 | `name`             | string      | Name of a builtin theme                           |
 | `path`             | string/null | Path to a custom `.qss` theme                     |
-| `use_custom_fonts` | Boolean     | Allow loading of fonts not installed system-wide  | 
+| `use_custom_fonts` | boolean     | Allow loading of fonts not installed system-wide  | 
 
 For a builtin theme:
 
