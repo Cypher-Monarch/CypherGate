@@ -2,7 +2,7 @@ DEFAULT_SETTINGS = {
     "config_version": 1,
     "theme": {
         "mode": "builtin",
-        "name": "pastel-orange",
+        "name": "default",
         "path": None,
     },
     "icons": {
