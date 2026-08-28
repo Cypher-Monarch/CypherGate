@@ -31,6 +31,7 @@ Controls the application's Qt stylesheet.
 | `name`             | string      | Name of a builtin theme                           |
 | `path`             | string/null | Path to a custom `.qss` theme                     |
 | `use_custom_fonts` | Boolean     | Allow loading of fonts not installed system-wide  | 
+
 For a builtin theme:
 
 ```json
