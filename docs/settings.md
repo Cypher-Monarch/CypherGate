@@ -25,12 +25,12 @@ restarting CypherGate.
 
 Controls the application's Qt stylesheet.
 
-| Setting | Type        | Description                   |
-| ------- | ----------- | ----------------------------- |
-| `mode`  | string      | `builtin` or `custom`         |
-| `name`  | string      | Name of a builtin theme       |
-| `path`  | string/null | Path to a custom `.qss` theme |
-
+| Setting            | Type        | Description                                       |
+| ------------------ | ----------- | ------------------------------------------------- |
+| `mode`             | string      | `builtin` or `custom`                             |
+| `name`             | string      | Name of a builtin theme                           |
+| `path`             | string/null | Path to a custom `.qss` theme                     |
+| `use_custom_fonts` | Boolean     | Allow loading of fonts not installed system-wide  | 
 For a builtin theme:
 
 ```json
@@ -38,10 +38,13 @@ For a builtin theme:
   "theme": {
     "mode": "builtin",
     "name": "playful",
-    "path": null
+    "path": null,
+    "use_custom_fonts": false
   }
 }
 ```
+
+_builtin theme pastel-orange requires value of `use_custom_fonts` to be set to `true` to get the complete theme experience_
 
 For a custom theme:
 
@@ -50,7 +53,8 @@ For a custom theme:
   "theme": {
     "mode": "custom",
     "name": null,
-    "path": "/path/to/theme.qss"
+    "path": "/path/to/theme.qss",
+    "use_custom_fonts": true
   }
 }
 ```
