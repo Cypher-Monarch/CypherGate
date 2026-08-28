@@ -10,6 +10,8 @@ from pathlib import Path
 SUPPORTED_FORMATS = {".ttf", ".otf"}
 
 def load_fonts():
+    font_ids = []
+
     for font_path in Path(FONT_DIR).iterdir():
         if font_path.suffix.lower() not in SUPPORTED_FORMATS:
             continue
@@ -18,3 +20,8 @@ def load_fonts():
 
         if font_id == -1:
             print(f"Failed to load font: {font_path.name}")
+            continue
+
+        font_ids.append(font_id)
+
+    return font_ids

@@ -25,6 +25,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from PySide6.QtGui import QFontDatabase
+
 from config.manager import load_settings
 from config.watcher import ConfigWatcher
 from constants import API_URL, CACHE_FILE, CONFIG_FILE, ICON_PATH, TABLE_COLUMNS
@@ -65,9 +67,10 @@ class CypherGate(QWidget):
     def __init__(self):
         super().__init__()
 
-        load_fonts()
-
         self.settings = load_settings()
+
+        if self.settings["application"]["use_custom_fonts"]:
+            self.font_ids = load_fonts()
 
         self.data_loaded.connect(self.process_server_data)
 
@@ -453,9 +456,26 @@ class CypherGate(QWidget):
     # Reload config
 
     def reload_config(self, path):
+
+        old_font_setting = self.settings["application"]["use_custom_fonts"]
+
         self.settings = load_settings()
 
+        # Compare settings before and after
         if path == str(CONFIG_FILE):
+            new_font_setting = self.settings["application"]["use_custom_fonts"]
+
+            # False -> True: load fonts
+            if not old_font_setting and new_font_setting:
+                self.font_ids = load_fonts()
+
+            # True -> False: unload fonts
+            elif old_font_setting and not new_font_setting:
+                for font_id in self.font_ids:
+                    QFontDatabase.removeApplicationFont(font_id)
+
+                self.font_ids = []
+
             reload_icons()
             apply_icons(self)
             apply_tray_icons(self)
