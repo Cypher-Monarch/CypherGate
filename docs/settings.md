@@ -30,7 +30,6 @@ Controls the application's Qt stylesheet.
 | `mode`             | string      | `builtin` or `custom`                             |
 | `name`             | string      | Name of a builtin theme                           |
 | `path`             | string/null | Path to a custom `.qss` theme                     |
-| `use_custom_fonts` | boolean     | Allow loading of fonts not installed system-wide  | 
 
 For a builtin theme:
 
@@ -39,13 +38,10 @@ For a builtin theme:
   "theme": {
     "mode": "builtin",
     "name": "playful",
-    "path": null,
-    "use_custom_fonts": false
+    "path": null
   }
 }
 ```
-
-_builtin theme pastel-orange requires value of `use_custom_fonts` to be set to `true` to get the complete theme experience_
 
 For a custom theme:
 
@@ -54,8 +50,7 @@ For a custom theme:
   "theme": {
     "mode": "custom",
     "name": null,
-    "path": "/path/to/theme.qss",
-    "use_custom_fonts": true
+    "path": "/path/to/theme.qss"
   }
 }
 ```
@@ -141,6 +136,10 @@ Controls general application behavior.
 | `minimize_to_tray`       | boolean | Whether closing/minimizing the application sends it to the system tray |
 | `notifications`          | boolean | Enables or disables desktop notifications                              |
 | `status_update_interval` | integer | Interval, in milliseconds, at which the GUI polls daemon status        |
+| `use_custom_fonts`       | boolean | Allow loading of fonts not installed system-wide                       | 
+
+_builtin theme pastel-orange requires value of `use_custom_fonts` to be set to `true` to get the complete theme experience_
+
 
 ## `vpn`
 
