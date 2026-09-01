@@ -140,7 +140,7 @@ Controls general application behavior.
 | `status_update_interval` | integer | Interval, in milliseconds, at which the GUI polls daemon status        |
 | `use_custom_fonts`       | boolean | Allow loading of fonts not installed system-wide                       | 
 
-_builtin theme pastel-orange requires value of `use_custom_fonts` to be set to `true` to get the complete theme experience_
+_builtin themes pastel-orange and win32 require value of `use_custom_fonts` to be set to `true` to get the complete theme experience_
 
 
 ## `vpn`
