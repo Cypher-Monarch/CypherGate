@@ -97,7 +97,7 @@ gpg --keyserver hkps://keys.openpgp.org \
     --recv-keys 9ED87F6065033606670941AAC6C9B498797C980E
 ```
 
-1. Use your favourite AUR helper to install `cyphergatevpn-bin`!
+2. Use your favourite AUR helper to install `cyphergatevpn-bin`!
 
 ```bash
 yay -S cyphergatevpn-bin
