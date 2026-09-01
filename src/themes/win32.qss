@@ -1,0 +1,375 @@
+/* ==========================================================
+   CypherGate — Win32
+   A lovingly hostile recreation of classic Windows utility UI.
+   ========================================================== */
+
+QWidget#mainWindow {
+    background-color: #D4D0C8;
+    color: #000000;
+    font-family: "Liberation Sans";
+    font-size: 11px;
+}
+
+QWidget {
+    background-color: #D4D0C8;
+    color: #000000;
+    font-family: "Liberation Sans";
+    font-size: 11px;
+}
+
+QLabel {
+    background: transparent;
+    color: #000000;
+}
+
+/* -------------------------
+   Title Bar
+   ------------------------- */
+
+QWidget#titleBar {
+    background-color: #000080;
+}
+
+QLabel#titleLabel {
+    background: transparent;
+    color: #FFFFFF;
+    font-family: "Liberation Sans";
+    font-size: 11px;
+    font-weight: bold;
+}
+
+QPushButton#minimizeButton,
+QPushButton#closeButton {
+    background-color: #D4D0C8;
+    color: #000000;
+    border-top: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #404040;
+    border-bottom: 1px solid #404040;
+    border-radius: 0px;
+    font-family: "Liberation Sans";
+    font-size: 10px;
+    font-weight: bold;
+    padding: 0px;
+}
+
+QPushButton#minimizeButton:hover,
+QPushButton#closeButton:hover {
+    background-color: #FFFFFF;
+}
+
+QPushButton#closeButton:hover {
+    color: #800000;
+}
+
+/* -------------------------
+   Headings
+   ------------------------- */
+
+QLabel#headingLabel {
+    background: transparent;
+    color: #000000;
+    font-family: "Liberation Sans";
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QLabel#animLabel {
+    background: transparent;
+    color: #000080;
+}
+
+QLabel#statusLabel {
+    color: #000000;
+    font-family: "Liberation Sans";
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* -------------------------
+   Country Dropdown
+   ------------------------- */
+
+QComboBox {
+    combobox-popup: 0;
+    background-color: #FFFFFF;
+    color: #000000;
+
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+    border-radius: 0px;
+
+    padding: 2px 4px;
+}
+
+QComboBox:hover,
+QComboBox:focus {
+    border-top-color: #000000;
+    border-left-color: #000000;
+}
+
+QComboBox::drop-down {
+    width: 20px;
+    background-color: #D4D0C8;
+    border-left: 1px solid #808080;
+}
+
+QListView {
+    background-color: #FFFFFF;
+    color: #000000;
+    border: 1px solid #000000;
+    outline: none;
+}
+
+QListView::item {
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 2px 4px;
+}
+
+QListView::item:hover {
+    background-color: #000080;
+    color: #FFFFFF;
+}
+
+QListView::item:selected {
+    background-color: #000080;
+    color: #FFFFFF;
+}
+
+/* -------------------------
+   Server Table
+   ------------------------- */
+
+QTableCornerButton::section {
+    background-color: #D4D0C8;
+    border-top: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #808080;
+    border-bottom: 1px solid #808080;
+}
+
+QTableWidget#serverTable {
+    background-color: #FFFFFF;
+    alternate-background-color: #F2F2F2;
+    color: #000000;
+
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+
+    border-radius: 0px;
+    gridline-color: #C0C0C0;
+
+    selection-background-color: #000080;
+    selection-color: #FFFFFF;
+
+    outline: none;
+}
+
+QTableWidget#serverTable::item {
+    background-color: transparent;
+    color: #000000;
+    padding: 2px 4px;
+    border: none;
+}
+
+QTableWidget#serverTable::item:hover {
+    background-color: #E8E8FF;
+}
+
+QTableWidget#serverTable::item:selected {
+    background-color: #000080;
+    color: #FFFFFF;
+    font-weight: normal;
+}
+
+QHeaderView {
+    background-color: #D4D0C8;
+}
+
+QHeaderView::section {
+    background-color: #D4D0C8;
+    color: #000000;
+
+    padding: 3px 5px;
+
+    border-top: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #808080;
+    border-bottom: 1px solid #808080;
+
+    font-family: "Liberation Sans";
+    font-weight: bold;
+}
+
+/* -------------------------
+   Main Buttons
+   ------------------------- */
+
+QPushButton {
+    background-color: #D4D0C8;
+    color: #000000;
+
+    border-top: 2px solid #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+
+    border-radius: 0px;
+    padding: 4px 12px;
+
+    font-family: "Liberation Sans";
+    font-size: 11px;
+    font-weight: normal;
+}
+
+QPushButton:hover {
+    background-color: #E8E8E8;
+}
+
+QPushButton:pressed {
+    border-top-color: #404040;
+    border-left-color: #404040;
+    border-right-color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
+    padding-top: 5px;
+    padding-left: 13px;
+}
+
+QPushButton:disabled {
+    background-color: #D4D0C8;
+    color: #808080;
+    border-top-color: #FFFFFF;
+    border-left-color: #FFFFFF;
+    border-right-color: #808080;
+    border-bottom-color: #808080;
+}
+
+/* -------------------------
+   Individual Buttons
+   ------------------------- */
+
+QPushButton#refreshButton {
+    background-color: #D4D0C8;
+    color: #000000;
+}
+
+QPushButton#refreshButton:hover {
+    background-color: #FFFFFF;
+}
+
+QPushButton#connectButton {
+    background-color: #D4D0C8;
+    color: #000000;
+}
+
+QPushButton#connectButton:hover {
+    background-color: #FFFFFF;
+}
+
+QPushButton#disconnectButton {
+    background-color: #D4D0C8;
+    color: #800000;
+}
+
+QPushButton#disconnectButton:hover {
+    background-color: #FFE0E0;
+    color: #800000;
+}
+
+QPushButton#autoConnectButton {
+    background-color: #D4D0C8;
+    color: #000080;
+}
+
+QPushButton#autoConnectButton:hover {
+    background-color: #FFFFFF;
+    color: #000080;
+}
+
+QPushButton#cancelButton {
+    background-color: #D4D0C8;
+    color: #800000;
+
+    border-top: 2px solid #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+
+    border-radius: 0px;
+}
+
+QPushButton#cancelButton:hover {
+    background-color: #FFFFFF;
+    color: #800000;
+}
+
+/* -------------------------
+   Scrollbars
+   ------------------------- */
+
+QScrollBar:vertical {
+    background-color: #D4D0C8;
+    width: 16px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #D4D0C8;
+    min-height: 20px;
+
+    border-top: 2px solid #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+
+    border-radius: 0px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #E8E8E8;
+}
+
+QScrollBar::add-line:vertical {
+    height: 16px;
+    background-color: #D4D0C8;
+    border-top: 2px solid #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+}
+
+QScrollBar::sub-line:vertical {
+    height: 16px;
+    background-color: #D4D0C8;
+    border-top: 2px solid #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background-color: #C0C0C0;
+}
+
+/* -------------------------
+   Tooltips
+   ------------------------- */
+
+QToolTip {
+    background-color: #FFFFE1;
+    color: #000000;
+
+    border: 1px solid #000000;
+    border-radius: 0px;
+
+    padding: 2px 4px;
+
+    font-family: "Liberation Sans";
+    font-size: 11px;
+}

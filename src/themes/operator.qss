@@ -1,0 +1,306 @@
+/* ==========================================================
+   CypherGate — OPERATOR
+   Fictional tactical/network operations console.
+   ========================================================== */
+
+QWidget#mainWindow {
+    background-color: #0A0C0C;
+    color: #D8D8CC;
+    font-family: "JetBrains Mono";
+    font-size: 13px;
+}
+
+QWidget {
+    background-color: #101312;
+    color: #D8D8CC;
+    font-family: "JetBrains Mono";
+}
+
+QLabel {
+    background: transparent;
+    color: #D8D8CC;
+}
+
+/* -------------------------
+   Title Bar
+   ------------------------- */
+
+QWidget#titleBar {
+    background-color: transparent;
+}
+
+QLabel#titleLabel {
+    background: transparent;
+    color: #C8A96B;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton#minimizeButton,
+QPushButton#closeButton {
+    background: transparent;
+    color: #8D918A;
+    border: none;
+    border-radius: 2px;
+    font-size: 16px;
+}
+
+QPushButton#minimizeButton:hover {
+    background-color: #252824;
+    color: #D8D8CC;
+}
+
+QPushButton#closeButton:hover {
+    background-color: #6E2020;
+    color: #FFFFFF;
+}
+
+/* -------------------------
+   Headings / Status
+   ------------------------- */
+
+QLabel#headingLabel {
+    background: transparent;
+    color: #C8A96B;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+QLabel#animLabel {
+    background: transparent;
+    color: #8FA56B;
+}
+
+QLabel#statusLabel {
+    color: #9DBB72;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* -------------------------
+   Country Dropdown
+   ------------------------- */
+
+QComboBox {
+    combobox-popup: 0;
+    background-color: #151917;
+    color: #D8D8CC;
+    border: 1px solid #3A403A;
+    border-radius: 2px;
+    padding: 6px 10px;
+}
+
+QComboBox:hover {
+    border-color: #6C755F;
+}
+
+QComboBox:focus {
+    border-color: #C8A96B;
+}
+
+QComboBox::drop-down {
+    width: 28px;
+    border: none;
+    border-left: 1px solid #292E2A;
+}
+
+QListView {
+    background-color: #111412;
+    color: #D8D8CC;
+    border: 1px solid #3A403A;
+    outline: none;
+}
+
+QListView::item {
+    background-color: #111412;
+    color: #D8D8CC;
+    padding: 6px 8px;
+}
+
+QListView::item:hover {
+    background-color: #252A25;
+}
+
+QListView::item:selected {
+    background-color: #C8A96B;
+    color: #0A0C0C;
+}
+
+/* -------------------------
+   Server Table
+   ------------------------- */
+
+QTableCornerButton::section {
+    background-color: #101312;
+    border: none;
+}
+
+QTableWidget#serverTable {
+    background-color: #0C0F0E;
+    alternate-background-color: #131715;
+    color: #D8D8CC;
+    border: 1px solid #343A35;
+    border-radius: 3px;
+    gridline-color: #252B27;
+    selection-background-color: #C8A96B;
+    selection-color: #0A0C0C;
+    outline: none;
+}
+
+QTableWidget#serverTable::item {
+    background-color: transparent;
+    color: #D0D1C7;
+    padding: 7px;
+    border: none;
+}
+
+QTableWidget#serverTable::item:hover {
+    background-color: #1D231F;
+}
+
+QTableWidget#serverTable::item:selected {
+    background-color: #C8A96B;
+    color: #0A0C0C;
+    font-weight: bold;
+}
+
+QHeaderView {
+    background-color: #0C0F0E;
+}
+
+QHeaderView::section {
+    background-color: #181C19;
+    color: #C8A96B;
+    padding: 7px 8px;
+    border: none;
+    border-bottom: 1px solid #4A4A3D;
+    border-right: 1px solid #252B27;
+    font-weight: bold;
+}
+
+/* -------------------------
+   Buttons
+   ------------------------- */
+
+QPushButton {
+    background-color: #3D4639;
+    color: #E5E5D9;
+    border: 1px solid #606957;
+    border-radius: 3px;
+    padding: 8px 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #4C5745;
+    border-color: #8B956F;
+}
+
+QPushButton:pressed {
+    background-color: #30372D;
+}
+
+QPushButton:disabled {
+    background-color: #1B1F1C;
+    color: #5B605A;
+    border-color: #292E2B;
+}
+
+QPushButton#refreshButton {
+    background-color: #171D19;
+    color: #9FAE8A;
+    border-color: #465044;
+}
+
+QPushButton#refreshButton:hover {
+    background-color: #222B24;
+    border-color: #718064;
+}
+
+QPushButton#connectButton {
+    background-color: #6C8E45;
+    color: #0A0C08;
+    border-color: #9DBB72;
+}
+
+QPushButton#connectButton:hover {
+    background-color: #82A955;
+}
+
+QPushButton#disconnectButton {
+    background-color: #36191A;
+    color: #E06B6B;
+    border-color: #713333;
+}
+
+QPushButton#disconnectButton:hover {
+    background-color: #4A2021;
+    color: #FF8888;
+    border-color: #984747;
+}
+
+QPushButton#autoConnectButton {
+    background-color: #302A1B;
+    color: #D7B978;
+    border-color: #665532;
+}
+
+QPushButton#autoConnectButton:hover {
+    background-color: #413720;
+    border-color: #927C48;
+}
+
+QPushButton#cancelButton {
+    background-color: #261819;
+    color: #D97A73;
+    border: 1px solid #633536;
+    border-radius: 13px;
+}
+
+QPushButton#cancelButton:hover {
+    background-color: #382021;
+    color: #FF9B92;
+    border-color: #914B4B;
+}
+
+/* -------------------------
+   Scrollbars
+   ------------------------- */
+
+QScrollBar:vertical {
+    background-color: #0A0C0C;
+    width: 8px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #3B423B;
+    min-height: 26px;
+    border-radius: 2px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #7A875F;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* -------------------------
+   Tooltips
+   ------------------------- */
+
+QToolTip {
+    background-color: #151917;
+    color: #D8D8CC;
+    border: 1px solid #C8A96B;
+    border-radius: 2px;
+    padding: 6px;
+}

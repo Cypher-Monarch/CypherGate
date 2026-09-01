@@ -1,0 +1,71 @@
+{
+    "config_version": 1,
+    "theme": {
+        "mode": "builtin",
+        "name": "kanagawa",
+        "path": null
+    },
+    "icons": {
+        "size": {
+            "cancel": 20,
+            "refresh": 20,
+            "connect": 20,
+            "disconnect": 20,
+            "auto_connect": 20,
+            "show": 20,
+            "exit": 20,
+            "tray": {
+                "cancel": 20,
+                "connect": 20,
+                "disconnect": 20,
+                "show": 20,
+                "exit": 20
+            }
+        },
+        "color": {
+            "cancel": "#C34043",
+            "refresh": "#DCD7BA",
+            "connect": "#1F1F28",
+            "disconnect": "#C34043",
+            "auto_connect": "#E6C384",
+            "show": "#7E9CD8",
+            "exit": "#C34043",
+            "tray": {
+                "cancel": "#C34043",
+                "connect": "#1F1F28",
+                "disconnect": "#C34043",
+                "show": "#7E9CD8",
+                "exit": "#C34043"
+            }
+        }
+    },
+    "widgets": {
+        "spinner": {
+            "size": 40,
+            "color": "#7E9CD8",
+            "thickness": 3,
+            "fps": 60,
+            "rotation_speed": 360
+        },
+        "table": {
+            "columns": [
+                "country",
+                "ping",
+                "speed",
+                "users"
+            ],
+            "sort_by": "ping",
+            "sort_order": "ascending"
+        }
+    },
+    "application": {
+        "minimize_to_tray": false,
+        "notifications": false,
+        "status_update_interval": 500,
+        "use_custom_fonts": false
+    },
+    "vpn": {
+        "connection_timeout": 30,
+        "default_country": null
+    }
+}

@@ -1,0 +1,71 @@
+{
+    "config_version": 1,
+    "theme": {
+        "mode": "builtin",
+        "name": "dracula",
+        "path": null
+    },
+    "icons": {
+        "size": {
+            "cancel": 20,
+            "refresh": 20,
+            "connect": 20,
+            "disconnect": 20,
+            "auto_connect": 20,
+            "show": 20,
+            "exit": 20,
+            "tray": {
+                "cancel": 20,
+                "connect": 20,
+                "disconnect": 20,
+                "show": 20,
+                "exit": 20
+            }
+        },
+        "color": {
+            "cancel": "#FF5555",
+            "refresh": "#F8F8F2",
+            "connect": "#282A36",
+            "disconnect": "#FF5555",
+            "auto_connect": "#F1FA8C",
+            "show": "#BD93F9",
+            "exit": "#FF5555",
+            "tray": {
+                "cancel": "#FF5555",
+                "connect": "#282A36",
+                "disconnect": "#FF5555",
+                "show": "#BD93F9",
+                "exit": "#FF5555"
+            }
+        }
+    },
+    "widgets": {
+        "spinner": {
+            "size": 40,
+            "color": "#BD93F9",
+            "thickness": 3,
+            "fps": 60,
+            "rotation_speed": 360
+        },
+        "table": {
+            "columns": [
+                "country",
+                "ping",
+                "speed",
+                "users"
+            ],
+            "sort_by": "ping",
+            "sort_order": "ascending"
+        }
+    },
+    "application": {
+        "minimize_to_tray": false,
+        "notifications": false,
+        "status_update_interval": 500,
+        "use_custom_fonts": false
+    },
+    "vpn": {
+        "connection_timeout": 30,
+        "default_country": null
+    }
+}

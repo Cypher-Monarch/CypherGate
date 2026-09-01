@@ -1,0 +1,71 @@
+{
+    "config_version": 1,
+    "theme": {
+        "mode": "builtin",
+        "name": "void",
+        "path": null
+    },
+    "icons": {
+        "size": {
+            "cancel": 20,
+            "refresh": 20,
+            "connect": 20,
+            "disconnect": 20,
+            "auto_connect": 20,
+            "show": 20,
+            "exit": 20,
+            "tray": {
+                "cancel": 20,
+                "connect": 20,
+                "disconnect": 20,
+                "show": 20,
+                "exit": 20
+            }
+        },
+        "color": {
+            "cancel": "#FF5F70",
+            "refresh": "#55E6FF",
+            "connect": "#06100B",
+            "disconnect": "#FF5F70",
+            "auto_connect": "#FFCA5C",
+            "show": "#55E6FF",
+            "exit": "#FF5F70",
+            "tray": {
+                "cancel": "#FF5F70",
+                "connect": "#06100B",
+                "disconnect": "#FF5F70",
+                "show": "#55E6FF",
+                "exit": "#FF5F70"
+            }
+        }
+    },
+    "widgets": {
+        "spinner": {
+            "size": 40,
+            "color": "#55E6FF",
+            "thickness": 3,
+            "fps": 60,
+            "rotation_speed": 360
+        },
+        "table": {
+            "columns": [
+                "country",
+                "ping",
+                "speed",
+                "users"
+            ],
+            "sort_by": "ping",
+            "sort_order": "ascending"
+        }
+    },
+    "application": {
+        "minimize_to_tray": false,
+        "notifications": false,
+        "status_update_interval": 500,
+        "use_custom_fonts": false
+    },
+    "vpn": {
+        "connection_timeout": 30,
+        "default_country": null
+    }
+}

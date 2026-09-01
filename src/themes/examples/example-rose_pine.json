@@ -1,0 +1,71 @@
+{
+    "config_version": 1,
+    "theme": {
+        "mode": "builtin",
+        "name": "rose_pine",
+        "path": null
+    },
+    "icons": {
+        "size": {
+            "cancel": 20,
+            "refresh": 20,
+            "connect": 20,
+            "disconnect": 20,
+            "auto_connect": 20,
+            "show": 20,
+            "exit": 20,
+            "tray": {
+                "cancel": 20,
+                "connect": 20,
+                "disconnect": 20,
+                "show": 20,
+                "exit": 20
+            }
+        },
+        "color": {
+            "cancel": "#EB6F92",
+            "refresh": "#E0DEF4",
+            "connect": "#191724",
+            "disconnect": "#EB6F92",
+            "auto_connect": "#F6C177",
+            "show": "#C4A7E7",
+            "exit": "#EB6F92",
+            "tray": {
+                "cancel": "#EB6F92",
+                "connect": "#191724",
+                "disconnect": "#EB6F92",
+                "show": "#C4A7E7",
+                "exit": "#EB6F92"
+            }
+        }
+    },
+    "widgets": {
+        "spinner": {
+            "size": 40,
+            "color": "#C4A7E7",
+            "thickness": 3,
+            "fps": 60,
+            "rotation_speed": 360
+        },
+        "table": {
+            "columns": [
+                "country",
+                "ping",
+                "speed",
+                "users"
+            ],
+            "sort_by": "ping",
+            "sort_order": "ascending"
+        }
+    },
+    "application": {
+        "minimize_to_tray": false,
+        "notifications": false,
+        "status_update_interval": 500,
+        "use_custom_fonts": false
+    },
+    "vpn": {
+        "connection_timeout": 30,
+        "default_country": null
+    }
+}
