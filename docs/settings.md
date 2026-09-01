@@ -53,9 +53,9 @@ For a custom theme:
     "path": "/path/to/theme.qss"
   }
 }
+```
 
 _user's home directory i.e. `~` is not automatically expanded so one must use the absolute path /home/foo_
-```
 
 ## `icons`
 
