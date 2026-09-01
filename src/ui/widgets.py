@@ -57,6 +57,7 @@ def create_widgets(window):
     window.table.setObjectName("serverTable")
     window.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
     window.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+    window.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
     # ────────────────────────────────────────────────────────
     # Buttons
