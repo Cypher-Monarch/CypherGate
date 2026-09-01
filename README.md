@@ -137,25 +137,13 @@ Want to make CypherGate look and behave the way you want?
 
 - [Settings](docs/settings.md) — Configure application behaviour and server tables
 - [Theming](docs/theming.md) — Create custom QSS themes
+- [Theme Showcase](showcase.md) — Browse the builtin themes and see how to use them
 
 ---
 
 ## ⚡ Final note
 
-This is:
-
-> **very opinionated**
-
-It looks how I want it to look
-and works how I want it to work
-
-If you like that:
-
-> you’ll probably enjoy using it
-
-If not:
-
-> well… at least it fixes your configs 😭
+> **It looks how it should. It works how it should. The 'should' is yours**
 
 ---
 
