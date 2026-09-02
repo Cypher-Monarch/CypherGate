@@ -35,8 +35,6 @@ So yeah:
 
 - grabs live VPNGate servers
 - auto-fixes configs that shouldn’t have been broken in the first place
-- runs a gold-on-black Qt GUI (yes it’s opinionated, no I won’t apologize)
-- also has a TUI if you live in the terminal
 - lets you:
   - auto-connect
   - pick manually
