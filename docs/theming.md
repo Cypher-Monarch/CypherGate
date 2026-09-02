@@ -278,7 +278,27 @@ QToolTip {
 
 ### Custom fonts
 
-Custom fonts require the font to be placed in `Assets/fonts`, the formats limited to `.ttf` and `.otf`:
+CypherGate supports custom fonts in `.ttf` and `.otf` formats.
+
+Bundled custom fonts are loaded from:
+
+`Assets/fonts`
+
+User-provided fonts may also be placed in:
+
+`~/.config/cyphergate/fonts`
+
+The user font directory is optional and is only scanned when it already exists. CypherGate does not create the directory automatically.
+
+For example:
+
+```text
+~/.config/cyphergate/fonts/
+├── Panchang-Regular.ttf
+└── Panchang-Bold.otf
+```
+
+A theme can then reference the loaded font by its family name:
 
 ```qss
 QWidget {
