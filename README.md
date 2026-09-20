@@ -79,7 +79,7 @@ So I made something that:
 
 Logs:
 
-- Linux → `~/.config/cyphergate/logs`
+- Linux → `/var/log/cyphergate`
 - Windows → `%USERPROFILE%\.config\cyphergate\logs`
 
 ---
