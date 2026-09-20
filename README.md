@@ -6,96 +6,96 @@
 
 ---
 
-## CypherGate
+> "Anyone can hide. Few remain hidden."
 
-> _“Anyone can hide. Few remain hidden.”_
+CypherGate is a Linux-first VPNGate client designed to make connecting to public VPN servers simple.
 
-I made this because VPNGate configs are… let’s just say
-**not exactly plug-and-play**
+VPNGate provides a large collection of public VPN servers, but the raw experience often involves:
 
-CypherGate:
+- downloading configurations manually
+- fixing outdated OpenVPN options
+- dealing with inconsistent server data
+- troubleshooting connection failures
 
-- fetches servers
-- fixes their broken configs
-- connects without asking you to debug nonsense
+CypherGate handles the tedious parts.
 
-So yeah:
+```
+Fetch → Validate → Fix → Connect
+```
 
-> click → connect → done
+No config hunting. No manual editing. Just connect.
 
 ---
 
-## 🎬 Showcase
+## Showcase
 
 [Showcase.mp4](https://github.com/user-attachments/assets/c10c687c-8eb8-49be-9347-599a60f41e1b)
 
 ---
 
-## ⚡ What it does (without the marketing talk)
+# Features
 
-- grabs live VPNGate servers
-- auto-fixes configs that shouldn’t have been broken in the first place
-- lets you:
-  - auto-connect
-  - pick manually
-  - or just go “fastest server pls”
+## Server Management
 
-- caches servers so you’re not stuck when offline
-- logs everything (for your ~paranoia~ curiosity)
-- sends notifications so you know what’s going on
+- Fetch live VPNGate server listings
+- Automatically repair incompatible configurations
+- Browse and select servers manually
+- Connect using the fastest available server
+- Cache server data for offline access
 
----
+## Desktop Experience
 
-## 🧠 Why this exists
+- Native Qt6 graphical interface
+- System tray integration
+- Desktop notifications
+- Connection status tracking
+- Custom QSS themes
+- Configurable settings
 
-Because I got tired of:
+## Reliability
 
-- broken configs
-- outdated ciphers
-- “just edit this file manually bro”
+CypherGate uses a dedicated backend daemon to manage privileged VPN operations.
 
-So I made something that:
-
-> just handles it
-
----
-
-## ⚙️ Requirements (TUI only)
-
-- `bash`
-- `curl`
-- `base64`
-- `whiptail`
-- `openvpn`
-- `notify-send`
-
----
-
-## 📂 Where stuff goes
-
-```bash
-~/.config/cyphergate/
+```
+GUI
+|
+IPC
+|
+cyphergated
+|
+Validation
+|
+OpenVPN
 ```
 
-Logs:
-
-- Linux → `/var/log/cyphergate`
-- Windows → `%USERPROFILE%\.config\cyphergate\logs`
+The daemon owns the connection lifecycle, keeping OpenVPN management predictable and preventing stale processes.
 
 ---
 
-## 📦 Installation (All official releases since v2.0.1 are cryptographically signed with GnuPG)
+# Why CypherGate exists
 
-### AUR
+VPNGate is a great resource, but using it manually often feels like maintaining a pile of configuration files.
 
-1. **FIRST TIME ONLY** - Import CypherGate release signing keys with:
+CypherGate was built around a simple idea:
+
+> Make VPNGate feel like an application instead of a collection of files.
+
+---
+
+# Installation
+
+All official releases since v2.0.1 are cryptographically signed with GnuPG.
+
+## Arch Linux (AUR)
+
+Import the release signing key:
 
 ```bash
 gpg --keyserver hkps://keys.openpgp.org \
     --recv-keys 9ED87F6065033606670941AAC6C9B498797C980E
 ```
 
-2. Use your favourite AUR helper to install `cyphergatevpn-bin`!
+Install:
 
 ```bash
 yay -S cyphergatevpn-bin
@@ -103,7 +103,9 @@ yay -S cyphergatevpn-bin
 
 ---
 
-### Linux (general)
+## Linux
+
+Download and run the installer:
 
 ```bash
 curl -fsSL https://github.com/Cypher-Monarch/CypherGate/releases/latest/download/install.sh > install.sh
@@ -112,40 +114,148 @@ sudo bash install.sh
 
 ---
 
-### Windows (For the "Where is my .exe?" people)
+# Usage
 
-- Installer → [Here you go](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGateInstaller-v1.0.1.exe)
-- Portable → [There you go](https://github.com/Cypher-Monarch/CypherGate/releases/download/v1.0.1/CypherGate-Windows-v1.0.1.zip)
+Launch CypherGate from your application menu:
 
-#### AS OF v1.0.1 Development of the windows version is discontinued
+```
+CypherGate VPN
+```
 
----
+The GUI handles:
 
-## 🖥️ Usage
-
-- Linux GUI → launch **CypherGate VPN**
-- Linux TUI → `cyphergate.sh`
-- Windows → Start Menu / `CypherGate.exe`
-
----
-
-## 🎨 Customization
-
-Want to make CypherGate look and behave the way you want?
-
-- [Settings](docs/settings.md) — Configure application behaviour and server tables
-- [Theming](docs/theming.md) — Create custom QSS themes
-- [Theme Showcase](showcase.md) — Browse the builtin themes and see how to use them
+* server selection
+* connection management
+* settings
+* themes
+* status monitoring
 
 ---
 
-## ⚡ Final note
+# Architecture
 
-> **It looks how it should. It works how it should. The 'should' is yours**
+CypherGate separates user interaction from privileged operations.
+
+The application communicates with `cyphergated` through IPC.
+
+Responsibilities are separated:
+
+| Component   | Responsibility       |
+| ----------- | -------------------- |
+| GUI         | User interaction     |
+| IPC         | Communication layer  |
+| cyphergated | Connection lifecycle |
+| Validator   | Configuration checks |
+| OpenVPN     | VPN tunnel           |
+
+This design keeps the backend small, controlled, and easier to audit.
 
 ---
 
-## License
+# Configuration
 
-CypherGate is licensed under the GNU General Public License v3.0 (GPL-3.0).
-See the [LICENSE](https://github.com/Cypher-Monarch/CypherGate/blob/main/LICENSE) file for details.
+User configuration:
+
+```bash
+~/.config/cyphergate/
+```
+
+Logs:
+
+```bash
+/var/log/cyphergate
+```
+
+---
+
+# Customization
+
+CypherGate supports customisation through QSS themes and configuration files.
+
+Documentation:
+
+* [Settings](docs/settings.md)
+* [Theming](docs/theming.md)
+* [Theme Showcase](showcase.md)
+
+---
+
+# Documentation
+
+Technical documentation is available in [CypherDocs](https://cypher-monarch.github.io/CypherDocs/cyphergate/docs/)
+
+Includes:
+
+* Architecture overview
+* IPC protocol
+* Security model
+* Configuration system
+* Codebase documentation
+* Assumptions and design decisions
+
+---
+
+# Development
+
+CypherGate is built with:
+
+* Python
+* Qt6
+* OpenVPN
+* systemd
+* JSON-based IPC
+
+The project follows a modular design philosophy:
+
+* small components
+* explicit responsibilities
+* documented behaviour
+
+---
+
+# Contributing
+
+Contributions are welcome.
+
+Before submitting changes:
+
+1. Read the documentation
+2. Check existing issues
+3. Keep changes focused
+4. Document architectural decisions where relevant
+
+See:
+
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [SECURITY.md](SECURITY.md)
+
+---
+
+# Security
+
+CypherGate takes connection management seriously.
+
+The daemon:
+
+* validates configurations before execution
+* limits what operations can be performed
+* manages OpenVPN lifecycle explicitly
+* avoids leaving unmanaged processes behind
+
+Security concerns should be reported through:
+
+[SECURITY.md](SECURITY.md)
+
+---
+
+# License
+
+CypherGate is licensed under the GNU General Public License v3.0.
+
+See [LICENSE](LICENSE) for details.
+
+---
+
+> It looks how it should.
+> It works how it should.
+> The "should" is yours.
