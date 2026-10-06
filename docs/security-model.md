@@ -59,6 +59,8 @@ The validator rejects directives considered capable of executing or loading exte
 - `auth-user-pass-verify`
 - `config`
 
+The validator normalizes OpenVPN directive names by removing leading `-` characters before applying the forbidden-directive policy. This ensures that alternate forms such as `up` and `--up` are treated equivalently and cannot bypass validation.
+
 The validator also requires `script-security 0`. Any parsed value greater than zero is rejected.
 
 The validator is intentionally policy-oriented rather than a complete OpenVPN configuration parser.

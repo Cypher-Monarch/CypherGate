@@ -1,6 +1,6 @@
 # CypherGate Architecture
 
-> Current implementation: v2.1.0 (Linux)
+> Current implementation: v2.1.1 (Linux)
 
 ## Overview
 
@@ -46,8 +46,8 @@ It:
 - prepares `.ovpn` configuration data;
 - writes the generated configuration to the user-side VPN directory;
 - requests privileged operations through the IPC layer;
-- polls daemon state;
-- synchronizes widgets from daemon state;
+- continuously polls daemon state;
+- synchronizes widgets and system-tray state from daemon state;
 - applies user configuration to the GUI;
 - displays connection/disconnection notifications.
 
@@ -136,6 +136,8 @@ It rejects configured dangerous directives and rejects any `script-security` val
 The daemon is the source of truth for VPN lifecycle state.
 
 The GUI does not need to keep the VPN process alive. Instead, it asks the daemon for state and maps that state to UI state.
+
+The GUI continuously polls daemon state so that each GUI instance remains synchronized with the authoritative daemon state, including system-tray state.
 
 The UI synchronization rules are centralized in `ui/status.py`:
 

@@ -138,7 +138,8 @@ Controls general application behavior.
 | `minimize_to_tray`       | boolean | Whether closing/minimizing the application sends it to the system tray |
 | `notifications`          | boolean | Enables or disables desktop notifications                              |
 | `status_update_interval` | integer | Interval, in milliseconds, at which the GUI polls daemon status        |
-| `use_custom_fonts`       | boolean | Allow loading of fonts not installed system-wide                       | 
+| `use_custom_fonts`       | boolean | Allow loading of fonts not installed system-wide                       |
+| `check_for_updates`      | boolean | Enables or disables application update checks                          |
 
 _builtin themes pastel-orange and win32 require value of `use_custom_fonts` to be set to `true` to get the complete theme experience_
 

@@ -65,7 +65,7 @@ The GUI:
 4. disables IPv6 through the daemon when necessary;
 5. writes the generated `.ovpn` file;
 6. sends `START_VPN` with the configuration path and server metadata;
-7. polls daemon status until the connection reaches a terminal state.
+7. relies on continuous daemon-status polling for UI state synchronization.
 
 The daemon:
 
@@ -81,7 +81,7 @@ The daemon:
 
 The monitor looks for OpenVPN's `Initialization Sequence Completed` marker in the session log. Once found, daemon state becomes `CONNECTED`.
 
-The GUI sees the state transition, synchronizes its widgets, and shows connection information including the country, server IP, ping, speed, and users. If a new GUI instance starts while the daemon is already `CONNECTED`, it can show the same connection information from the existing daemon state.
+The GUI observes the daemon state through continuous polling, synchronizes its widgets and system-tray state, and shows connection information including the country, server IP, ping, speed, and users. If a new GUI instance starts while the daemon is already `CONNECTED`, it can show the same connection information from the existing daemon state.
 
 ### Disconnecting
 

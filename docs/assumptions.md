@@ -14,7 +14,7 @@ This document records assumptions that are easy to lose during refactors.
 - The GUI is a client of the daemon rather than the owner of the VPN lifecycle.
 - The GUI may disappear while the daemon continues running.
 - A new GUI instance must synchronize itself from daemon state.
-- GUI polling is currently used for state observation.
+- The GUI continuously polls daemon state for state observation and UI synchronization.
 - User-facing application behavior is controlled by the per-user settings file where applicable.
 - Configuration changes may be applied at runtime for settings explicitly supported by the configuration watcher.
 
