@@ -26,7 +26,7 @@ def validate_config(config):
             continue
 
         tokens = line.split()
-        directive = tokens[0].lower()
+        directive = tokens[0].lstrip("-").lower()
 
         if directive == "script-security":
             if len(tokens) >= 2:
