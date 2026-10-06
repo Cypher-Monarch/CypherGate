@@ -64,7 +64,8 @@ DEFAULT_SETTINGS = {
         "minimize_to_tray": True,
         "notifications": True,
         "status_update_interval": 500,
-        "use_custom_fonts": True,
+        "use_custom_fonts": False,
+        "check_for_updates": True,
     },
     "vpn": {
         "connection_timeout": 15,

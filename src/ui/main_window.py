@@ -110,7 +110,8 @@ class CypherGate(QWidget):
         if not perms["ok"]:
             self.show_permission_dialog(perms)
 
-        check_for_updates(self)
+        if self.settings["application"]["check_for_updates"]:
+            check_for_updates(self)
 
     def show_permission_dialog(self, perms):
         dialog = QMessageBox(self)
