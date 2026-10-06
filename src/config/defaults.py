@@ -17,6 +17,7 @@ DEFAULT_SETTINGS = {
             "tray": {
                 "cancel": 20,
                 "connect": 20,
+                "auto_connect": 20,
                 "disconnect": 20,
                 "show": 20,
                 "exit": 20,
@@ -33,6 +34,7 @@ DEFAULT_SETTINGS = {
             "tray": {
                 "cancel": "#E06C75",
                 "connect": "#D4AF37",
+                "auto_connect": "#D4AF37",
                 "disconnect": "#E06C75",
                 "show": "#D4AF37",
                 "exit": "#E06C75",

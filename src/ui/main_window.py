@@ -93,11 +93,14 @@ class CypherGate(QWidget):
 
         self.connect_btn.setEnabled(False)
         self.refresh_btn.setEnabled(False)
+        self.disconnect_btn.setEnabled(False)
+        self.auto_btn.setEnabled(False)
 
         self.load_servers_async()
 
         self.watch_timer = QTimer(self)
         self.watch_timer.timeout.connect(self.check_vpn_status)
+        self.watch_timer.start(self.settings["application"]["status_update_interval"])
         self.previous_status = None
 
         self.tray_icon = create_tray(self, ICON_PATH)
@@ -358,30 +361,27 @@ class CypherGate(QWidget):
 
             self.previous_status = current_status
 
-            if current_status in {"CONNECTED", "ERROR", "DISCONNECTED"}:
-                self.watch_timer.stop()
-                return
+            if current_status == "CONNECTING":
+                connection_timeout = int(self.settings["vpn"]["connection_timeout"])
 
-            connection_timeout = int(self.settings["vpn"]["connection_timeout"])
+                if time.monotonic() - self.connection_start >= connection_timeout:
+                    self.ensure_root_handler_async()
+                    send_root_command({"action": "STOP_VPN"})
+                    send_root_command({"action": "ENABLE_IPV6"})
 
-            if time.monotonic() - self.connection_start >= connection_timeout:
-                self.watch_timer.stop()
+                    new_status = get_status()
 
-                self.ensure_root_handler_async()
+                    if new_status:
+                        sync_ui_state(self, new_status)
 
-                send_root_command({"action": "STOP_VPN"})
-                send_root_command({"action": "ENABLE_IPV6"})
+                    self.previous_status = None
 
-                new_status = get_status()
-                if new_status:
-                    sync_ui_state(self, new_status)
-                self.previous_status = None
-
-                QMessageBox.warning(
-                    self,
-                    "Connection Timed Out",
-                    f"The VPN server did not respond within {connection_timeout} seconds.",
-                )
+                    QMessageBox.warning(
+                        self,
+                        "Connection Timed Out",
+                        f"The VPN server did not respond within "
+                        f"{connection_timeout} seconds.",
+                    )
 
         except Exception:
             pass
@@ -494,6 +494,7 @@ class CypherGate(QWidget):
     connect_btn: QPushButton
     disconnect_btn: QPushButton
     refresh_btn: QPushButton
+    auto_btn: QPushButton
     cancel_button: QPushButton
     watch_timer: QTimer
     table: QTableWidget

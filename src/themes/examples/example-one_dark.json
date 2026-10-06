@@ -19,7 +19,8 @@
                 "connect": 20,
                 "disconnect": 20,
                 "show": 20,
-                "exit": 20
+                "exit": 20,
+                "auto_connect": 20
             }
         },
         "color": {
@@ -35,7 +36,8 @@
                 "connect": "#282C34",
                 "disconnect": "#E06C75",
                 "show": "#61AFEF",
-                "exit": "#E06C75"
+                "exit": "#E06C75",
+                "auto_connect": "#282C34"
             }
         }
     },

@@ -93,4 +93,7 @@ def apply_icons(window):
 
 def apply_tray_icons(window):
     for name, action in window.tray_actions.items():
+        if name == "status":
+            continue
+
         action.setIcon(icon(name, "systray"))
