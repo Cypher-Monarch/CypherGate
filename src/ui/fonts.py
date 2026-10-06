@@ -3,11 +3,14 @@
 # Author: nox-lux & Cypher-Monarch
 # ────────────────────────────────────────────────────────
 
-from constants import FONT_DIR, USER_FONT_DIR
-from PySide6.QtGui import QFontDatabase
 from pathlib import Path
 
+from PySide6.QtGui import QFontDatabase
+
+from constants import FONT_DIR, USER_FONT_DIR
+
 SUPPORTED_FORMATS = {".ttf", ".otf"}
+
 
 def load_fonts():
     font_ids = []

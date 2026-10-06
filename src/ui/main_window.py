@@ -13,6 +13,7 @@ from PySide6.QtCore import (
     QTimer,
     Signal,
 )
+from PySide6.QtGui import QFontDatabase
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -24,8 +25,6 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QWidget,
 )
-
-from PySide6.QtGui import QFontDatabase
 
 from config.manager import load_settings
 from config.watcher import ConfigWatcher
