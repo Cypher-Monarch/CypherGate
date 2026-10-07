@@ -38,7 +38,7 @@ ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
 ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
 
 FONT_DIR = os.path.join(APP_DIR, "Assets", "fonts")
-USER_FONT_DIR = os.path.join(VPN_ROOT,"fonts")
+USER_FONT_DIR = os.path.join(VPN_ROOT, "fonts")
 
 TABLE_COLUMNS = {
     "country": ("Country", 0),
@@ -51,4 +51,4 @@ TABLE_COLUMNS = {
     "score": ("Score", 7),
 }
 
-VERSION = "2.1.0"
+VERSION = "2.1.1"
