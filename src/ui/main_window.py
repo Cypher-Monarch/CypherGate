@@ -62,6 +62,7 @@ from vpn.loader import parse_server_data
 
 class CypherGate(QWidget):
     data_loaded = Signal(str)
+    server_fetch_failed = Signal(bool, str)
 
     def __init__(self):
         super().__init__()
@@ -72,6 +73,7 @@ class CypherGate(QWidget):
             self.font_ids = load_fonts()
 
         self.data_loaded.connect(self.process_server_data)
+        self.server_fetch_failed.connect(self.show_server_fetch_error)
 
         setup_window(self)
         create_widgets(self)
@@ -96,7 +98,10 @@ class CypherGate(QWidget):
         self.disconnect_btn.setEnabled(False)
         self.auto_btn.setEnabled(False)
 
+        self.servers_loading = True
         self.load_servers_async()
+
+        self.server_fetch_error = False
 
         self.watch_timer = QTimer(self)
         self.watch_timer.timeout.connect(self.check_vpn_status)
@@ -148,26 +153,28 @@ class CypherGate(QWidget):
     def load_servers_async(self):
         def task():
             try:
-                response = requests.get(API_URL, timeout=30)
+                response = requests.get(API_URL, timeout=(2, 3))
                 response.raise_for_status()
                 data = response.text
+
                 with open(CACHE_FILE, "w", encoding="utf-8") as f:
                     f.write(data)
 
             except Exception as e:
-                if os.path.exists(CACHE_FILE):
+                error_message = str(e)
+
+                try:
                     with open(CACHE_FILE, "r", encoding="utf-8") as f:
                         data = f.read()
-                else:
-                    error_message = str(e)
-                    QTimer.singleShot(
-                        0,
-                        lambda: QMessageBox.critical(
-                            self,
-                            "Error",
-                            f"Failed to fetch VPN servers and no cache found:\n{error_message}",
-                        ),
-                    )
+
+                    if data:
+                        self.server_fetch_failed.emit(True, error_message)
+                    else:
+                        self.server_fetch_failed.emit(False, error_message)
+                        return
+
+                except (OSError, UnicodeError):
+                    self.server_fetch_failed.emit(False, error_message)
                     return
 
             self.data_loaded.emit(data)
@@ -179,6 +186,33 @@ class CypherGate(QWidget):
             self.all_servers, country, self.settings
         )
         self.populate_table(self.filtered_servers)
+
+    def show_server_fetch_error(self, cache_available, error_message):
+        if cache_available:
+            QMessageBox.warning(
+                self,
+                "Using Cached Servers",
+                "Failed to fetch the latest VPN server list.\n"
+                "CypherGate is using cached data, which may be outdated.\n\n"
+                f"Error: {error_message}",
+            )
+        else:
+            self.server_fetch_error = True
+            self.servers_loading = False
+            self.spinner.hide()
+            self.status_label.setText("Failed to load servers")
+
+            self.connect_btn.setEnabled(False)
+            self.refresh_btn.setEnabled(True)
+            self.disconnect_btn.setEnabled(False)
+            self.auto_btn.setEnabled(False)
+
+            QMessageBox.critical(
+                self,
+                "Error",
+                "Failed to fetch VPN servers and no usable cache was found.\n\n"
+                f"Error: {error_message}",
+            )
 
     def process_server_data(self, data):
         servers, countries = parse_server_data(data)
@@ -196,6 +230,7 @@ class CypherGate(QWidget):
         if countries:
             self.filter_servers(self.country_dropdown.currentText())
 
+        self.servers_loading = False
         self.spinner.hide()
 
         self.connect_btn.setEnabled(True)
@@ -203,6 +238,9 @@ class CypherGate(QWidget):
 
         status = get_status()
         sync_ui_state(self, status)
+
+        if status is not None:
+            self.previous_status = status["status"]
 
         if status and status["status"] == "CONNECTED":
             self.show_connection_info(
@@ -347,7 +385,8 @@ class CypherGate(QWidget):
             if status is None:
                 return
 
-            sync_ui_state(self, status)
+            if not self.servers_loading:
+                sync_ui_state(self, status)
 
             current_status = status["status"]
 
@@ -388,6 +427,7 @@ class CypherGate(QWidget):
             pass
 
     def refresh_servers(self):
+        self.servers_loading = True
         self.spinner.show()
         self.status_label.setText("Refreshing servers...")
         self.connect_btn.setEnabled(False)

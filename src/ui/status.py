@@ -5,25 +5,35 @@ def sync_ui_state(window, state):
     status = state["status"]
     actions = window.tray_actions
 
-    if status == "DISCONNECTED":
-        window.stop_spinner("Disconnected")
+    server_fetch_error = getattr(window, "server_fetch_error", False)
 
-        window.connect_btn.setEnabled(True)
+    if status == "DISCONNECTED":
+        if not server_fetch_error:
+            window.stop_spinner("Disconnected")
+        else:
+            window.spinner.hide()
+
+        window.connect_btn.setEnabled(not server_fetch_error)
         window.disconnect_btn.setEnabled(False)
         window.refresh_btn.setEnabled(True)
-        window.auto_btn.setEnabled(True)
+        window.auto_btn.setEnabled(not server_fetch_error)
         window.cancel_button.hide()
 
-        actions["status"].setText("● Disconnected")
-        actions["connect"].setVisible(True)
-        actions["auto_connect"].setVisible(True)
+        if not server_fetch_error:
+            actions["status"].setText("● Disconnected")
+            window.tray_icon.setToolTip("CypherGate VPN — Disconnected")
+
+        actions["connect"].setVisible(not server_fetch_error)
+        actions["auto_connect"].setVisible(not server_fetch_error)
         actions["cancel"].setVisible(False)
         actions["disconnect"].setVisible(False)
-        window.tray_icon.setToolTip("CypherGate VPN — Disconnected")
 
     elif status == "CONNECTING":
-        window.start_spinner()
-        window.status_label.setText("Connection in progress...")
+        if not server_fetch_error:
+            window.start_spinner()
+            window.status_label.setText("Connection in progress...")
+        else:
+            window.spinner.hide()
 
         window.connect_btn.setEnabled(False)
         window.disconnect_btn.setEnabled(False)
@@ -43,7 +53,10 @@ def sync_ui_state(window, state):
         country = state.get("country") or "VPN"
         ping = state.get("ping")
 
-        window.stop_spinner(f"Connected to {country}")
+        if not server_fetch_error:
+            window.stop_spinner(f"Connected to {country}")
+        else:
+            window.spinner.hide()
 
         window.connect_btn.setEnabled(False)
         window.disconnect_btn.setEnabled(True)
@@ -55,6 +68,9 @@ def sync_ui_state(window, state):
         if ping is not None:
             status_text += f" — {ping}"
 
+        if not server_fetch_error:
+            window.status_label.setText(status_text)
+
         actions["status"].setText(f"● {status_text}")
         actions["connect"].setVisible(False)
         actions["auto_connect"].setVisible(False)
@@ -65,18 +81,21 @@ def sync_ui_state(window, state):
     elif status == "ERROR":
         error = state.get("last_error") or "Connection failed"
 
-        window.stop_spinner("Connection failed")
-        window.status_label.setText(error)
+        if not server_fetch_error:
+            window.stop_spinner("Connection failed")
+            window.status_label.setText(error)
+        else:
+            window.spinner.hide()
 
-        window.connect_btn.setEnabled(True)
+        window.connect_btn.setEnabled(not server_fetch_error)
         window.disconnect_btn.setEnabled(False)
         window.refresh_btn.setEnabled(True)
-        window.auto_btn.setEnabled(True)
+        window.auto_btn.setEnabled(not server_fetch_error)
         window.cancel_button.hide()
 
         actions["status"].setText("! Connection failed")
-        actions["connect"].setVisible(True)
-        actions["auto_connect"].setVisible(True)
+        actions["connect"].setVisible(not server_fetch_error)
+        actions["auto_connect"].setVisible(not server_fetch_error)
         actions["cancel"].setVisible(False)
         actions["disconnect"].setVisible(False)
         window.tray_icon.setToolTip(f"CypherGate VPN — {error}")
