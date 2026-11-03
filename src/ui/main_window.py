@@ -19,7 +19,9 @@ from PySide6.QtWidgets import (
     QGraphicsOpacityEffect,
     QLabel,
     QMessageBox,
+    QPlainTextEdit,
     QPushButton,
+    QStackedWidget,
     QTableWidget,
     QTableWidgetItem,
     QWidget,
@@ -613,6 +615,23 @@ class CypherGate(QWidget):
     watch_timer: QTimer
     table: QTableWidget
     country_dropdown: QComboBox
+
+    # Layout
+    pages: QStackedWidget
+    server_page: QWidget
+    dashboard_page: QWidget
+    logs_page: QWidget
+
+    # Dashboard
+    dashboard_footer: QLabel
+
+    # Logs
+    error_logs_btn: QPushButton
+    logs_output: QPlainTextEdit
+    logs_status_label: QLabel
+    logs_refresh_btn: QPushButton
+    logs_copy_btn: QPushButton
+    logs_back_btn: QPushButton
 
     # Event listeners
     closeEvent = closeEvent
