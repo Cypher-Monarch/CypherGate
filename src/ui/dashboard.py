@@ -162,9 +162,7 @@ def create_dashboard(window):
     actions.addWidget(window.dashboard_disconnect_btn)
     layout.addLayout(actions)
 
-    window.dashboard_footer = QLabel(
-        "Connection details are refreshed automatically"
-    )
+    window.dashboard_footer = QLabel("Connection details are refreshed automatically")
     window.dashboard_footer.setObjectName("dashboardFooter")
     window.dashboard_footer.setAlignment(Qt.AlignmentFlag.AlignCenter)
     layout.addWidget(window.dashboard_footer)
@@ -184,9 +182,7 @@ def update_dashboard(window, state):
     window.dashboard_ping.setText(f"{ping} ms" if ping is not None else "N/A")
 
     speed = state.get("speed")
-    window.dashboard_speed.setText(
-        f"{speed} Mbps" if speed is not None else "N/A"
-    )
+    window.dashboard_speed.setText(f"{speed} Mbps" if speed is not None else "N/A")
 
     users = state.get("users")
     window.dashboard_users.setText(str(users) if users is not None else "N/A")
@@ -199,8 +195,6 @@ def update_dashboard(window, state):
         elapsed = max(0, int(time.time() - started_at))
         hours, remainder = divmod(elapsed, 3600)
         minutes, seconds = divmod(remainder, 60)
-        window.dashboard_duration.setText(
-            f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-        )
+        window.dashboard_duration.setText(f"{hours:02d}:{minutes:02d}:{seconds:02d}")
     else:
         window.dashboard_duration.setText("—")

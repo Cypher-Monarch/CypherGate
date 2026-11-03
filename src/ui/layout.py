@@ -23,9 +23,7 @@ def _create_logs_page(window):
     heading.setObjectName("headingLabel")
     heading.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-    description = QLabel(
-        "The live connection log viewer will appear here."
-    )
+    description = QLabel("The live connection log viewer will appear here.")
     description.setAlignment(Qt.AlignmentFlag.AlignCenter)
     description.setObjectName("logsPlaceholder")
 
@@ -75,9 +73,7 @@ def setup_layout(window):
     server_layout.addLayout(btn_layout)
 
     spinner_layout = QHBoxLayout()
-    spinner_layout.addWidget(
-        window.spinner, alignment=Qt.AlignmentFlag.AlignCenter
-    )
+    spinner_layout.addWidget(window.spinner, alignment=Qt.AlignmentFlag.AlignCenter)
     spinner_layout.addWidget(
         window.cancel_button, alignment=Qt.AlignmentFlag.AlignCenter
     )

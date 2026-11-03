@@ -41,11 +41,11 @@ from ui.animations import (
     stop_spinner,
     tray_restore,
 )
+from ui.dashboard import update_dashboard
 from ui.events import closeEvent, mouseMoveEvent, mousePressEvent
 from ui.fonts import load_fonts
 from ui.icons import apply_icons, apply_tray_icons, reload_icons
 from ui.layout import setup_layout
-from ui.dashboard import update_dashboard
 from ui.spinner import SpinnerWidget
 from ui.status import sync_ui_state
 from ui.tray import create_tray
