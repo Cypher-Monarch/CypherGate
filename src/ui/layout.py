@@ -1,9 +1,46 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QStackedWidget,
     QVBoxLayout,
     QWidget,
 )
+
+from ui.dashboard import create_dashboard
+
+
+def _create_logs_page(window):
+    page = QWidget()
+    page.setObjectName("logsPage")
+
+    layout = QVBoxLayout(page)
+    layout.setContentsMargins(12, 18, 12, 12)
+    layout.setSpacing(12)
+
+    heading = QLabel("Connection Logs")
+    heading.setObjectName("headingLabel")
+    heading.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    description = QLabel(
+        "The live connection log viewer will appear here."
+    )
+    description.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    description.setObjectName("logsPlaceholder")
+
+    back_button = QPushButton("Back to Dashboard")
+    back_button.setObjectName("refreshButton")
+    back_button.clicked.connect(window.show_previous_page)
+
+    layout.addWidget(heading)
+    layout.addStretch(1)
+    layout.addWidget(description)
+    layout.addStretch(1)
+    layout.addWidget(back_button)
+
+    window.logs_back_btn = back_button
+    return page
 
 
 def setup_layout(window):
@@ -20,30 +57,49 @@ def setup_layout(window):
     title_bar_widget = QWidget()
     title_bar_widget.setObjectName("titleBar")
     title_bar_widget.setLayout(title_bar_layout)
-
     layout.addWidget(title_bar_widget)
 
-    layout.addWidget(window.heading_label)
-    layout.addWidget(window.country_dropdown)
-    layout.addWidget(window.table)
+    # Page 1: Existing server-selection interface
+    window.server_page = QWidget()
+    server_layout = QVBoxLayout(window.server_page)
+    server_layout.setContentsMargins(0, 0, 0, 0)
+    server_layout.addWidget(window.heading_label)
+    server_layout.addWidget(window.country_dropdown)
+    server_layout.addWidget(window.table)
 
     btn_layout = QHBoxLayout()
     btn_layout.addWidget(window.refresh_btn)
     btn_layout.addWidget(window.connect_btn)
     btn_layout.addWidget(window.auto_btn)
     btn_layout.addWidget(window.disconnect_btn)
-
-    layout.addLayout(btn_layout)
+    server_layout.addLayout(btn_layout)
 
     spinner_layout = QHBoxLayout()
-
-    spinner_layout.addWidget(window.spinner, alignment=Qt.AlignmentFlag.AlignCenter)
+    spinner_layout.addWidget(
+        window.spinner, alignment=Qt.AlignmentFlag.AlignCenter
+    )
     spinner_layout.addWidget(
         window.cancel_button, alignment=Qt.AlignmentFlag.AlignCenter
     )
+    server_layout.addLayout(spinner_layout)
+    status_actions = QHBoxLayout()
+    status_actions.addWidget(window.status_label, 1)
+    window.error_logs_btn = QPushButton("View Logs")
+    window.error_logs_btn.setObjectName("refreshButton")
+    window.error_logs_btn.hide()
+    status_actions.addWidget(window.error_logs_btn)
+    server_layout.addLayout(status_actions)
 
-    layout.addLayout(spinner_layout)
+    # Pages 2 and 3
+    window.dashboard_page = create_dashboard(window)
+    window.logs_page = _create_logs_page(window)
 
-    layout.addWidget(window.status_label)
+    window.pages = QStackedWidget()
+    window.pages.setObjectName("mainPages")
+    window.pages.addWidget(window.server_page)
+    window.pages.addWidget(window.dashboard_page)
+    window.pages.addWidget(window.logs_page)
+    window.pages.setCurrentWidget(window.server_page)
 
+    layout.addWidget(window.pages)
     window.setLayout(layout)

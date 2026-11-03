@@ -45,6 +45,7 @@ from ui.events import closeEvent, mouseMoveEvent, mousePressEvent
 from ui.fonts import load_fonts
 from ui.icons import apply_icons, apply_tray_icons, reload_icons
 from ui.layout import setup_layout
+from ui.dashboard import update_dashboard
 from ui.spinner import SpinnerWidget
 from ui.status import sync_ui_state
 from ui.tray import create_tray
@@ -242,14 +243,7 @@ class CypherGate(QWidget):
         if status is not None:
             self.previous_status = status["status"]
 
-        if status and status["status"] == "CONNECTED":
-            self.show_connection_info(
-                status["country"],
-                status["ping"],
-                status["ip"],
-                status["speed"],
-                status["users"],
-            )
+        self.update_active_view(status)
 
     def configure_table(self):
         columns = self.settings["widgets"]["table"]["columns"]
@@ -389,14 +383,12 @@ class CypherGate(QWidget):
                 sync_ui_state(self, status)
 
             current_status = status["status"]
+            self.update_active_view(status)
 
             if self.previous_status != "CONNECTED" and current_status == "CONNECTED":
                 self.show_connection_info(
-                    status["country"],
-                    status["ping"],
-                    status["ip"],
-                    status["speed"],
-                    status["users"],
+                    status.get("country"),
+                    status.get("ip"),
                 )
 
             self.previous_status = current_status
@@ -404,7 +396,14 @@ class CypherGate(QWidget):
             if current_status == "CONNECTING":
                 connection_timeout = int(self.settings["vpn"]["connection_timeout"])
 
-                if time.monotonic() - self.connection_start >= connection_timeout:
+                started_at = status.get("started_at")
+                elapsed = (
+                    time.time() - started_at
+                    if started_at is not None
+                    else time.monotonic()
+                    - getattr(self, "connection_start", time.monotonic())
+                )
+                if elapsed >= connection_timeout:
                     self.ensure_root_handler_async()
                     send_root_command({"action": "STOP_VPN"})
                     send_root_command({"action": "ENABLE_IPV6"})
@@ -413,6 +412,7 @@ class CypherGate(QWidget):
 
                     if new_status:
                         sync_ui_state(self, new_status)
+                        self.update_active_view(new_status)
 
                     self.previous_status = None
 
@@ -426,6 +426,32 @@ class CypherGate(QWidget):
         except Exception:
             pass
 
+    def update_active_view(self, state):
+        if not state:
+            return
+
+        status = state.get("status")
+        self.current_vpn_status = status
+
+        self.error_logs_btn.setVisible(status == "ERROR")
+
+        if status == "CONNECTED":
+            update_dashboard(self, state)
+            if self.pages.currentWidget() != self.logs_page:
+                self.pages.setCurrentWidget(self.dashboard_page)
+        elif self.pages.currentWidget() != self.logs_page:
+            self.pages.setCurrentWidget(self.server_page)
+
+    def show_logs(self):
+        self.logs_return_page = self.pages.currentWidget()
+        self.pages.setCurrentWidget(self.logs_page)
+
+    def show_previous_page(self):
+        if getattr(self, "current_vpn_status", None) == "CONNECTED":
+            self.pages.setCurrentWidget(self.dashboard_page)
+        else:
+            self.pages.setCurrentWidget(self.server_page)
+
     def refresh_servers(self):
         self.servers_loading = True
         self.spinner.show()
@@ -434,7 +460,7 @@ class CypherGate(QWidget):
         self.refresh_btn.setEnabled(False)
         self.load_servers_async()
 
-    def show_connection_info(self, country, ping, ip, speed, users):
+    def show_connection_info(self, country, ip):
         if (
             notification.notify is not None
             and self.settings["application"]["notifications"]
@@ -444,14 +470,6 @@ class CypherGate(QWidget):
                 message=f"{country} | New IPv4: {ip}",
                 app_name="CypherGate",
             )
-        msg = (
-            f"Connected to {country}\n"
-            f"Ping: {ping}\n"
-            f"Speed: {speed}\n"
-            f"Users: {users}\n"
-            f"Your new IPv4: {ip}\n"
-        )
-        QMessageBox.information(self, "VPN Connected", msg)
 
     def disconnect_vpn(self):
         if hasattr(self, "watch_timer"):
@@ -460,7 +478,9 @@ class CypherGate(QWidget):
         send_root_command({"action": "STOP_VPN"})
         send_root_command({"action": "ENABLE_IPV6"})
 
-        sync_ui_state(self, get_status())
+        new_status = get_status()
+        sync_ui_state(self, new_status)
+        self.update_active_view(new_status)
 
         QMessageBox.information(
             self, "VPN Disconnected", "VPN connection has been terminated."
@@ -490,7 +510,9 @@ class CypherGate(QWidget):
             QMessageBox.warning(self, "Cancel Failed", str(e))
             return
 
-        sync_ui_state(self, get_status())
+        new_status = get_status()
+        sync_ui_state(self, new_status)
+        self.update_active_view(new_status)
         self.previous_status = None
 
     # Reload config
