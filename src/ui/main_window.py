@@ -1,4 +1,3 @@
-import os
 import threading
 import time
 from pathlib import Path
@@ -31,6 +30,7 @@ from config.watcher import ConfigWatcher
 from constants import API_URL, CACHE_FILE, CONFIG_FILE, ICON_PATH, TABLE_COLUMNS
 from diagnostics import collect_diagnostics, format_diagnostics
 from ipc import ensure_root_handler, get_status, send_root_command
+from log_reader import read_log
 from permissions import check_permissions
 from ui.animations import (
     animated_exit,
@@ -386,6 +386,9 @@ class CypherGate(QWidget):
 
             self.latest_daemon_status = status
 
+            if self.pages.currentWidget() == self.logs_page:
+                self.refresh_logs()
+
             if not self.servers_loading:
                 sync_ui_state(self, status)
 
@@ -478,6 +481,35 @@ class CypherGate(QWidget):
         self.connect_btn.setEnabled(False)
         self.refresh_btn.setEnabled(False)
         self.load_servers_async()
+
+    def refresh_logs(self):
+        status = self.latest_daemon_status
+        log_file = status.get("log_file") if status else None
+
+        if not log_file:
+            self.logs_output.clear()
+            self.logs_status_label.setText("No active session log")
+            return
+
+        try:
+            content = read_log(log_file)
+            scrollbar = self.logs_output.verticalScrollBar()
+            was_at_bottom = scrollbar.value() >= scrollbar.maximum() - 2
+
+            self.logs_output.setPlainText(content)
+
+            if was_at_bottom:
+                scrollbar.setValue(scrollbar.maximum())
+
+            self.logs_status_label.setText(Path(log_file).name)
+
+        except OSError as exc:
+            self.logs_status_label.setText("Unable to read session log")
+            self.logs_output.setPlainText(str(exc))
+
+    def copy_logs(self):
+        QApplication.clipboard().setText(self.logs_output.toPlainText())
+        self.logs_status_label.setText("Logs copied to clipboard")
 
     def show_connection_info(self, country, ip):
         if (

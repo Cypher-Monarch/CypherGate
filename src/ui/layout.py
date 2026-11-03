@@ -1,7 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QHBoxLayout,
-    QLabel,
     QPushButton,
     QStackedWidget,
     QVBoxLayout,
@@ -9,36 +8,7 @@ from PySide6.QtWidgets import (
 )
 
 from ui.dashboard import create_dashboard
-
-
-def _create_logs_page(window):
-    page = QWidget()
-    page.setObjectName("logsPage")
-
-    layout = QVBoxLayout(page)
-    layout.setContentsMargins(12, 18, 12, 12)
-    layout.setSpacing(12)
-
-    heading = QLabel("Connection Logs")
-    heading.setObjectName("headingLabel")
-    heading.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-    description = QLabel("The live connection log viewer will appear here.")
-    description.setAlignment(Qt.AlignmentFlag.AlignCenter)
-    description.setObjectName("logsPlaceholder")
-
-    back_button = QPushButton("Back to Dashboard")
-    back_button.setObjectName("refreshButton")
-    back_button.clicked.connect(window.show_previous_page)
-
-    layout.addWidget(heading)
-    layout.addStretch(1)
-    layout.addWidget(description)
-    layout.addStretch(1)
-    layout.addWidget(back_button)
-
-    window.logs_back_btn = back_button
-    return page
+from ui.log_page import create_logs_page
 
 
 def setup_layout(window):
@@ -88,7 +58,7 @@ def setup_layout(window):
 
     # Pages 2 and 3
     window.dashboard_page = create_dashboard(window)
-    window.logs_page = _create_logs_page(window)
+    window.logs_page = create_logs_page(window)
 
     window.pages = QStackedWidget()
     window.pages.setObjectName("mainPages")
