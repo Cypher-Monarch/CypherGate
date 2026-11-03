@@ -29,6 +29,7 @@ from PySide6.QtWidgets import (
 from config.manager import load_settings
 from config.watcher import ConfigWatcher
 from constants import API_URL, CACHE_FILE, CONFIG_FILE, ICON_PATH, TABLE_COLUMNS
+from diagnostics import collect_diagnostics, format_diagnostics
 from ipc import ensure_root_handler, get_status, send_root_command
 from permissions import check_permissions
 from ui.animations import (
@@ -103,6 +104,7 @@ class CypherGate(QWidget):
         self.load_servers_async()
 
         self.server_fetch_error = False
+        self.latest_daemon_status = None
 
         self.watch_timer = QTimer(self)
         self.watch_timer.timeout.connect(self.check_vpn_status)
@@ -238,6 +240,9 @@ class CypherGate(QWidget):
         self.refresh_btn.setEnabled(True)
 
         status = get_status()
+
+        self.latest_daemon_status = status
+
         sync_ui_state(self, status)
 
         if status is not None:
@@ -379,6 +384,8 @@ class CypherGate(QWidget):
             if status is None:
                 return
 
+            self.latest_daemon_status = status
+
             if not self.servers_loading:
                 sync_ui_state(self, status)
 
@@ -451,6 +458,18 @@ class CypherGate(QWidget):
             self.pages.setCurrentWidget(self.dashboard_page)
         else:
             self.pages.setCurrentWidget(self.server_page)
+
+    def copy_diagnostics(self):
+        diagnostics = collect_diagnostics(
+            settings=self.settings,
+            daemon_status=self.latest_daemon_status,
+        )
+
+        report = format_diagnostics(diagnostics)
+
+        QApplication.clipboard().setText(report)
+
+        self.dashboard_footer.setText("Diagnostics copied to clipboard")
 
     def refresh_servers(self):
         self.servers_loading = True

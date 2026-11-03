@@ -116,3 +116,4 @@ def connect_signals(window):
     window.dashboard_disconnect_btn.clicked.connect(window.disconnect_vpn)
     window.dashboard_logs_btn.clicked.connect(window.show_logs)
     window.error_logs_btn.clicked.connect(window.show_logs)
+    window.dashboard_copy_diagnostics_btn.clicked.connect(window.copy_diagnostics)
