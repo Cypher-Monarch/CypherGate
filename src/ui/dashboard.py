@@ -1,11 +1,9 @@
-import math
 import time
 
-from PySide6.QtCore import QPointF, Qt, QTimer
-from PySide6.QtGui import QColor, QPainter, QPalette, QPen, QRadialGradient
+from PySide6.QtCore import QPointF, Qt
+from PySide6.QtGui import QColor, QPainter, QPalette, QRadialGradient
 from PySide6.QtWidgets import (
     QFrame,
-    QGridLayout,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -14,57 +12,45 @@ from PySide6.QtWidgets import (
 )
 
 
-class ConnectionOrb(QWidget):
-    """A subtle, theme-aware pulse for the connected-state hero."""
+class HeroPanel(QFrame):
+    """A theme-aware radial glow for the connected-state hero."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setFixedSize(104, 104)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self._phase = 0.0
-
-        self._timer = QTimer(self)
-        self._timer.timeout.connect(self._advance)
-        self._timer.start(45)
-
-    def _advance(self):
-        self._phase = (self._phase + 0.045) % (math.pi * 2)
-        self.update()
+        self.setObjectName("dashboardHero")
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground)
 
     def paintEvent(self, event):
-        del event
+        super().paintEvent(event)
+
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        center = QPointF(self.rect().center())
-        accent = QColor(self.palette().color(QPalette.ColorRole.WindowText))
-        pulse = (math.sin(self._phase) + 1) / 2
+        accent = self.palette().color(QPalette.ColorRole.WindowText)
 
-        glow = QRadialGradient(center, 48 + pulse * 5)
+        center = QPointF(self.rect().center())
+        radius = max(self.width(), self.height()) * 0.72
+
+        gradient = QRadialGradient(center, radius)
+
         inner = QColor(accent)
-        inner.setAlpha(58)
+        inner.setAlpha(65)
+
+        middle = QColor(accent)
+        middle.setAlpha(20)
+
         outer = QColor(accent)
         outer.setAlpha(0)
-        glow.setColorAt(0.0, inner)
-        glow.setColorAt(1.0, outer)
+
+        gradient.setColorAt(0.0, inner)
+        gradient.setColorAt(0.55, middle)
+        gradient.setColorAt(1.0, outer)
+
         painter.setPen(Qt.PenStyle.NoPen)
-        painter.setBrush(glow)
-        painter.drawEllipse(center, 49, 49)
+        painter.setBrush(gradient)
+        painter.drawRoundedRect(self.rect(), 18, 18)
 
-        ring = QColor(accent)
-        ring.setAlpha(105 + int(pulse * 55))
-        painter.setBrush(Qt.BrushStyle.NoBrush)
-        painter.setPen(QPen(ring, 1.5))
-        painter.drawEllipse(center, 35 + pulse * 2, 35 + pulse * 2)
-
-        painter.setPen(QPen(accent, 2.5))
-        painter.drawEllipse(center, 27, 27)
-        painter.setPen(accent)
-        font = painter.font()
-        font.setPixelSize(29)
-        font.setBold(True)
-        painter.setFont(font)
-        painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, "✓")
+        painter.end()
 
 
 def _metric_card(title):
@@ -91,18 +77,26 @@ def create_dashboard(window):
     page = QWidget()
     page.setObjectName("dashboardPage")
 
-    layout = QVBoxLayout(page)
-    layout.setContentsMargins(12, 18, 12, 12)
-    layout.setSpacing(14)
+    # Main 2:1 horizontal layout
+    layout = QHBoxLayout(page)
+    layout.setContentsMargins(12, 12, 12, 12)
+    layout.setSpacing(12)
 
-    # Hero section
-    hero = QFrame()
-    hero.setObjectName("dashboardHero")
+    # ─────────────────────────────────────────
+    # Left pane: Hero
+    # ─────────────────────────────────────────
+
+    hero = HeroPanel()
+
     hero_layout = QVBoxLayout(hero)
-    hero_layout.setContentsMargins(20, 22, 20, 22)
-    hero_layout.setSpacing(7)
+    hero_layout.setContentsMargins(24, 30, 24, 30)
+    hero_layout.setSpacing(12)
 
-    window.dashboard_status_icon = ConnectionOrb()
+    hero_layout.addStretch(1)
+
+    window.dashboard_status_icon = QLabel("✓")
+    window.dashboard_status_icon.setObjectName("dashboardHeroIcon")
+    window.dashboard_status_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     window.dashboard_status = QLabel("CONNECTED")
     window.dashboard_status.setObjectName("dashboardStatus")
@@ -124,33 +118,46 @@ def create_dashboard(window):
     hero_layout.addWidget(window.dashboard_country)
     hero_layout.addWidget(window.dashboard_hostname)
 
-    layout.addWidget(hero)
+    hero_layout.addStretch(1)
 
-    # Session and server metrics
-    metrics = QGridLayout()
-    metrics.setHorizontalSpacing(10)
-    metrics.setVerticalSpacing(10)
+    layout.addWidget(hero, 2)
 
+    # ─────────────────────────────────────────
+    # Right pane: Sidebar
+    # ─────────────────────────────────────────
+
+    sidebar = QFrame()
+    sidebar.setObjectName("dashboardSidebar")
+
+    sidebar_layout = QVBoxLayout(sidebar)
+    sidebar_layout.setContentsMargins(14, 18, 14, 18)
+    sidebar_layout.setSpacing(10)
+
+    sidebar_title = QLabel("CONNECTION OVERVIEW")
+    sidebar_title.setObjectName("dashboardSidebarTitle")
+
+    sidebar_layout.addWidget(sidebar_title)
+
+    # Metrics
     metric_specs = (
-        ("SESSION DURATION", "dashboard_duration"),
-        ("SERVER PING", "dashboard_ping"),
+        ("SESSION", "dashboard_duration"),
+        ("PING", "dashboard_ping"),
         ("SERVER IP", "dashboard_ip"),
-        ("ADVERTISED SPEED", "dashboard_speed"),
-        ("SERVER USERS", "dashboard_users"),
-        ("SERVER SCORE", "dashboard_score"),
+        ("SPEED", "dashboard_speed"),
+        ("USERS", "dashboard_users"),
+        ("SCORE", "dashboard_score"),
     )
 
-    for index, (title, attribute) in enumerate(metric_specs):
+    for title, attribute in metric_specs:
         card, value = _metric_card(title)
         setattr(window, attribute, value)
-        metrics.addWidget(card, index // 2, index % 2)
+        sidebar_layout.addWidget(card)
 
-    layout.addLayout(metrics)
-    layout.addStretch(1)
+    sidebar_layout.addStretch(1)
 
-    # Dashboard actions
-    actions = QHBoxLayout()
-    actions.setSpacing(10)
+    # Actions
+    window.dashboard_copy_diagnostics_btn = QPushButton("Copy Diagnostics")
+    window.dashboard_copy_diagnostics_btn.setObjectName("refreshButton")
 
     window.dashboard_logs_btn = QPushButton("Show Logs")
     window.dashboard_logs_btn.setObjectName("refreshButton")
@@ -158,14 +165,18 @@ def create_dashboard(window):
     window.dashboard_disconnect_btn = QPushButton("Disconnect")
     window.dashboard_disconnect_btn.setObjectName("disconnectButton")
 
-    actions.addWidget(window.dashboard_logs_btn)
-    actions.addWidget(window.dashboard_disconnect_btn)
-    layout.addLayout(actions)
+    sidebar_layout.addWidget(window.dashboard_copy_diagnostics_btn)
+    sidebar_layout.addWidget(window.dashboard_logs_btn)
+    sidebar_layout.addWidget(window.dashboard_disconnect_btn)
 
-    window.dashboard_footer = QLabel("Connection details are refreshed automatically")
+    window.dashboard_footer = QLabel("Connection details refresh automatically")
     window.dashboard_footer.setObjectName("dashboardFooter")
+    window.dashboard_footer.setWordWrap(True)
     window.dashboard_footer.setAlignment(Qt.AlignmentFlag.AlignCenter)
-    layout.addWidget(window.dashboard_footer)
+
+    sidebar_layout.addWidget(window.dashboard_footer)
+
+    layout.addWidget(sidebar, 1)
 
     return page
 
@@ -179,10 +190,10 @@ def update_dashboard(window, state):
     window.dashboard_ip.setText(state.get("ip") or "Unknown")
 
     ping = state.get("ping")
-    window.dashboard_ping.setText(f"{ping} ms" if ping is not None else "N/A")
+    window.dashboard_ping.setText(f"{ping}" if ping is not None else "N/A")
 
     speed = state.get("speed")
-    window.dashboard_speed.setText(f"{speed} Mbps" if speed is not None else "N/A")
+    window.dashboard_speed.setText(f"{speed}" if speed is not None else "N/A")
 
     users = state.get("users")
     window.dashboard_users.setText(str(users) if users is not None else "N/A")
