@@ -112,3 +112,10 @@ def connect_signals(window):
     window.auto_btn.clicked.connect(window.auto_connect_fastest)
     window.disconnect_btn.clicked.connect(window.disconnect_vpn)
     window.cancel_button.clicked.connect(window.cancel_connection)
+
+    window.dashboard_disconnect_btn.clicked.connect(window.disconnect_vpn)
+    window.dashboard_logs_btn.clicked.connect(window.show_logs)
+    window.error_logs_btn.clicked.connect(window.show_logs)
+    window.dashboard_copy_diagnostics_btn.clicked.connect(window.copy_diagnostics)
+
+    window.logs_copy_btn.clicked.connect(window.copy_logs)

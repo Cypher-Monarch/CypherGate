@@ -1,11 +1,4 @@
-/* ============================================================
-   CypherGate — Biohazard
-   ============================================================ */
-
-
-/* ------------------------------------------------------------
-   Base
-   ------------------------------------------------------------ */
+/* CypherGate — Biohazard */
 
 QWidget#mainWindow {
     background-color: #0B0D0A;
@@ -25,10 +18,7 @@ QLabel {
     color: #D9E6C5;
 }
 
-
-/* ------------------------------------------------------------
-   Title Bar
-   ------------------------------------------------------------ */
+/* Title Bar */
 
 QWidget#titleBar {
     background: transparent;
@@ -58,10 +48,7 @@ QPushButton#closeButton:hover {
     color: #FF4D4D;
 }
 
-
-/* ------------------------------------------------------------
-   Labels
-   ------------------------------------------------------------ */
+/* Labels */
 
 QLabel#headingLabel {
     background: transparent;
@@ -81,10 +68,7 @@ QLabel#statusLabel {
     font-weight: bold;
 }
 
-
-/* ------------------------------------------------------------
-   Combo Box
-   ------------------------------------------------------------ */
+/* Combo Box */
 
 QComboBox {
     combobox-popup: 0;
@@ -105,10 +89,7 @@ QComboBox::drop-down {
     border: none;
 }
 
-
-/* ------------------------------------------------------------
-   List View
-   ------------------------------------------------------------ */
+/* List View */
 
 QListView {
     background-color: #121610;
@@ -132,10 +113,7 @@ QListView::item:selected {
     color: #0B0D0A;
 }
 
-
-/* ------------------------------------------------------------
-   Table
-   ------------------------------------------------------------ */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #121610;
@@ -184,10 +162,7 @@ QHeaderView::section {
     font-weight: bold;
 }
 
-
-/* ------------------------------------------------------------
-   Buttons — Base
-   ------------------------------------------------------------ */
+/* Buttons */
 
 QPushButton {
     background-color: #C6FF00;
@@ -212,18 +187,25 @@ QPushButton:disabled {
     border-color: #35421F;
 }
 
+/* Buttons */
 
-/* ------------------------------------------------------------
-   Buttons — Actions
-   ------------------------------------------------------------ */
-
-QPushButton#refreshButton {
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
     background-color: #1B2714;
     color: #B5D64D;
     border-color: #4A5C27;
 }
 
-QPushButton#refreshButton:hover {
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton:hover {
     background-color: #263819;
 }
 
@@ -269,10 +251,7 @@ QPushButton#cancelButton:hover {
     border-color: #FFB347;
 }
 
-
-/* ------------------------------------------------------------
-   Scroll Bar
-   ------------------------------------------------------------ */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #0B0D0A;
@@ -299,10 +278,7 @@ QScrollBar::sub-page:vertical {
     background: none;
 }
 
-
-/* ------------------------------------------------------------
-   Tooltips
-   ------------------------------------------------------------ */
+/* Tooltips */
 
 QToolTip {
     background-color: #171C12;
@@ -310,4 +286,94 @@ QToolTip {
     border: 1px solid #C6FF00;
     border-radius: 4px;
     padding: 6px;
+}
+
+/* Connected Dashboard */
+
+QFrame#dashboardCard {
+    background-color: rgba(128, 128, 128, 0.08);
+    border: 1px solid palette(mid);
+    border-radius: 8px;
+}
+
+QLabel#dashboardStatus {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+QLabel#dashboardCountry {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+QLabel#dashboardHostname {
+    font-size: 11px;
+    color: palette(mid);
+}
+
+QLabel#dashboardDurationHeading,
+QLabel#dashboardPingHeading,
+QLabel#dashboardIpHeading,
+QLabel#dashboardSpeedHeading,
+QLabel#dashboardUsersHeading,
+QLabel#dashboardScoreHeading {
+    font-size: 9px;
+    font-weight: bold;
+    color: palette(mid);
+}
+
+QLabel#dashboardDurationValue,
+QLabel#dashboardPingValue,
+QLabel#dashboardIpValue,
+QLabel#dashboardSpeedValue,
+QLabel#dashboardUsersValue,
+QLabel#dashboardScoreValue {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLabel#dashboardFooter,
+QLabel#logsStatusLabel {
+    font-size: 10px;
+    color: palette(mid);
+}
+
+/* Log Viewer */
+
+/* Theme Overrides */
+QFrame#dashboardHero {
+    color: #55D12E;
+}
+
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
+    background-color: #C6FF00;
+    color: #0B0D0A;
+    border: 1px solid #55D12E;
+}
+
+QPushButton#refreshButton:hover,
+QPushButton#dashboardCopyDiagnosticsButton:hover,
+QPushButton#dashboardLogsButton:hover,
+QPushButton#errorLogsButton:hover,
+QPushButton#logsCopyButton:hover,
+QPushButton#logsBackButton:hover {
+    background-color: #D7FF4A;
+    border-color: #55D12E;
+}
+
+QPlainTextEdit#logsOutput {
+    background-color: #121610;
+    color: #D9E6C5;
+    border: 1px solid #55D12E;
+    border-radius: 8px;
+    padding: 8px;
+    selection-background-color: #55D12E;
+    selection-color: #0B0D0A;
+    font-family: monospace;
 }

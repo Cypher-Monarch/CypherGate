@@ -18,7 +18,7 @@ QLabel {
     color: #DCD7BA;
 }
 
-/* Title bar */
+/* Title Bar */
 
 QWidget#titleBar {
     background-color: transparent;
@@ -70,7 +70,7 @@ QLabel#statusLabel {
     font-weight: bold;
 }
 
-/* Country dropdown */
+/* Country Selector */
 
 QComboBox {
     combobox-popup: 0;
@@ -117,7 +117,7 @@ QListView::item:selected {
     color: #DCD7BA;
 }
 
-/* Server table */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #16161D;
@@ -192,13 +192,23 @@ QPushButton:disabled {
     border-color: #363646;
 }
 
-QPushButton#refreshButton {
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
     background-color: #2A2A37;
     color: #DCD7BA;
     border-color: #363646;
 }
 
-QPushButton#refreshButton:hover {
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton:hover {
     color: #7E9CD8;
 }
 
@@ -245,7 +255,7 @@ QPushButton#cancelButton:hover {
     border-color: #C34043;
 }
 
-/* Scrollbar */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #1F1F28;
@@ -281,4 +291,94 @@ QToolTip {
     border: 1px solid #363646;
     border-radius: 4px;
     padding: 6px;
+}
+
+/* Connected Dashboard */
+
+QFrame#dashboardCard {
+    background-color: rgba(128, 128, 128, 0.08);
+    border: 1px solid palette(mid);
+    border-radius: 8px;
+}
+
+QLabel#dashboardStatus {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+QLabel#dashboardCountry {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+QLabel#dashboardHostname {
+    font-size: 11px;
+    color: palette(mid);
+}
+
+QLabel#dashboardDurationHeading,
+QLabel#dashboardPingHeading,
+QLabel#dashboardIpHeading,
+QLabel#dashboardSpeedHeading,
+QLabel#dashboardUsersHeading,
+QLabel#dashboardScoreHeading {
+    font-size: 9px;
+    font-weight: bold;
+    color: palette(mid);
+}
+
+QLabel#dashboardDurationValue,
+QLabel#dashboardPingValue,
+QLabel#dashboardIpValue,
+QLabel#dashboardSpeedValue,
+QLabel#dashboardUsersValue,
+QLabel#dashboardScoreValue {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLabel#dashboardFooter,
+QLabel#logsStatusLabel {
+    font-size: 10px;
+    color: palette(mid);
+}
+
+/* Log Viewer */
+
+/* Theme Overrides */
+QFrame#dashboardHero {
+    color: #98BB6C;
+}
+
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
+    background-color: #2A2A37;
+    color: #DCD7BA;
+    border: 1px solid #98BB6C;
+}
+
+QPushButton#refreshButton:hover,
+QPushButton#dashboardCopyDiagnosticsButton:hover,
+QPushButton#dashboardLogsButton:hover,
+QPushButton#errorLogsButton:hover,
+QPushButton#logsCopyButton:hover,
+QPushButton#logsBackButton:hover {
+    background-color: #363646;
+    border-color: #98BB6C;
+}
+
+QPlainTextEdit#logsOutput {
+    background-color: #16161D;
+    color: #DCD7BA;
+    border: 1px solid #98BB6C;
+    border-radius: 8px;
+    padding: 8px;
+    selection-background-color: #98BB6C;
+    selection-color: #DCD7BA;
+    font-family: monospace;
 }

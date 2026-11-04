@@ -2,8 +2,7 @@
 
 CypherGate uses Qt Style Sheets (QSS) for application theming.
 
-A theme is a `.qss` stylesheet that controls the visual appearance of the
-application's widgets.
+A theme is a `.qss` stylesheet that controls the visual appearance of the application's widgets.
 
 ## Theme selection
 
@@ -29,8 +28,7 @@ When `mode` is `builtin`, CypherGate loads:
 <theme directory>/<name>.qss
 ```
 
-During development, builtin themes are loaded from the repository's `themes/`
-directory.
+During development, builtin themes are loaded from the repository's `themes/` directory.
 
 Installed/frozen builds load builtin themes from:
 
@@ -54,8 +52,7 @@ Custom themes can be loaded from an arbitrary `.qss` file:
 
 When `mode` is `custom`, the configured `path` is used directly.
 
-If the resolved theme file does not exist, CypherGate uses its builtin fallback
-stylesheet instead.
+If the resolved theme file does not exist, CypherGate uses its builtin fallback stylesheet instead.
 
 ## QSS
 
@@ -77,49 +74,97 @@ QPushButton#connectButton {
 }
 ```
 
-Object names allow individual widgets to be styled without affecting every
-widget of the same Qt class.
+Object names allow individual widgets to be styled without affecting every widget of the same Qt class.
 
 ## Available widgets
 
 ### Main window
 
-| Object name    | Widget                  |
-| -------------- | ----------------------- |
-| `mainWindow`   | Main application window |
-| `titleBar`     | Custom title bar        |
-| `titleLabel`   | Window title            |
-| `headingLabel` | Main heading            |
+| Object name | Widget |
+|---|---|
+| `mainWindow` | Main application window |
+| `titleBar` | Custom title bar |
+| `titleLabel` | Window title |
+| `headingLabel` | Main heading |
 
 ### Window controls
 
-| Object name      | Widget          |
-| ---------------- | --------------- |
+| Object name | Widget |
+|---|---|
 | `minimizeButton` | Minimize button |
-| `closeButton`    | Close button    |
+| `closeButton` | Close button |
 
 ### VPN controls
 
-| Object name         | Widget              |
-| ------------------- | ------------------- |
-| `refreshButton`     | Refresh button      |
-| `connectButton`     | Connect button      |
-| `disconnectButton`  | Disconnect button   |
+| Object name | Widget |
+|---|---|
+| `refreshButton` | Refresh button |
+| `connectButton` | Connect button |
+| `disconnectButton` | Disconnect button |
 | `autoConnectButton` | Auto-connect button |
-| `cancelButton`      | Cancel button       |
+| `cancelButton` | Cancel button |
+| `errorLogsButton` | View Logs button |
 
 ### Server table
 
-| Object name   | Widget                    |
-| ------------- | ------------------------- |
-| `serverTable` | VPN server table          |
-| `animLabel`   | Animated table cell label |
+| Object name | Widget |
+|---|---|
+| `serverTable` | VPN server table |
+| `animLabel` | Animated table cell label |
 
 ### Country selector
 
-| Object name       | Widget               |
-| ----------------- | -------------------- |
-| `countryDropdown` | Country selector     |
+| Object name | Widget |
+|---|---|
+| `countryDropdown` | Country selector |
+
+### Connected dashboard
+
+| Object name | Widget |
+|---|---|
+| `dashboardPage` | Connected dashboard page |
+| `dashboardHero` | Hero panel |
+| `dashboardHeroIcon` | Connection status icon |
+| `dashboardStatus` | Connection status label |
+| `dashboardCountry` | Connected server country |
+| `dashboardHostname` | Connected server hostname |
+| `dashboardSidebar` | Connection overview sidebar |
+| `dashboardSidebarTitle` | Sidebar heading |
+| `dashboardCard` | Dashboard metric card |
+| `dashboardFooter` | Dashboard footer |
+| `dashboardCopyDiagnosticsButton` | Copy Diagnostics button |
+| `dashboardLogsButton` | Show Logs button |
+
+The dashboard metric heading and value labels use individual object names:
+
+```text
+dashboardDurationHeading
+dashboardDurationValue
+dashboardPingHeading
+dashboardPingValue
+dashboardIpHeading
+dashboardIpValue
+dashboardSpeedHeading
+dashboardSpeedValue
+dashboardUsersHeading
+dashboardUsersValue
+dashboardScoreHeading
+dashboardScoreValue
+```
+
+The dashboard also uses `disconnectButton` for its Disconnect button.
+
+### Logs page
+
+| Object name | Widget |
+|---|---|
+| `logsPage` | Connection logs page |
+| `logsStatusLabel` | Log status label |
+| `logsOutput` | Read-only log output |
+| `logsCopyButton` | Copy Logs button |
+| `logsBackButton` | Back button |
+
+The logs page also uses `headingLabel` for its heading.
 
 ## Common selectors
 
@@ -160,8 +205,7 @@ QPushButton:disabled {
 
 ### Labels
 
-Labels can be styled globally with `QLabel` or individually using their
-object names:
+Labels can be styled globally with `QLabel` or individually using their object names:
 
 ```qss
 QLabel {
@@ -186,8 +230,7 @@ QHeaderView::section
 QTableCornerButton::section
 ```
 
-These selectors can be used to customize the table background, cells,
-selection, headers, borders, and corner button.
+These selectors can be used to customize the table background, cells, selection, headers, borders, and corner button.
 
 For example:
 
@@ -209,8 +252,7 @@ QHeaderView::section {
 
 ### Country selector
 
-The country selector is a `QComboBox` with an explicit `QListView`
-popup.
+The country selector is a `QComboBox` with an explicit `QListView` popup.
 
 The combo box can be styled using:
 
@@ -230,8 +272,7 @@ QListView::item:hover
 QListView::item:selected
 ```
 
-CypherGate sets `combobox-popup: 0` on the country selector to use
-the standard list-view popup behavior.
+CypherGate sets `combobox-popup: 0` on the country selector to use the standard list-view popup behavior.
 
 For example:
 
@@ -282,7 +323,7 @@ CypherGate supports custom fonts in `.ttf` and `.otf` formats.
 
 Bundled custom fonts are loaded from:
 
-`Assets/fonts`
+`assets/fonts`
 
 User-provided fonts may also be placed in:
 
@@ -308,8 +349,7 @@ QWidget {
 
 ## States and pseudo-selectors
 
-Qt's standard pseudo-selectors can be used where supported by the target
-widget.
+Qt's standard pseudo-selectors can be used where supported by the target widget.
 
 Common examples include:
 
@@ -330,23 +370,17 @@ QPushButton#connectButton:hover {
 
 CypherGate watches the active theme file for changes.
 
-When the active stylesheet changes, CypherGate reloads and reapplies the theme
-without requiring an application restart.
+When the active stylesheet changes, CypherGate reloads and reapplies the theme without requiring an application restart.
 
-Changing the selected theme through `settings.json` is also supported by the
-configuration watcher.
+Changing the selected theme through `settings.json` is also supported by the configuration watcher.
 
-Theme reloads are handled separately from the normal icon and widget
-configuration reloads.
+Theme reloads are handled separately from the normal icon and widget configuration reloads.
 
 ## Fallback behavior
 
-If the resolved theme path does not exist, CypherGate does not fail to start
-because of the missing stylesheet. Instead, the builtin fallback stylesheet is
-used.
+If the resolved theme path does not exist, CypherGate does not fail to start because of the missing stylesheet. Instead, the builtin fallback stylesheet is used.
 
-This applies to both builtin themes whose files cannot be found and custom
-themes whose configured paths are invalid.
+This applies to both builtin themes whose files cannot be found and custom themes whose configured paths are invalid.
 
 ## Creating a custom theme
 
@@ -384,15 +418,12 @@ QTableWidget#serverTable::item:selected {
 
 Save the stylesheet as a `.qss` file and point `theme.path` at it:
 
-The theme can then be edited while CypherGate is running and the changes will
-be picked up by the configuration watcher.
+The theme can then be edited while CypherGate is running and the changes will be picked up by the configuration watcher.
 
 ## Qt Style Sheets
 
-CypherGate themes are regular QSS files rather than a separate CypherGate
-styling language. Standard Qt Style Sheet selectors and properties supported by
-the application's widgets can therefore be used.
+CypherGate themes are regular QSS files rather than a separate CypherGate styling language. Standard Qt Style Sheet selectors and properties supported by the application's widgets can therefore be used.
 
 This document describes the CypherGate-specific widgets and selectors.
-For complete QSS syntax and property behavior, refer to the Qt Style Sheets
-documentation.
+
+For complete QSS syntax and property behavior, refer to the Qt Style Sheets documentation.

@@ -1,20 +1,4 @@
-/* ╔══════════════════════════════════════════════════════════════╗
-   ║  CypherGate — VOID / SIGNAL LOST                             ║
-   ╚══════════════════════════════════════════════════════════════╝ */
-
-/* Palette:
-   void      #07090C
-   panel     #0D1117
-   panel2    #111821
-   border    #26313D
-   text      #DCE7F2
-   muted     #718096
-   cyan      #55E6FF
-   violet    #9B7BFF
-   green     #59F2A7
-   amber     #FFCA5C
-   red       #FF5F70
-*/
+/* CypherGate — VOID */
 
 QWidget#mainWindow {
     background-color: #07090C;
@@ -34,9 +18,7 @@ QLabel {
     color: #DCE7F2;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Title Bar — pretending this is a spaceship console
-   ───────────────────────────────────────────────────────────── */
+/* Title Bar */
 
 QWidget#titleBar {
     background-color: #07090C;
@@ -69,9 +51,7 @@ QPushButton#closeButton:hover {
     color: #FF5F70;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Heading
-   ───────────────────────────────────────────────────────────── */
+/* Headings */
 
 QLabel#headingLabel {
     background: transparent;
@@ -93,9 +73,7 @@ QLabel#statusLabel {
     font-weight: bold;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Country selector — instrument panel aesthetic
-   ───────────────────────────────────────────────────────────── */
+/* Country Selector */
 
 QComboBox {
     combobox-popup: 0;
@@ -144,9 +122,7 @@ QListView::item:selected {
     color: #07090C;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Server table — dark telemetry board
-   ───────────────────────────────────────────────────────────── */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #0D1117;
@@ -202,9 +178,7 @@ QHeaderView::section:hover {
     color: #9B7BFF;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Buttons — sharp enough to look intentional
-   ───────────────────────────────────────────────────────────── */
+/* Buttons */
 
 QPushButton {
     background-color: #55E6FF;
@@ -232,7 +206,7 @@ QPushButton:disabled {
     border-color: #202A34;
 }
 
-/* Individual controls */
+/* Individual Controls */
 
 QPushButton#connectButton {
     background-color: #59F2A7;
@@ -267,20 +241,35 @@ QPushButton#disconnectButton:pressed {
 }
 
 QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton,
 QPushButton#autoConnectButton {
     background-color: #10161D;
     color: #55E6FF;
     border: 1px solid #26313D;
 }
 
-QPushButton#refreshButton:hover,
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton:hover,
 QPushButton#autoConnectButton:hover {
     background-color: #16202A;
     color: #8DEEFF;
     border-color: #55E6FF;
 }
 
-QPushButton#refreshButton:pressed,
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton:pressed,
 QPushButton#autoConnectButton:pressed {
     background-color: #0A0F14;
 }
@@ -315,9 +304,7 @@ QPushButton#cancelButton:pressed {
     background-color: #120F09;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Scrollbars — almost invisible until you need them
-   ───────────────────────────────────────────────────────────── */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #07090C;
@@ -368,9 +355,7 @@ QScrollBar::sub-line:horizontal {
     width: 0px;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   Tooltips
-   ───────────────────────────────────────────────────────────── */
+/* Tooltips */
 
 QToolTip {
     background-color: #111821;
@@ -378,4 +363,95 @@ QToolTip {
     border: 1px solid #55E6FF;
     border-radius: 5px;
     padding: 6px;
+}
+
+/* Connected Dashboard */
+
+QFrame#dashboardCard {
+    background-color: rgba(128, 128, 128, 0.08);
+    border: 1px solid palette(mid);
+    border-radius: 8px;
+}
+
+QLabel#dashboardStatus {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+QLabel#dashboardCountry {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+QLabel#dashboardHostname {
+    font-size: 11px;
+    color: palette(mid);
+}
+
+QLabel#dashboardDurationHeading,
+QLabel#dashboardPingHeading,
+QLabel#dashboardIpHeading,
+QLabel#dashboardSpeedHeading,
+QLabel#dashboardUsersHeading,
+QLabel#dashboardScoreHeading {
+    font-size: 9px;
+    font-weight: bold;
+    color: palette(mid);
+}
+
+QLabel#dashboardDurationValue,
+QLabel#dashboardPingValue,
+QLabel#dashboardIpValue,
+QLabel#dashboardSpeedValue,
+QLabel#dashboardUsersValue,
+QLabel#dashboardScoreValue {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+QLabel#dashboardFooter,
+QLabel#logsStatusLabel {
+    font-size: 10px;
+    color: palette(mid);
+}
+
+/* Log Viewer */
+
+/* Theme Overrides */
+QFrame#dashboardHero {
+    color: #59F2A7;
+}
+
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
+    background-color: #55E6FF;
+    color: #07090C;
+    border: 1px solid #59F2A7;
+}
+
+QPushButton#refreshButton:hover,
+QPushButton#dashboardCopyDiagnosticsButton:hover,
+QPushButton#dashboardLogsButton:hover,
+QPushButton#errorLogsButton:hover,
+QPushButton#logsCopyButton:hover,
+QPushButton#logsBackButton:hover {
+    background-color: #8DEEFF;
+    border-color: #59F2A7;
+    color: #07090C;
+}
+
+QPlainTextEdit#logsOutput {
+    background-color: #0D1117;
+    color: #DCE7F2;
+    border: 1px solid #59F2A7;
+    border-radius: 8px;
+    padding: 8px;
+    selection-background-color: #59F2A7;
+    selection-color: #07090C;
+    font-family: monospace;
 }
