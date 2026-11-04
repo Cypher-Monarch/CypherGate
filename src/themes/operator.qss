@@ -206,13 +206,23 @@ QPushButton:disabled {
     border-color: #292E2B;
 }
 
-QPushButton#refreshButton {
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
     background-color: #171D19;
     color: #9FAE8A;
     border-color: #465044;
 }
 
-QPushButton#refreshButton:hover {
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton:hover {
     background-color: #222B24;
     border-color: #718064;
 }
@@ -309,11 +319,7 @@ QToolTip {
    Connected Dashboard
    ──────────────────────────────────────────────────────── */
 
-QFrame#dashboardHero {
-    background-color: rgba(128, 128, 128, 0.08);
-    border: 1px solid palette(mid);
-    border-radius: 12px;
-}
+
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -349,8 +355,47 @@ QLabel#dashboardMetricValue {
 }
 
 QLabel#dashboardFooter,
-QLabel#logsPlaceholder {
+QLabel#logsStatusLabel {
     font-size: 10px;
     color: palette(mid);
 }
 
+
+/* Log Viewer */
+
+/* Theme-aware dashboard and log viewer overrides */
+QFrame#dashboardHero {
+    color: #6C8E45;
+}
+
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
+    background-color: #3D4639;
+    color: #E5E5D9;
+    border: 1px solid #6C8E45;
+}
+
+QPushButton#refreshButton:hover,
+QPushButton#dashboardCopyDiagnosticsButton:hover,
+QPushButton#dashboardLogsButton:hover,
+QPushButton#errorLogsButton:hover,
+QPushButton#logsCopyButton:hover,
+QPushButton#logsBackButton:hover {
+    background-color: #4C5745;
+    border-color: #6C8E45;
+}
+
+QPlainTextEdit#logsOutput {
+    background-color: #101312;
+    color: #D8D8CC;
+    border: 1px solid #6C8E45;
+    border-radius: 8px;
+    padding: 8px;
+    selection-background-color: #6C8E45;
+    selection-color: #E5E5D9;
+    font-family: monospace;
+}

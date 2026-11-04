@@ -131,6 +131,11 @@ QPushButton:disabled {
    ──────────────────────────────────────────────────────── */
 
 QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton,
 QPushButton#autoConnectButton {
     background-color: #1b1b1b;
     color: #d4af37;
@@ -138,14 +143,24 @@ QPushButton#autoConnectButton {
     border: 1px solid #4d4121;
 }
 
-QPushButton#refreshButton:hover,
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton:hover,
 QPushButton#autoConnectButton:hover {
     background-color: #242424;
     color: #e2c35a;
     border-color: #806b2d;
 }
 
-QPushButton#refreshButton:pressed,
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton:pressed,
 QPushButton#autoConnectButton:pressed {
     background-color: #151515;
 }
@@ -320,11 +335,7 @@ QToolTip {
    Connected Dashboard
    ──────────────────────────────────────────────────────── */
 
-QFrame#dashboardHero {
-    background-color: rgba(128, 128, 128, 0.08);
-    border: 1px solid palette(mid);
-    border-radius: 12px;
-}
+
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -360,8 +371,47 @@ QLabel#dashboardMetricValue {
 }
 
 QLabel#dashboardFooter,
-QLabel#logsPlaceholder {
+QLabel#logsStatusLabel {
     font-size: 10px;
     color: palette(mid);
 }
 
+
+/* Log Viewer */
+
+/* Theme-aware dashboard and log viewer overrides */
+QFrame#dashboardHero {
+    color: #D4AF37;
+}
+
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
+    background-color: #d4af37;
+    color: #101010;
+    border: 1px solid #D4AF37;
+}
+
+QPushButton#refreshButton:hover,
+QPushButton#dashboardCopyDiagnosticsButton:hover,
+QPushButton#dashboardLogsButton:hover,
+QPushButton#errorLogsButton:hover,
+QPushButton#logsCopyButton:hover,
+QPushButton#logsBackButton:hover {
+    background-color: #e2c35a;
+    border-color: #D4AF37;
+}
+
+QPlainTextEdit#logsOutput {
+    background-color: #101010;
+    color: #f5d76e;
+    border: 1px solid #D4AF37;
+    border-radius: 8px;
+    padding: 8px;
+    selection-background-color: #D4AF37;
+    selection-color: #101010;
+    font-family: monospace;
+}

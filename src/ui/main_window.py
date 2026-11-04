@@ -457,6 +457,7 @@ class CypherGate(QWidget):
     def show_logs(self):
         self.logs_return_page = self.pages.currentWidget()
         self.pages.setCurrentWidget(self.logs_page)
+        self.refresh_logs()
 
     def show_previous_page(self):
         if getattr(self, "current_vpn_status", None) == "CONNECTED":
@@ -629,9 +630,7 @@ class CypherGate(QWidget):
     error_logs_btn: QPushButton
     logs_output: QPlainTextEdit
     logs_status_label: QLabel
-    logs_refresh_btn: QPushButton
     logs_copy_btn: QPushButton
-    logs_back_btn: QPushButton
 
     # Event listeners
     closeEvent = closeEvent

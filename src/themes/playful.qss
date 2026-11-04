@@ -22,6 +22,7 @@ QWidget {
 
 QLabel {
     color: #e8e8ee;
+    background-color: transparent;
 }
 
 
@@ -213,7 +214,12 @@ QPushButton:disabled {
    Individual Buttons
    ──────────────────────────────────────────────────────── */
 
-QPushButton#refreshButton {
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
     background-color: #89b4fa;
 }
 
@@ -291,16 +297,19 @@ QToolTip {
    Connected Dashboard
    ──────────────────────────────────────────────────────── */
 
-QFrame#dashboardHero {
-    background-color: rgba(128, 128, 128, 0.08);
-    border: 1px solid palette(mid);
-    border-radius: 12px;
-}
+
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
     border: 1px solid palette(mid);
     border-radius: 8px;
+}
+
+QLabel#dashboardHeroIcon,
+QLabel#dashboardStatus,
+QLabel#dashboardCountry,
+QLabel#dashboardHostname {
+    background: transparent;
 }
 
 QLabel#dashboardStatus {
@@ -331,8 +340,47 @@ QLabel#dashboardMetricValue {
 }
 
 QLabel#dashboardFooter,
-QLabel#logsPlaceholder {
+QLabel#logsStatusLabel {
     font-size: 10px;
     color: palette(mid);
 }
 
+
+/* Log Viewer */
+
+/* Theme-aware dashboard and log viewer overrides */
+QFrame#dashboardHero {
+    color: #CBA6F7;
+}
+
+QPushButton#refreshButton,
+QPushButton#dashboardCopyDiagnosticsButton,
+QPushButton#dashboardLogsButton,
+QPushButton#errorLogsButton,
+QPushButton#logsCopyButton,
+QPushButton#logsBackButton {
+    background-color: #cba6f7;
+    color: #11111b;
+    border: 1px solid #CBA6F7;
+}
+
+QPushButton#refreshButton:hover,
+QPushButton#dashboardCopyDiagnosticsButton:hover,
+QPushButton#dashboardLogsButton:hover,
+QPushButton#errorLogsButton:hover,
+QPushButton#logsCopyButton:hover,
+QPushButton#logsBackButton:hover {
+    background-color: #b4befe;
+    border-color: #CBA6F7;
+}
+
+QPlainTextEdit#logsOutput {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: 1px solid #CBA6F7;
+    border-radius: 8px;
+    padding: 8px;
+    selection-background-color: #CBA6F7;
+    selection-color: #11111b;
+    font-family: monospace;
+}

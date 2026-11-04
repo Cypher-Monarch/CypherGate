@@ -118,5 +118,4 @@ def connect_signals(window):
     window.error_logs_btn.clicked.connect(window.show_logs)
     window.dashboard_copy_diagnostics_btn.clicked.connect(window.copy_diagnostics)
 
-    window.logs_refresh_btn.clicked.connect(window.refresh_logs)
     window.logs_copy_btn.clicked.connect(window.copy_logs)

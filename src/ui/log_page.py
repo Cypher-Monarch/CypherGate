@@ -1,4 +1,4 @@
-from PySide6.QtGui import Qt
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QPlainTextEdit, QPushButton, QVBoxLayout, QWidget
 
 
@@ -15,7 +15,7 @@ def create_logs_page(window):
     heading.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     window.logs_status_label = QLabel("No active session log")
-    window.logs_status_label.setObjectName("logsPlaceholder")
+    window.logs_status_label.setObjectName("logsStatusLabel")
 
     window.logs_output = QPlainTextEdit()
     window.logs_output.setObjectName("logsOutput")
@@ -23,23 +23,17 @@ def create_logs_page(window):
     window.logs_output.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
     window.logs_output.setPlaceholderText("Connection logs will appear here.")
 
-    window.logs_refresh_btn = QPushButton("Refresh")
-    window.logs_refresh_btn.setObjectName("refreshButton")
-
     window.logs_copy_btn = QPushButton("Copy Logs")
-    window.logs_copy_btn.setObjectName("refreshButton")
+    window.logs_copy_btn.setObjectName("logsCopyButton")
 
     back_button = QPushButton("Back")
-    back_button.setObjectName("refreshButton")
+    back_button.setObjectName("logsBackButton")
     back_button.clicked.connect(window.show_previous_page)
 
     layout.addWidget(heading)
     layout.addWidget(window.logs_status_label)
     layout.addWidget(window.logs_output, 1)
-    layout.addWidget(window.logs_refresh_btn)
     layout.addWidget(window.logs_copy_btn)
     layout.addWidget(back_button)
-
-    window.logs_back_btn = back_button
 
     return page

@@ -51,7 +51,7 @@ def setup_layout(window):
     status_actions = QHBoxLayout()
     status_actions.addWidget(window.status_label, 1)
     window.error_logs_btn = QPushButton("View Logs")
-    window.error_logs_btn.setObjectName("refreshButton")
+    window.error_logs_btn.setObjectName("errorLogsButton")
     window.error_logs_btn.hide()
     status_actions.addWidget(window.error_logs_btn)
     server_layout.addLayout(status_actions)

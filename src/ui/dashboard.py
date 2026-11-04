@@ -34,10 +34,10 @@ class HeroPanel(QFrame):
         gradient = QRadialGradient(center, radius)
 
         inner = QColor(accent)
-        inner.setAlpha(65)
+        inner.setAlpha(38)
 
         middle = QColor(accent)
-        middle.setAlpha(20)
+        middle.setAlpha(12)
 
         outer = QColor(accent)
         outer.setAlpha(0)
@@ -53,7 +53,7 @@ class HeroPanel(QFrame):
         painter.end()
 
 
-def _metric_card(title):
+def _metric_card(title, name):
     card = QFrame()
     card.setObjectName("dashboardCard")
 
@@ -62,10 +62,10 @@ def _metric_card(title):
     layout.setSpacing(5)
 
     heading = QLabel(title.upper())
-    heading.setObjectName("dashboardMetricHeading")
+    heading.setObjectName(f"dashboard{name}Heading")
 
     value = QLabel("—")
-    value.setObjectName("dashboardMetricValue")
+    value.setObjectName(f"dashboard{name}Value")
     value.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
 
     layout.addWidget(heading)
@@ -140,16 +140,16 @@ def create_dashboard(window):
 
     # Metrics
     metric_specs = (
-        ("SESSION", "dashboard_duration"),
-        ("PING", "dashboard_ping"),
-        ("SERVER IP", "dashboard_ip"),
-        ("SPEED", "dashboard_speed"),
-        ("USERS", "dashboard_users"),
-        ("SCORE", "dashboard_score"),
+        ("SESSION", "Duration", "dashboard_duration"),
+        ("PING", "Ping", "dashboard_ping"),
+        ("SERVER IP", "Ip", "dashboard_ip"),
+        ("SPEED", "Speed", "dashboard_speed"),
+        ("USERS", "Users", "dashboard_users"),
+        ("SCORE", "Score", "dashboard_score"),
     )
 
-    for title, attribute in metric_specs:
-        card, value = _metric_card(title)
+    for title, name, attribute in metric_specs:
+        card, value = _metric_card(title, name)
         setattr(window, attribute, value)
         sidebar_layout.addWidget(card)
 
@@ -157,10 +157,12 @@ def create_dashboard(window):
 
     # Actions
     window.dashboard_copy_diagnostics_btn = QPushButton("Copy Diagnostics")
-    window.dashboard_copy_diagnostics_btn.setObjectName("refreshButton")
+    window.dashboard_copy_diagnostics_btn.setObjectName(
+        "dashboardCopyDiagnosticsButton"
+    )
 
     window.dashboard_logs_btn = QPushButton("Show Logs")
-    window.dashboard_logs_btn.setObjectName("refreshButton")
+    window.dashboard_logs_btn.setObjectName("dashboardLogsButton")
 
     window.dashboard_disconnect_btn = QPushButton("Disconnect")
     window.dashboard_disconnect_btn.setObjectName("disconnectButton")
