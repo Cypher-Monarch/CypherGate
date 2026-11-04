@@ -333,13 +333,23 @@ QLabel#dashboardHostname {
     color: palette(mid);
 }
 
-QLabel#dashboardMetricHeading {
+QLabel#dashboardDurationHeading,
+QLabel#dashboardPingHeading,
+QLabel#dashboardIpHeading,
+QLabel#dashboardSpeedHeading,
+QLabel#dashboardUsersHeading,
+QLabel#dashboardScoreHeading {
     font-size: 9px;
     font-weight: bold;
     color: palette(mid);
 }
 
-QLabel#dashboardMetricValue {
+QLabel#dashboardDurationValue,
+QLabel#dashboardPingValue,
+QLabel#dashboardIpValue,
+QLabel#dashboardSpeedValue,
+QLabel#dashboardUsersValue,
+QLabel#dashboardScoreValue {
     font-size: 16px;
     font-weight: bold;
 }
