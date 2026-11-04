@@ -33,11 +33,11 @@ else:
     ROOT_HANDLER_PATH = os.path.join(APP_DIR, "cyphergated.py")
     THEME_DIR = os.path.join(APP_DIR, "themes")
 
-ICON_DIR = os.path.join(APP_DIR, "Assets", "icons")
+ICON_DIR = os.path.join(APP_DIR, "assets", "icons")
 
-ICON_PATH = os.path.join(APP_DIR, "Assets", "icon.png")
+ICON_PATH = os.path.join(APP_DIR, "assets", "icon.png")
 
-FONT_DIR = os.path.join(APP_DIR, "Assets", "fonts")
+FONT_DIR = os.path.join(APP_DIR, "assets", "fonts")
 USER_FONT_DIR = os.path.join(VPN_ROOT, "fonts")
 
 TABLE_COLUMNS = {

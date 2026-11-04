@@ -4,11 +4,12 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
+from constants import APP_DIR
 from ui.main_window import CypherGate
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("Assets/icon.png"))
+    app.setWindowIcon(QIcon(f"{APP_DIR}/icon.png"))
     window = CypherGate()
     window.show()
 

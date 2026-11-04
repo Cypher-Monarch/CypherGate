@@ -323,7 +323,7 @@ CypherGate supports custom fonts in `.ttf` and `.otf` formats.
 
 Bundled custom fonts are loaded from:
 
-`Assets/fonts`
+`assets/fonts`
 
 User-provided fonts may also be placed in:
 

@@ -109,7 +109,7 @@ mkdir -p "$RELEASE_DIR"
 
 echo "==> Copying assets..."
 
-cp -r "$SRC_DIR/Assets" "$RELEASE_DIR/"
+cp -r "$SRC_DIR/assets" "$RELEASE_DIR/"
 
 echo "==> Copying themes..."
 
