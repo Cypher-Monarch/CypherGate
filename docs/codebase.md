@@ -5,37 +5,41 @@
 ```text
 src
 ├── config
-│   ├── defaults.py
-│   ├── fallback_theme.py
-│   ├── manager.py
-│   ├── theme.py
-│   └── watcher.py
+│   ├── defaults.py
+│   ├── fallback_theme.py
+│   ├── manager.py
+│   ├── theme.py
+│   └── watcher.py
 ├── daemon
-│   ├── commands.py
-│   ├── logging.py
-│   ├── monitor.py
-│   ├── setup.py
-│   ├── state.py
-│   └── validator.py
+│   ├── commands.py
+│   ├── logging.py
+│   ├── monitor.py
+│   ├── setup.py
+│   ├── state.py
+│   └── validator.py
 ├── ui
-│   ├── animations.py
-│   ├── events.py
-│   ├── fonts.py
-│   ├── icons.py
-│   ├── layout.py
-│   ├── main_window.py
-│   ├── spinner.py
-│   ├── status.py
-│   ├── tray.py
-│   ├── widgets.py
-│   └── window.py
+│   ├── animations.py
+│   ├── dashboard.py
+│   ├── events.py
+│   ├── fonts.py
+│   ├── icons.py
+│   ├── layout.py
+│   ├── log_page.py
+│   ├── main_window.py
+│   ├── spinner.py
+│   ├── status.py
+│   ├── tray.py
+│   ├── widgets.py
+│   └── window.py
 ├── vpn
-│   ├── connector.py
-│   └── loader.py
+│   ├── connector.py
+│   └── loader.py
 ├── constants.py
 ├── cyphergated.py
 ├── cyphergate.py
+├── diagnostics.py
 ├── ipc.py
+├── log_reader.py
 ├── permissions.py
 ├── requirements.txt
 └── update.py
@@ -81,7 +85,9 @@ The daemon:
 
 The monitor looks for OpenVPN's `Initialization Sequence Completed` marker in the session log. Once found, daemon state becomes `CONNECTED`.
 
-The GUI observes the daemon state through continuous polling, synchronizes its widgets and system-tray state, and shows connection information including the country, server IP, ping, speed, and users. If a new GUI instance starts while the daemon is already `CONNECTED`, it can show the same connection information from the existing daemon state.
+The GUI observes the daemon state through continuous polling, synchronizes its widgets and system-tray state, and shows the connected dashboard with session information including the country, hostname, server IP, ping, speed, users, and score. The dashboard also provides access to diagnostics, connection logs, and the disconnect action.
+
+If a new GUI instance starts while the daemon is already `CONNECTED`, it can show the same connection information from the existing daemon state.
 
 ### Disconnecting
 
@@ -128,7 +134,7 @@ The configuration is divided into several sections:
 * `theme`: builtin or custom theme selection;
 * `icons`: icon sizes and colors;
 * `widgets`: widget-specific settings such as spinner appearance and animation;
-* `application`: application behavior such as tray minimization, notifications, and status polling;
+* `application`: application behavior such as tray minimization, notifications, status polling, custom fonts, and update checking;
 * `vpn`: connection timeout and default country;
 * `table`: displayed server columns and sorting configuration.
 
@@ -147,7 +153,8 @@ Configuration changes can update:
 * spinner size, color, thickness, FPS, and rotation speed;
 * the active theme;
 * server table columns;
-* server table sorting.
+* server table sorting;
+* custom fonts.
 
 Settings that affect application lifecycle or VPN behavior are applied according to their respective runtime usage rather than being treated as generic UI hot-reload properties.
 
@@ -170,16 +177,22 @@ The prepared configuration is written to the configured VPN directory.
 The UI modules are deliberately small:
 
 * `widgets.py`: widget creation and signal wiring;
-* `layout.py`: widget arrangement;
+* `layout.py`: widget arrangement and page management;
 * `window.py`: window styling;
 * `status.py`: state-to-widget mapping;
 * `tray.py`: system tray integration;
 * `animations.py`: visual transitions;
 * `events.py`: window interaction events;
 * `icons.py`: SVG icon rendering/cache and icon application;
-* `spinner.py`: connection spinner and spinner configuration.
-* `fonts.py`: load custom fonts for themes using said fonts.
+* `spinner.py`: connection spinner and spinner configuration;
+* `fonts.py`: load custom fonts for themes using said fonts;
+* `dashboard.py`: connected dashboard and session information;
+* `log_page.py`: in-app connection log viewer.
 
 The `config` package owns settings loading, defaults, theme resolution, and configuration watching.
+
+`diagnostics.py` collects and formats application diagnostics for copying from the GUI.
+
+`log_reader.py` reads the active session log for display in the log page.
 
 The main application class remains the coordinator for VPN workflows rather than putting all implementation details into one file.
