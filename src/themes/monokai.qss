@@ -18,7 +18,7 @@ QLabel {
     color: #F8F8F2;
 }
 
-/* Title bar */
+/* Title Bar */
 
 QWidget#titleBar {
     background-color: transparent;
@@ -70,7 +70,7 @@ QLabel#statusLabel {
     font-weight: bold;
 }
 
-/* Country dropdown */
+/* Country Selector */
 
 QComboBox {
     combobox-popup: 0;
@@ -117,7 +117,7 @@ QListView::item:selected {
     color: #F8F8F2;
 }
 
-/* Server table */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #1E1F1C;
@@ -255,7 +255,7 @@ QPushButton#cancelButton:hover {
     border-color: #F92672;
 }
 
-/* Scrollbar */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #272822;
@@ -293,11 +293,7 @@ QToolTip {
     padding: 6px;
 }
 
-/* ────────────────────────────────────────────────────────
-   Connected Dashboard
-   ──────────────────────────────────────────────────────── */
-
-
+/* Connected Dashboard */
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -348,10 +344,9 @@ QLabel#logsStatusLabel {
     color: palette(mid);
 }
 
-
 /* Log Viewer */
 
-/* Theme-aware dashboard and log viewer overrides */
+/* Theme Overrides */
 QFrame#dashboardHero {
     color: #A6E22E;
 }

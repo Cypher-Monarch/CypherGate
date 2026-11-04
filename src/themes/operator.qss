@@ -1,7 +1,4 @@
-/* ==========================================================
-   CypherGate — OPERATOR
-   Fictional tactical/network operations console.
-   ========================================================== */
+/* CypherGate — OPERATOR */
 
 QWidget#mainWindow {
     background-color: #0A0C0C;
@@ -21,9 +18,7 @@ QLabel {
     color: #D8D8CC;
 }
 
-/* -------------------------
-   Title Bar
-   ------------------------- */
+/* Title Bar */
 
 QWidget#titleBar {
     background-color: transparent;
@@ -55,9 +50,7 @@ QPushButton#closeButton:hover {
     color: #FFFFFF;
 }
 
-/* -------------------------
-   Headings / Status
-   ------------------------- */
+/* Headings */
 
 QLabel#headingLabel {
     background: transparent;
@@ -77,9 +70,7 @@ QLabel#statusLabel {
     font-weight: bold;
 }
 
-/* -------------------------
-   Country Dropdown
-   ------------------------- */
+/* Country Selector */
 
 QComboBox {
     combobox-popup: 0;
@@ -126,9 +117,7 @@ QListView::item:selected {
     color: #0A0C0C;
 }
 
-/* -------------------------
-   Server Table
-   ------------------------- */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #101312;
@@ -178,9 +167,7 @@ QHeaderView::section {
     font-weight: bold;
 }
 
-/* -------------------------
-   Buttons
-   ------------------------- */
+/* Buttons */
 
 QPushButton {
     background-color: #3D4639;
@@ -273,9 +260,7 @@ QPushButton#cancelButton:hover {
     border-color: #914B4B;
 }
 
-/* -------------------------
-   Scrollbars
-   ------------------------- */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #0A0C0C;
@@ -303,9 +288,7 @@ QScrollBar::sub-page:vertical {
     background: none;
 }
 
-/* -------------------------
-   Tooltips
-   ------------------------- */
+/* Tooltips */
 
 QToolTip {
     background-color: #151917;
@@ -315,11 +298,7 @@ QToolTip {
     padding: 6px;
 }
 
-/* ────────────────────────────────────────────────────────
-   Connected Dashboard
-   ──────────────────────────────────────────────────────── */
-
-
+/* Connected Dashboard */
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -370,10 +349,9 @@ QLabel#logsStatusLabel {
     color: palette(mid);
 }
 
-
 /* Log Viewer */
 
-/* Theme-aware dashboard and log viewer overrides */
+/* Theme Overrides */
 QFrame#dashboardHero {
     color: #6C8E45;
 }

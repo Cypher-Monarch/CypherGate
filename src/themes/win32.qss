@@ -1,7 +1,4 @@
-/* ==========================================================
-   CypherGate — Win32
-   A lovingly hostile recreation of classic Windows utility UI.
-   ========================================================== */
+/* CypherGate — Win32 */
 
 QWidget#mainWindow {
     background-color: #D4D0C8;
@@ -22,9 +19,7 @@ QLabel {
     color: #000000;
 }
 
-/* -------------------------
-   Title Bar
-   ------------------------- */
+/* Title Bar */
 
 QWidget#titleBar {
     background-color: #000080;
@@ -62,9 +57,7 @@ QPushButton#closeButton:hover {
     color: #800000;
 }
 
-/* -------------------------
-   Headings
-   ------------------------- */
+/* Headings */
 
 QLabel#headingLabel {
     background: transparent;
@@ -86,21 +79,17 @@ QLabel#statusLabel {
     font-weight: bold;
 }
 
-/* -------------------------
-   Country Dropdown
-   ------------------------- */
+/* Country Selector */
 
 QComboBox {
     combobox-popup: 0;
     background-color: #FFFFFF;
     color: #000000;
-
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-right: 2px solid #FFFFFF;
     border-bottom: 2px solid #FFFFFF;
     border-radius: 0px;
-
     padding: 2px 4px;
 }
 
@@ -139,9 +128,7 @@ QListView::item:selected {
     color: #FFFFFF;
 }
 
-/* -------------------------
-   Server Table
-   ------------------------- */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #D4D0C8;
@@ -155,18 +142,14 @@ QTableWidget#serverTable {
     background-color: #FFFFFF;
     alternate-background-color: #F2F2F2;
     color: #000000;
-
     border-top: 2px solid #808080;
     border-left: 2px solid #808080;
     border-right: 2px solid #FFFFFF;
     border-bottom: 2px solid #FFFFFF;
-
     border-radius: 0px;
     gridline-color: #C0C0C0;
-
     selection-background-color: #000080;
     selection-color: #FFFFFF;
-
     outline: none;
 }
 
@@ -194,34 +177,26 @@ QHeaderView {
 QHeaderView::section {
     background-color: #D4D0C8;
     color: #000000;
-
     padding: 3px 5px;
-
     border-top: 1px solid #FFFFFF;
     border-left: 1px solid #FFFFFF;
     border-right: 1px solid #808080;
     border-bottom: 1px solid #808080;
-
     font-family: "Liberation Sans";
     font-weight: bold;
 }
 
-/* -------------------------
-   Main Buttons
-   ------------------------- */
+/* Main Buttons */
 
 QPushButton {
     background-color: #D4D0C8;
     color: #000000;
-
     border-top: 2px solid #FFFFFF;
     border-left: 2px solid #FFFFFF;
     border-right: 2px solid #404040;
     border-bottom: 2px solid #404040;
-
     border-radius: 0px;
     padding: 4px 12px;
-
     font-family: "Liberation Sans";
     font-size: 11px;
     font-weight: normal;
@@ -249,9 +224,7 @@ QPushButton:disabled {
     border-bottom-color: #808080;
 }
 
-/* -------------------------
-   Individual Buttons
-   ------------------------- */
+/* Individual Buttons */
 
 QPushButton#refreshButton,
 QPushButton#dashboardCopyDiagnosticsButton,
@@ -304,12 +277,10 @@ QPushButton#autoConnectButton:hover {
 QPushButton#cancelButton {
     background-color: #D4D0C8;
     color: #800000;
-
     border-top: 2px solid #FFFFFF;
     border-left: 2px solid #FFFFFF;
     border-right: 2px solid #404040;
     border-bottom: 2px solid #404040;
-
     border-radius: 0px;
 }
 
@@ -318,9 +289,7 @@ QPushButton#cancelButton:hover {
     color: #800000;
 }
 
-/* -------------------------
-   Scrollbars
-   ------------------------- */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #D4D0C8;
@@ -331,12 +300,10 @@ QScrollBar:vertical {
 QScrollBar::handle:vertical {
     background-color: #D4D0C8;
     min-height: 20px;
-
     border-top: 2px solid #FFFFFF;
     border-left: 2px solid #FFFFFF;
     border-right: 2px solid #404040;
     border-bottom: 2px solid #404040;
-
     border-radius: 0px;
 }
 
@@ -367,28 +334,19 @@ QScrollBar::sub-page:vertical {
     background-color: #C0C0C0;
 }
 
-/* -------------------------
-   Tooltips
-   ------------------------- */
+/* Tooltips */
 
 QToolTip {
     background-color: #FFFFE1;
     color: #000000;
-
     border: 1px solid #000000;
     border-radius: 0px;
-
     padding: 2px 4px;
-
     font-family: "Liberation Sans";
     font-size: 11px;
 }
 
-/* ────────────────────────────────────────────────────────
-   Connected Dashboard
-   ──────────────────────────────────────────────────────── */
-
-
+/* Connected Dashboard */
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -439,10 +397,9 @@ QLabel#logsStatusLabel {
     color: palette(mid);
 }
 
-
 /* Log Viewer */
 
-/* Theme-aware dashboard and log viewer overrides */
+/* Theme Overrides */
 QFrame#dashboardHero {
     color: #000080;
 }

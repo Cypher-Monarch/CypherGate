@@ -1,11 +1,4 @@
-/* ============================================================
-   CypherGate — Biohazard
-   ============================================================ */
-
-
-/* ------------------------------------------------------------
-   Base
-   ------------------------------------------------------------ */
+/* CypherGate — Biohazard */
 
 QWidget#mainWindow {
     background-color: #0B0D0A;
@@ -25,10 +18,7 @@ QLabel {
     color: #D9E6C5;
 }
 
-
-/* ------------------------------------------------------------
-   Title Bar
-   ------------------------------------------------------------ */
+/* Title Bar */
 
 QWidget#titleBar {
     background: transparent;
@@ -58,10 +48,7 @@ QPushButton#closeButton:hover {
     color: #FF4D4D;
 }
 
-
-/* ------------------------------------------------------------
-   Labels
-   ------------------------------------------------------------ */
+/* Labels */
 
 QLabel#headingLabel {
     background: transparent;
@@ -81,10 +68,7 @@ QLabel#statusLabel {
     font-weight: bold;
 }
 
-
-/* ------------------------------------------------------------
-   Combo Box
-   ------------------------------------------------------------ */
+/* Combo Box */
 
 QComboBox {
     combobox-popup: 0;
@@ -105,10 +89,7 @@ QComboBox::drop-down {
     border: none;
 }
 
-
-/* ------------------------------------------------------------
-   List View
-   ------------------------------------------------------------ */
+/* List View */
 
 QListView {
     background-color: #121610;
@@ -132,10 +113,7 @@ QListView::item:selected {
     color: #0B0D0A;
 }
 
-
-/* ------------------------------------------------------------
-   Table
-   ------------------------------------------------------------ */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #121610;
@@ -184,10 +162,7 @@ QHeaderView::section {
     font-weight: bold;
 }
 
-
-/* ------------------------------------------------------------
-   Buttons — Base
-   ------------------------------------------------------------ */
+/* Buttons */
 
 QPushButton {
     background-color: #C6FF00;
@@ -212,10 +187,7 @@ QPushButton:disabled {
     border-color: #35421F;
 }
 
-
-/* ------------------------------------------------------------
-   Buttons — Actions
-   ------------------------------------------------------------ */
+/* Buttons */
 
 QPushButton#refreshButton,
 QPushButton#dashboardCopyDiagnosticsButton,
@@ -279,10 +251,7 @@ QPushButton#cancelButton:hover {
     border-color: #FFB347;
 }
 
-
-/* ------------------------------------------------------------
-   Scroll Bar
-   ------------------------------------------------------------ */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #0B0D0A;
@@ -309,10 +278,7 @@ QScrollBar::sub-page:vertical {
     background: none;
 }
 
-
-/* ------------------------------------------------------------
-   Tooltips
-   ------------------------------------------------------------ */
+/* Tooltips */
 
 QToolTip {
     background-color: #171C12;
@@ -322,11 +288,7 @@ QToolTip {
     padding: 6px;
 }
 
-/* ────────────────────────────────────────────────────────
-   Connected Dashboard
-   ──────────────────────────────────────────────────────── */
-
-
+/* Connected Dashboard */
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -377,10 +339,9 @@ QLabel#logsStatusLabel {
     color: palette(mid);
 }
 
-
 /* Log Viewer */
 
-/* Theme-aware dashboard and log viewer overrides */
+/* Theme Overrides */
 QFrame#dashboardHero {
     color: #55D12E;
 }

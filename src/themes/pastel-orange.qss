@@ -3,7 +3,6 @@
    Author: nox-lux
    ──────────────────────────────────────────────────────── */
 
-
 /* ────────────────────────────────────────────────────────
    Base
    ──────────────────────────────────────────────────────── */
@@ -11,7 +10,6 @@
 QWidget#mainWindow {
     background-color: #1B262C;
     color: #FDCB9E;
-
     font-size: 14px;
 }
 
@@ -26,7 +24,6 @@ QLabel {
     background-color: transparent;
 }
 
-
 /* ────────────────────────────────────────────────────────
    Title Bar
    ──────────────────────────────────────────────────────── */
@@ -38,7 +35,6 @@ QWidget#titleBar {
 QLabel#titleLabel {
     background: transparent;
     color: #FDCB9E;
-
     font-size: 15px;
     font-weight: bold;
 }
@@ -47,10 +43,8 @@ QPushButton#minimizeButton,
 QPushButton#closeButton {
     background: transparent;
     color: #FDCB9E;
-
     border: none;
     border-radius: 8px;
-
     font-size: 16px;
 }
 
@@ -64,7 +58,6 @@ QPushButton#closeButton:hover {
     color: #ed5c5c;
 }
 
-
 /* ────────────────────────────────────────────────────────
    Headings
    ──────────────────────────────────────────────────────── */
@@ -72,7 +65,6 @@ QPushButton#closeButton:hover {
 QLabel#headingLabel {
     background: transparent;
     color: #FDCB9E;
-
     font-size: 22px;
     font-weight: bold;
 }
@@ -82,20 +74,16 @@ QLabel#animLabel {
     color: #FDCB9E;
 }
 
-
 /* ────────────────────────────────────────────────────────
    Country Dropdown
    ──────────────────────────────────────────────────────── */
 
 QComboBox {
     combobox-popup: 0;
-
     background-color: #1B262C;
     color: #FDCB9E;
-
     border: 1px solid #FDCB9E;
     border-radius: 8px;
-
     padding: 6px 10px;
 }
 
@@ -110,14 +98,12 @@ QComboBox:focus {
 
 QComboBox::drop-down {
     width: 28px;
-
     border: none;
 }
 
 QListView {
     background-color: #0F4C75;
     color: #cdd6f4;
-
     border: 1px solid #313244;
     outline: none;
 }
@@ -125,7 +111,6 @@ QListView {
 QListView::item {
     background-color: #1B262C;
     color: #cdd6f4;
-
     padding: 6px 8px;
 }
 
@@ -137,7 +122,6 @@ QListView::item:selected {
     background-color: #FDCB9E;
     color: #11111b;
 }
-
 
 /* ────────────────────────────────────────────────────────
    Server Table
@@ -172,13 +156,10 @@ QHeaderView {
 QHeaderView::section {
     background-color: #FDCB9E;
     color: #1B262C;
-
     padding: 8px;
     border: 1px solid #FDCB9E;
-
     font-weight: bold;
 }
-
 
 /* ────────────────────────────────────────────────────────
    Main Buttons
@@ -187,12 +168,9 @@ QHeaderView::section {
 QPushButton {
     background-color: #FDCB9E;
     color: #000;
-
     border: none;
     border-radius: 12px;
-
     padding: 10px 18px;
-
     font-weight: bold;
 }
 
@@ -210,7 +188,6 @@ QPushButton:disabled {
     border: 1px solid #FDCB9E;
     color: #FDCB9E;
 }
-
 
 /* ────────────────────────────────────────────────────────
    Individual Buttons
@@ -240,7 +217,6 @@ QPushButton#logsBackButton:hover {
 QPushButton#cancelButton {
     background-color: #1e1e2e;
     color: #f9e2af;
-
     border: 1px solid #f9e2af;
     border-radius: 16px;
 }
@@ -250,18 +226,15 @@ QPushButton#cancelButton:hover {
     color: #000;
 }
 
-
 /* ────────────────────────────────────────────────────────
    Status
    ──────────────────────────────────────────────────────── */
 
 QLabel#statusLabel {
     color: #FDCB9E;
-
     font-size: 14px;
     font-weight: bold;
 }
-
 
 /* ────────────────────────────────────────────────────────
    Scrollbars
@@ -281,7 +254,6 @@ QScrollBar::handle:vertical:hover {
     background-color: #FDCB6E;
 }
 
-
 /* ────────────────────────────────────────────────────────
    Tooltips
    ──────────────────────────────────────────────────────── */
@@ -289,18 +261,14 @@ QScrollBar::handle:vertical:hover {
 QToolTip {
     background-color: #1B262C;
     color: #FDCB9E;
-
     border: 1px solid #FDCB9E;
     border-radius: 8px;
-
     padding: 6px;
 }
 
 /* ────────────────────────────────────────────────────────
    Connected Dashboard
    ──────────────────────────────────────────────────────── */
-
-
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -357,7 +325,6 @@ QLabel#logsStatusLabel {
     font-size: 10px;
     color: palette(mid);
 }
-
 
 /* Log Viewer */
 

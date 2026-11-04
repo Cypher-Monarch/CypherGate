@@ -1,16 +1,8 @@
-/* ────────────────────────────────────────────────────────
-   CypherGate — Gruvbox Theme
-   ──────────────────────────────────────────────────────── */
-
-
-/* ────────────────────────────────────────────────────────
-   Base
-   ──────────────────────────────────────────────────────── */
+/* CypherGate — Gruvbox Theme */
 
 QWidget#mainWindow {
     background-color: #1d2021;
     color: #ebdbb2;
-
     font-family: "Noto Sans";
     font-size: 14px;
 }
@@ -25,10 +17,7 @@ QLabel {
     background-color: transparent;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Title Bar
-   ──────────────────────────────────────────────────────── */
+/* Title Bar */
 
 QWidget#titleBar {
     background-color: transparent;
@@ -37,7 +26,6 @@ QWidget#titleBar {
 QLabel#titleLabel {
     background: transparent;
     color: #fabd2f;
-
     font-size: 15px;
     font-weight: bold;
 }
@@ -46,10 +34,8 @@ QPushButton#minimizeButton,
 QPushButton#closeButton {
     background: transparent;
     color: #fabd2f;
-
     border: none;
     border-radius: 8px;
-
     font-size: 16px;
 }
 
@@ -62,15 +48,11 @@ QPushButton#closeButton:hover {
     color: #fb4934;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Headings
-   ──────────────────────────────────────────────────────── */
+/* Headings */
 
 QLabel#headingLabel {
     background: transparent;
     color: #fabd2f;
-
     font-size: 22px;
     font-weight: bold;
 }
@@ -80,20 +62,14 @@ QLabel#animLabel {
     color: #fabd2f;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Country Dropdown
-   ──────────────────────────────────────────────────────── */
+/* Country Selector */
 
 QComboBox {
     combobox-popup: 0;
-
     background-color: #282828;
     color: #ebdbb2;
-
     border: 1px solid #504945;
     border-radius: 8px;
-
     padding: 6px 10px;
 }
 
@@ -107,14 +83,12 @@ QComboBox:focus {
 
 QComboBox::drop-down {
     width: 28px;
-
     border: none;
 }
 
 QListView {
     background-color: #282828;
     color: #ebdbb2;
-
     border: 1px solid #504945;
     outline: none;
 }
@@ -122,7 +96,6 @@ QListView {
 QListView::item {
     background-color: #282828;
     color: #ebdbb2;
-
     padding: 6px 8px;
 }
 
@@ -135,10 +108,7 @@ QListView::item:selected {
     color: #1d2021;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Server Table
-   ──────────────────────────────────────────────────────── */
+/* Server Table */
 
 QTableCornerButton::section {
     background-color: #282828;
@@ -148,10 +118,8 @@ QTableCornerButton::section {
 QTableWidget#serverTable {
     background-color: #1d2021;
     alternate-background-color: #282828;
-
     border: 1px solid #504945;
     border-radius: 12px;
-
     gridline-color: #3c3836;
 }
 
@@ -172,27 +140,19 @@ QHeaderView {
 QHeaderView::section {
     background-color: #282828;
     color: #fabd2f;
-
     padding: 8px;
     border: none;
-
     font-weight: bold;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Main Buttons
-   ──────────────────────────────────────────────────────── */
+/* Main Buttons */
 
 QPushButton {
     background-color: #fabd2f;
     color: #1d2021;
-
     border: none;
     border-radius: 12px;
-
     padding: 10px 18px;
-
     font-weight: bold;
 }
 
@@ -209,10 +169,7 @@ QPushButton:disabled {
     color: #7c6f64;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Individual Buttons
-   ──────────────────────────────────────────────────────── */
+/* Individual Buttons */
 
 QPushButton#refreshButton,
 QPushButton#dashboardCopyDiagnosticsButton,
@@ -242,7 +199,6 @@ QPushButton#autoConnectButton {
 QPushButton#cancelButton {
     background-color: #3c1f1f;
     color: #fb4934;
-
     border: 1px solid #7c2d27;
     border-radius: 16px;
 }
@@ -252,22 +208,15 @@ QPushButton#cancelButton:hover {
     border-color: #fb4934;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Status
-   ──────────────────────────────────────────────────────── */
+/* Status */
 
 QLabel#statusLabel {
     color: #b8bb26;
-
     font-size: 14px;
     font-weight: bold;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Scrollbars
-   ──────────────────────────────────────────────────────── */
+/* Scrollbars */
 
 QScrollBar:vertical {
     background-color: #1d2021;
@@ -283,26 +232,17 @@ QScrollBar::handle:vertical:hover {
     background-color: #fabd2f;
 }
 
-
-/* ────────────────────────────────────────────────────────
-   Tooltips
-   ──────────────────────────────────────────────────────── */
+/* Tooltips */
 
 QToolTip {
     background-color: #282828;
     color: #ebdbb2;
-
     border: 1px solid #fabd2f;
     border-radius: 8px;
-
     padding: 6px;
 }
 
-/* ────────────────────────────────────────────────────────
-   Connected Dashboard
-   ──────────────────────────────────────────────────────── */
-
-
+/* Connected Dashboard */
 
 QFrame#dashboardCard {
     background-color: rgba(128, 128, 128, 0.08);
@@ -360,10 +300,9 @@ QLabel#logsStatusLabel {
     color: palette(mid);
 }
 
-
 /* Log Viewer */
 
-/* Theme-aware dashboard and log viewer overrides */
+/* Theme Overrides */
 QFrame#dashboardHero {
     color: #B8BB26;
 }
